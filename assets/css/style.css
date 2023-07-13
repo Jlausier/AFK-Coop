@@ -10,6 +10,10 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
+
+
+
+
 /* ===== HEADER SELECTORS ============================================================ */
 
 .header {
@@ -24,11 +28,18 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-/* ===== PAGE CONTENT SELECTORS ====================================================== */
+
+
+
+
+/* ===== STARTER PAGE CONTENT SELECTORS ============================================== */
 
 main {
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
+
+
+/* ----- Toggle "by Game" or "by Genre" ----- */
 
 .search-by-container {
     border: 1px solid rgba(0, 0, 0, 0.5);
@@ -37,3 +48,99 @@ main {
 .search-by-btn {
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
+                                            /* <--- USE THESE IDs FOR JS PURPOSES */
+#search-by-game-toggle { 
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+                                            /* <--- USE THESE IDs FOR JS PURPOSES */
+#search-by-genre-toggle {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+
+/* ----- Search by GENRE Dialog Box ----- */
+
+.game-search-form-container {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.game-search-form-title {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+                                            /* <--- USE THESE IDs FOR JS PURPOSES */
+#game-search-form-game { 
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+                                            /* <--- USE THESE IDs FOR JS PURPOSES */
+#game-search-form-location {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+                                            /* <--- USE THESE IDs FOR JS PURPOSES */
+#game-search-form-submit {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+
+/* ----- Search by GENRE Dialog Box ----- */
+
+.genre-search-form-container {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.genre-search-form-title {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.genre-card-container {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.genre-cards {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+#genre-1 {
+    border: 1px solid rgba(0, 0, 0, 0.5); 
+}
+
+#genre-2 {
+    border: 1px solid rgba(0, 0, 0, 0.5); 
+}
+
+#genre-3 {
+    border: 1px solid rgba(0, 0, 0, 0.5); 
+}
+
+#genre-4 {
+    border: 1px solid rgba(0, 0, 0, 0.5); 
+}
+
+#genre-5 {
+    border: 1px solid rgba(0, 0, 0, 0.5); 
+}
+
+#genre-6 {
+    border: 1px solid rgba(0, 0, 0, 0.5); 
+}
+
+#genre-7 {
+    border: 1px solid rgba(0, 0, 0, 0.5); 
+}
+
+#genre-8 {
+    border: 1px solid rgba(0, 0, 0, 0.5); 
+}
+                                            /* <--- USE THESE IDs FOR JS PURPOSES */
+#genre-search-form-location {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+                                            /* <--- USE THESE IDs FOR JS PURPOSES */
+#genre-search-form-submit {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+
+
+
+
+/* ===== STARTER PAGE CONTENT SELECTORS ============================================== */
