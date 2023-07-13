@@ -98,7 +98,7 @@ main {
 .genre-cards {
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
-
+/* ------- */
 #genre-1 {
     border: 1px solid rgba(0, 0, 0, 0.5); 
 }
@@ -130,6 +130,7 @@ main {
 #genre-8 {
     border: 1px solid rgba(0, 0, 0, 0.5); 
 }
+/* ------- */
                                             /* <--- USE THESE IDs FOR JS PURPOSES */
 #genre-search-form-location {
     border: 1px solid rgba(0, 0, 0, 0.5);
@@ -143,4 +144,36 @@ main {
 
 
 
-/* ===== STARTER PAGE CONTENT SELECTORS ============================================== */
+/* ===== RESULTS PAGE CONTENT SELECTORS ============================================== */
+
+.results-main-container {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+                                            /* <--- USE THESE IDs FOR JS PURPOSES */
+#results-main-container {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.results-item-container {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.results-item-img {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.results-item-title {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.results-item-desc {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.results-item-btn {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.results-item-fav {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
