@@ -1,3 +1,39 @@
+/* These selectors have been created to organize html content and the dashed border
+has been applied to them to provide a visual queue to see where elements begin 
+and end. */
+
+/* !! All dashed borders can be commented out/deleted once no longer needed. */
+
+/* !! Any selectors that are not used by the end of the project may be deleted !! */
+
 body {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+/* ===== HEADER SELECTORS ============================================================ */
+
+.header {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.title {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.subtitle {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+/* ===== PAGE CONTENT SELECTORS ====================================================== */
+
+main {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.search-by-container {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.search-by-btn {
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
