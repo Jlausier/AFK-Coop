@@ -36,7 +36,7 @@ class API {
       url += "?";
       params.forEach(({ name, val }, index) => {
         if (index !== 0) url += "&";
-        url += name + val;
+        url += name + "=" + val;
       });
     }
     return url;
@@ -66,10 +66,11 @@ class API {
       throw new Error("Selected resource is not available");
     }
 
-    params.forEach((param) => {
+    params.filter((param) => {
       if (!availableResources[0].params.filter((e) => e === param.name)) {
         throw new Error("Parameter not found");
       }
+      if (param.val !== "") return param;
     });
 
     let url = this.constructUrl(
@@ -78,4 +79,50 @@ class API {
     );
     return fetch(url).then(this.handleResponse);
   }
+}
+
+class YelpAPI extends API {
+  constructor(baseUrl, apiKeyName = "", apiKey = "") {
+    super(
+      baseUrl,
+      [
+        {
+          name: "businessesSearch",
+          location: "businesses/search",
+          params: ["location", "term", "categories", "sort_by", "limit"],
+        },
+      ],
+      apiKeyName,
+      apiKey
+    );
+  }
+
+  fetchBusinessesSearch = async (location, categories) =>
+    super
+      .fetchResponse("businessesSearch", [
+        {
+          name: "location",
+          value: location,
+        },
+        ...categories.map((cat) => {
+          return {
+            name: "categories",
+            value: cat,
+          };
+        }),
+        {
+          name: "sort_by",
+          value: "best_match",
+        },
+        {
+          name: "limit",
+          value: "20",
+        },
+      ])
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 }
