@@ -4,6 +4,10 @@ class API {
   /**
    * Constructor for generic API class
    * @param {string} baseUrl Base URL of the API
+   * @param {Array<Object>} resources Available resources and their potential parameters
+   * @param {string} resources[].name Name of the resource
+   * @param {string} resources[].location Location of the resource
+   * @param {Array<string>} resources[].params Potential parameters for the resource
    * @param {string} apiKeyName Parameter name of the API key
    * @param {string} apiKey API key
    */
@@ -63,8 +67,8 @@ class API {
     }
 
     params.forEach((param) => {
-      if (!availableResources[0].params.filter((e) => e.name === param.name)) {
-        throw new Error("Parameter not allowed");
+      if (!availableResources[0].params.filter((e) => e === param.name)) {
+        throw new Error("Parameter not found");
       }
     });
 
