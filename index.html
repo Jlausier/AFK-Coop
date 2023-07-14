@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AFK Coop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Belanosima&family=Quicksand:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="style sheet" href="./assets/css/style.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -24,18 +31,17 @@
               violetz: "#3212A6",
               redz: "#A60505",
               blackz: "#0D0D0D",
+                fontFamily:{
+                  'quicksand': ['"Quicksand"']
+
+              }
             },
           },
         },
       };
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Belanosima&family=Quicksand:wght@300&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="style sheet" href="./assets/css/style.css" />
+   
+   
   </head>
 
   <body class="bg-gradient-to-r from-orangez to-violetz bg-clip-tex">
@@ -118,7 +124,7 @@
 
   <main class="mt-10">
     <!-- ======= Page 1 : Search by Game ==================================================== -->
-    <div class="flex flex-row">
+    <div class="flex flex-row ">
       <section
         id="main-search-game"
         class="border h-96 bg-slate-300 flex flex-col p-10"
@@ -174,14 +180,30 @@
               >Find Date Spots</a
             >
           </div>
+          
         </div>
         
+       
+        
       </section>
+      
+      
       <div id="yelp-container" class="border w-full h-96 flex flex-col bg-slate-400 m-auto ml-10 overflow-auto bg-tealz scrolling-touch ">
-
+        <div class="flex flex-row  border border-purpz">
+        <img src="./assets/images/valken-paintball-header-josh-bella.jpg" class=" h-64 p-4">
+        
+        <ul class="list-none font-quicksand border border-navy w-full"> 
+            <h2>Buisness name</h2>
+            <li>Address</li>
+            <li>buisness hours</li>
+            <li>yelp review</li>
+        </ul>
+        </div>
       </div>
       
     </div>
+    
+    
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
