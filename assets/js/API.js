@@ -1,6 +1,7 @@
 class API {
   #apiKey;
   #headerAuth;
+  #proxy = "https://floating-headland-95050.herokuapp.com/";
 
   /**
    * Constructor for generic API class
@@ -14,12 +15,14 @@ class API {
    */
   constructor(
     baseUrl,
+    useProxy,
     resources,
     apiKeyName = null,
     apiKey = null,
     headerAuth = null
   ) {
     this.baseUrl = baseUrl;
+    this.useProxy = useProxy;
     this.resources = resources;
     this.apiKeyName = apiKeyName;
     this.#apiKey = apiKey;
@@ -34,17 +37,19 @@ class API {
    * @param {string} params[].val Value of the parameter
    * @returns {string} Constructed API URL
    */
-  constructUrl(resource, ...params) {
-    let url = this.baseUrl + resource;
+  constructUrl(resource, params) {
+    let url = "";
+    if (this.useProxy) url += this.#proxy;
+    url += this.baseUrl + resource;
+    let options = [...params];
+    if (this.#apiKey && this.apiKeyName)
+      params.push(this.apiKeyName + this.#apiKey);
 
-    let params = [...params];
-    if (this.#apiKey) params.push(this.apiKeyName + this.#apiKey);
-
-    if (params.length > 0) {
+    if (options.length > 0) {
       url += "?";
-      params.forEach(({ name, val }, index) => {
+      options.forEach((option, index) => {
         if (index !== 0) url += "&";
-        url += name + "=" + val;
+        url += option.name + "=" + option.val;
       });
     }
     return url;
@@ -68,28 +73,55 @@ class API {
    * @param {string} params[].val Value of the parameter
    * @returns {Promise<Object>} Generic fetch promise
    */
-  async fetchResponse(resource, authType, params = []) {
-    let availableResources = resources.filter((e) => e.name === resource);
-    if (availableResources.length === 0) {
+  async fetchResponse(
+    resource,
+    subResource,
+    subResourceSpecifiers = [],
+    params = []
+  ) {
+    // Validate base resource
+    if (!this.resources.hasOwnProperty(resource))
       throw new Error("Selected resource is not available");
+
+    let validResource = this.resources[resource];
+    let validResourceLocation = validResource.location;
+
+    let availableParams = validResource.params || [];
+    if (subResource !== "") {
+      // Validate subresource
+      if (
+        !(
+          validResource.hasOwnProperty("subResources") &&
+          validResource.subResources.hasOwnProperty(subResource)
+        )
+      )
+        throw new Error("Selected subresource is not available");
+
+      // Add subresource's available params
+      let availableSubResourceParams =
+        validResource.subResources[subResource].params || [];
+      availableParams.push(...availableSubResourceParams);
+      // Add resource specifier to location
+      validResourceLocation += validResource.subResources[
+        subResource
+      ].specifyResource(...subResourceSpecifiers);
     }
 
-    params.filter((param) => {
-      if (!availableResources[0].params.filter((e) => e === param.name)) {
+    // Get valid params
+    let validParams = [...params].filter((param) => {
+      if (!availableParams.includes(param.name)) {
         throw new Error("Parameter not found");
       }
       if (param.val !== "") return param;
     });
+    // Get valid URL
+    let url = this.constructUrl(validResourceLocation, validParams);
 
-    let url = this.constructUrl(
-      availableResources[0].location,
-      availableResources[0].params
-    );
-
+    // Add headers
     let headers = {
       accept: "application/json",
     };
-
+    // Add header auth
     if (this.#headerAuth) {
       Object.keys(this.#headerAuth).forEach((key) => {
         headers[key] = this.#headerAuth[key];
@@ -107,13 +139,23 @@ class YelpAPI extends API {
   constructor() {
     super(
       "https://api.yelp.com/v3/",
-      [
-        {
-          name: "businessesSearch",
-          location: "businesses/search",
-          params: ["location", "term", "categories", "sort_by", "limit"],
+      true,
+      {
+        businesses: {
+          location: "businesses/",
+
+          subResources: {
+            searchByCategory: {
+              specifyResource: () => "search",
+              params: ["location", "term", "categories", "sort_by", "limit"],
+            },
+            searchById: {
+              specifyResource: (id) => id,
+              params: ["locale"],
+            },
+          },
         },
-      ],
+      },
       null,
       null,
       {
@@ -123,32 +165,41 @@ class YelpAPI extends API {
     );
   }
 
-  fetchBusinessesSearch = async (location, categories) =>
+  fetchBusinessesByCategory = async (location, categories) =>
     super
-      .fetchResponse("businessesSearch", [
-        {
-          name: "location",
-          value: location,
-        },
-        ...categories.map((cat) => {
-          return {
-            name: "categories",
-            value: cat,
-          };
-        }),
-        {
-          name: "sort_by",
-          value: "best_match",
-        },
-        {
-          name: "limit",
-          value: "20",
-        },
-      ])
+      .fetchResponse(
+        "businesses",
+        "searchByCategory",
+        [],
+        [
+          {
+            name: "location",
+            val: location.replace(/ /g, "%20"),
+          },
+          ...categories.map((cat) => {
+            return {
+              name: "categories",
+              val: cat,
+            };
+          }),
+          {
+            name: "sort_by",
+            val: "best_match",
+          },
+          {
+            name: "limit",
+            val: "20",
+          },
+        ]
+      )
       .then((data) => {
         console.log(data);
+        return data;
       })
       .catch((error) => {
         console.log(error);
       });
+
+  fetchBusinessById = async (id) =>
+    super.fetchResponse("businesses", "searchById", [id]);
 }
