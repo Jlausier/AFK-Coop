@@ -37,21 +37,64 @@
     />
     <link rel="style sheet" href="./assets/css/style.css" />
   </head>
-  <nav>
-    <a class="text-2xl text-dark p-2">Contact us</a>
-    <a class="text-2xl text-dark p-2">Github</a>
-  </nav>
+
   <body>
-    <!-- <h1 class="text-3xl text-dark text-center p-5">AFK<br />Coop</h1> -->
-    <!-- Search By Buttons -->
-    <div class="search-by-container">
-      <a id="search-by-game-toggle" href="#" class="search-by-btn">by Game</a>
-      <a id="search-by-genre-toggle" href="#" class="search-by-btn">by Genre</a>
-    </div>
-    <!-- Search Form Dialog Box -->
-    <div class="game-search-form-container">
-      <h3 class="game-search-form-title">Search by<span>Game</span></h3>
-    </div>
+    <header class="h-64">
+      <section class="border h-32 pt-12 flex justify-between">
+        <div class="border w-64"></div>
+        <div class="border flex-col w-64">
+          <h1 class="text-8xl text-center">AFK</h1>
+          <h2 class="text-2xl text-center">Co-op</h2>
+        </div>
+        <nav class="border w-64">
+          <a class="text-2xl text-dark p-2">Contact us</a>
+          <a class="text-2xl text-dark p-2">Github</a>
+        </nav>
+      </section>
+    </header>
+    <main>
+      <!-- ======= Page 1 : Search by Game ==================================================== -->
+      <section
+        id="main-search-game"
+        class="border h-96 bg-slate-300 flex flex-col justify-center items-center"
+      >
+        <!-- <h1 class="text-3xl text-dark text-center p-5">AFK<br />Coop</h1> -->
+        <!-- Search By Buttons -->
+        <div class="border search-by-container">
+          <a id="search-by-game-toggle" href="#" class="border search-by-btn"
+            >by Game</a
+          >
+          <a id="search-by-genre-toggle" href="#" class="border search-by-btn"
+            >by Genre</a
+          >
+        </div>
+        <!-- Search Form Dialog Box -->
+        <div
+          class="border flex flex-col justify-center items-center game-search-form-container"
+        >
+          <h3 class="border game-search-form-title">
+            Search by<span>Game</span>
+          </h3>
+          <label class="border">Game Name</label>
+          <input
+            type="text"
+            id="game-search-form-game"
+            class="border"
+            placeholder="Minecraft"
+          />
+          <label class="border">Location</label>
+          <input
+            type="text"
+            id="game-search-form-location"
+            class="border"
+            placeholder="Orlando"
+          />
+          <a type="submit" id="game-search-form-submit" class="border"
+            >Find Date Spots</a
+          >
+        </div>
+      </section>
+    </main>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
   <script src="./assets/js/script.js"></script>
