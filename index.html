@@ -59,40 +59,53 @@
         class="border h-96 bg-slate-300 flex flex-col justify-center items-center"
       >
         <!-- <h1 class="text-3xl text-dark text-center p-5">AFK<br />Coop</h1> -->
-        <!-- Search By Buttons -->
-        <div class="border search-by-container">
-          <a id="search-by-game-toggle" href="#" class="border search-by-btn"
+        <!-- -=-=-=- Search By Buttons -=-=-=- -->
+        <div class="border p-2 search-by-container">
+          <!-- search by game btn -->
+          <a
+            id="search-by-game-toggle"
+            href="#"
+            class="border p-1 bg-slate-500 text-slate-200 search-by-btn"
             >by Game</a
           >
-          <a id="search-by-genre-toggle" href="#" class="border search-by-btn"
+          <!-- search by genre btn -->
+          <a
+            id="search-by-genre-toggle"
+            href="#"
+            class="border p-1 bg-slate-500 text-slate-200 search-by-btn"
             >by Genre</a
           >
         </div>
-        <!-- Search Form Dialog Box -->
+        <!-- -=-=-=- Search Form Dialog Box -=-=-=- -->
         <div
-          class="border w-64 h-72 flex flex-col justify-around items-center game-search-form-container"
+          class="border w-64 h-72 flex flex-col bg-slate-400 justify-around items-center game-search-form-container"
         >
-          <div>
-            <h3 class="border game-search-form-title">
-              Search by<span>Game</span>
+          <!-- container for the DB title -->
+          <div class="border p-2">
+            <h3 class="border text-center game-search-form-title">
+              Search by<br /><span class="text-2xl">Game</span>
             </h3>
           </div>
-          <div class="flex flex-col">
-            <label class="border">Game Name</label>
+          <!-- container for the DB form -->
+          <div class="border p-2 flex flex-col">
+            <label class="border p-1">Game Name</label>
             <input
               type="text"
               id="game-search-form-game"
               class="border"
               placeholder="Minecraft"
             />
-            <label class="border">Location</label>
+            <label class="border p-1">Location</label>
             <input
               type="text"
               id="game-search-form-location"
               class="border"
               placeholder="Orlando"
             />
-            <a type="submit" id="game-search-form-submit" class="border"
+            <a
+              type="submit"
+              id="game-search-form-submit"
+              class="border m-1 p-1 text-center bg-slate-500 text-slate-200"
               >Find Date Spots</a
             >
           </div>
