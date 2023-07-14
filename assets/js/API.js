@@ -1,5 +1,6 @@
 class API {
   #apiKey;
+  #headerAuth;
 
   /**
    * Constructor for generic API class
@@ -11,11 +12,18 @@ class API {
    * @param {string} apiKeyName Parameter name of the API key
    * @param {string} apiKey API key
    */
-  constructor(baseUrl, resources, apiKeyName = "", apiKey = "") {
+  constructor(
+    baseUrl,
+    resources,
+    apiKeyName = null,
+    apiKey = null,
+    headerAuth = null
+  ) {
     this.baseUrl = baseUrl;
     this.resources = resources;
     this.apiKeyName = apiKeyName;
     this.#apiKey = apiKey;
+    this.#headerAuth = headerAuth;
   }
 
   /**
@@ -30,7 +38,7 @@ class API {
     let url = this.baseUrl + resource;
 
     let params = [...params];
-    if (this.#apiKey !== "") params.push(this.apiKeyName + this.#apiKey);
+    if (this.#apiKey) params.push(this.apiKeyName + this.#apiKey);
 
     if (params.length > 0) {
       url += "?";
@@ -60,7 +68,7 @@ class API {
    * @param {string} params[].val Value of the parameter
    * @returns {Promise<Object>} Generic fetch promise
    */
-  async fetchResponse(resource, params = []) {
+  async fetchResponse(resource, authType, params = []) {
     let availableResources = resources.filter((e) => e.name === resource);
     if (availableResources.length === 0) {
       throw new Error("Selected resource is not available");
@@ -77,14 +85,28 @@ class API {
       availableResources[0].location,
       availableResources[0].params
     );
-    return fetch(url).then(this.handleResponse);
+
+    let headers = {
+      accept: "application/json",
+    };
+
+    if (this.#headerAuth) {
+      Object.keys(this.#headerAuth).forEach((key) => {
+        headers[key] = this.#headerAuth[key];
+      });
+    }
+
+    return fetch(url, {
+      method: "GET",
+      headers,
+    }).then(this.handleResponse);
   }
 }
 
 class YelpAPI extends API {
-  constructor(baseUrl, apiKeyName = "", apiKey = "") {
+  constructor() {
     super(
-      baseUrl,
+      "https://api.yelp.com/v3/",
       [
         {
           name: "businessesSearch",
@@ -92,8 +114,12 @@ class YelpAPI extends API {
           params: ["location", "term", "categories", "sort_by", "limit"],
         },
       ],
-      apiKeyName,
-      apiKey
+      null,
+      null,
+      {
+        Authorization:
+          "Bearer NdsssKx2ir8nv7oCjugA6W3xuCcDKf8mWFYBsvGebSjzP2kEvWl08ihRgpQae9YjKprA-rKIG-ndVQorYhOFU2ByUfK_HiliUEIl_Fs1RsWxL4YbAwSfxodkBpKwZHYx",
+      }
     );
   }
 
