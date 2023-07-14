@@ -13,7 +13,7 @@
               clifford: "#da373d",
               navy: "#363FFA",
               dark: "#B2AFBD",
-              pinkz:  "#b252f2",
+              pinkz: "#b252f2",
               purpz: "#44118c",
               darkpurpz: "#2e0f59",
               darkz: "#090526",
@@ -23,7 +23,7 @@
               orangez: "#BF1534",
               violetz: "#3212A6",
               redz: "#A60505",
-              blackz: "#0D0D0D"
+              blackz: "#0D0D0D",
             },
           },
         },
@@ -38,15 +38,24 @@
     <link rel="style sheet" href="./assets/css/style.css" />
   </head>
   <nav>
-    <a class="text-2xl text-dark  p-2  ">Contact us</a>
-    <a class="text-2xl  text-dark p-2  ">Github</a>
+    <a class="text-2xl text-dark p-2">Contact us</a>
+    <a class="text-2xl text-dark p-2">Github</a>
   </nav>
-  <body class="bg-gradient-to-r from-orangez to-violetz  text-transparent bg-clip-tex text-center">
-    <h1 class="text-3xl text-dark text-center  p-5 ">AFK<br />Coop</h1>
-
-
-
+  <body>
+    <!-- <h1 class="text-3xl text-dark text-center p-5">AFK<br />Coop</h1> -->
+    <!-- Search By Buttons -->
+    <div class="search-by-container">
+      <a id="search-by-game-toggle" href="#" class="search-by-btn">by Game</a>
+      <a id="search-by-genre-toggle" href="#" class="search-by-btn">by Genre</a>
+    </div>
+    <!-- Search Form Dialog Box -->
+    <div class="game-search-form-container">
+      <h3 class="game-search-form-title">Search by<span>Game</span></h3>
+    </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
   <script src="./assets/js/script.js"></script>
 </html>
+
+<!-- This is the former body tailwind class -->
+<!-- class="bg-gradient-to-r from-orangez to-violetz text-transparent bg-clip-tex text-center" -->
