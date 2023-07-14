@@ -37,12 +37,12 @@ class API {
   constructUrl(resource, ...params) {
     let url = this.baseUrl + resource;
 
-    let params = [...params];
-    if (this.#apiKey) params.push(this.apiKeyName + this.#apiKey);
+    let options = [...params];
+    if (this.#apiKey) options.push(this.apiKeyName + this.#apiKey);
 
-    if (params.length > 0) {
+    if (options.length > 0) {
       url += "?";
-      params.forEach(({ name, val }, index) => {
+      options.forEach(({ name, val }, index) => {
         if (index !== 0) url += "&";
         url += name + "=" + val;
       });
