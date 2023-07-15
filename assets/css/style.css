@@ -6,12 +6,30 @@ and end. */
 
 /* !! Any selectors that are not used by the end of the project may be deleted !! */
 
-body {
-    border: 1px solid rgba(0, 0, 0, 0.5);
+:root{
+    --pinkz: #b252f2
+    --purpz: #44118c
+    --darkpurpz: #2e0f59
+    --darkz: #090526
+    --tealz: #9cd9c8
 }
 
 
+body {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    
+}
 
+
+/* h1{
+/* bg-gradient-to-r from-pinkz to-tealz inline-block text-transparent bg-clip-text p-5 */
+/* display: inline;
+color: transparent;
+background-image:   linear-gradient(
+    (--pinkz)0%
+    (--tealz)100%);
+background-clip: text;
+} */ 
 
 
 /* ===== HEADER SELECTORS ============================================================ */
