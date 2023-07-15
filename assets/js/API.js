@@ -1,32 +1,59 @@
 class API {
-  #apiKey;
-  #headerAuth;
   #proxy = "https://floating-headland-95050.herokuapp.com/";
 
   /**
    * Constructor for generic API class
    * @param {string} baseUrl Base URL of the API
+   * @param {boolean} useProxy Whether to use proxy to bypass CORS issues
    * @param {Array<Object>} resources Available resources and their potential parameters
-   * @param {string} resources[].name Name of the resource
    * @param {string} resources[].location Location of the resource
    * @param {Array<string>} resources[].params Potential parameters for the resource
-   * @param {string} apiKeyName Parameter name of the API key
-   * @param {string} apiKey API key
+   * @param {Object} resources[].subResources Additional resources
    */
   constructor(
     baseUrl,
     useProxy,
     resources,
-    apiKeyName = null,
+    headerAuth = null,
     apiKey = null,
-    headerAuth = null
+    client = null
   ) {
     this.baseUrl = baseUrl;
     this.useProxy = useProxy;
     this.resources = resources;
-    this.apiKeyName = apiKeyName;
-    this.#apiKey = apiKey;
-    this.#headerAuth = headerAuth;
+    this.headerAuth = headerAuth;
+    this.apiKey = apiKey;
+    this.client = client;
+    this.start = 0;
+    this.expiration = 0;
+  }
+
+  /**
+   * Refreshed auth token if necessary
+   */
+  async refreshToken() {
+    let currTime = Date.now();
+    if (!this.headerAuth || currTime > this.start + this.expiration * 1000) {
+      return fetch(
+        this.client.urlConstructor(this.client.id, this.client.secret),
+        {
+          method: "POST",
+        }
+      )
+        .then(this.handleResponse)
+        .then((data) => {
+          this.start = currTime;
+          this.expiration = data["expires_in"];
+          this.headerAuth = {
+            "Client-ID": this.client.id,
+            Authorization: "Bearer " + data["access_token"],
+          };
+          return "success";
+        })
+        .catch((error) => {
+          throw new Error("Could not refresh auth token\n", error);
+        });
+    }
   }
 
   /**
@@ -34,25 +61,42 @@ class API {
    * @param {string} resource Location of the requested resource
    * @param  {Array<Object>} params Additional parameters
    * @param {string} params[].name Name of the parameter
-   * @param {string} params[].val Value of the parameter
+   * @param {string} params[].value Value of the parameter
    * @returns {string} Constructed API URL
    */
   constructUrl(resource, params) {
     let url = "";
     if (this.useProxy) url += this.#proxy;
     url += this.baseUrl + resource;
-    let options = [...params];
-    if (this.#apiKey && this.apiKeyName)
-      params.push(this.apiKeyName + this.#apiKey);
 
-    if (options.length > 0) {
+    if (params.length > 0) {
       url += "?";
-      options.forEach((option, index) => {
+      params.forEach((option, index) => {
         if (index !== 0) url += "&";
         url += option.name + "=" + option.val;
       });
     }
     return url;
+  }
+
+  /**
+   * Construct URP for API call to resource with parameters and API key
+   * @param {string} resource Location of the requested resource
+   * @param  {Array<Object>} params Additional parameters
+   * @param {string} params[].name Name of the parameter
+   * @param {string} params[].value Value of the parameter
+   * @returns Constructed API URL
+   */
+  constructUrlWithKey(resource, params) {
+    let validParams = params;
+    if (
+      this.apiKey &&
+      this.apiKey.hasOwnProperty("name") &&
+      this.apiKey.hasOwnProperty("value")
+    ) {
+      validParams.push(this.apiKey);
+    }
+    return this.constructUrl(resource, params);
   }
 
   /**
@@ -73,12 +117,7 @@ class API {
    * @param {string} params[].val Value of the parameter
    * @returns {Promise<Object>} Generic fetch promise
    */
-  async fetchResponse(
-    resource,
-    subResource,
-    subResourceSpecifiers = [],
-    params = []
-  ) {
+  validateCall(resource, subResource, params = [], subResourceSpecifiers = []) {
     // Validate base resource
     if (!this.resources.hasOwnProperty(resource))
       throw new Error("Selected resource is not available");
@@ -108,30 +147,92 @@ class API {
     }
 
     // Get valid params
-    let validParams = [...params].filter((param) => {
+    let validParams = params.filter((param) => {
       if (!availableParams.includes(param.name)) {
         throw new Error("Parameter not found");
       }
       if (param.val !== "") return param;
     });
-    // Get valid URL
-    let url = this.constructUrl(validResourceLocation, validParams);
 
-    // Add headers
+    return {
+      location: validResourceLocation,
+      parameters: validParams,
+    };
+  }
+
+  /**
+   *
+   * @param {string} resource Named resource
+   * @param {string} subResource Named subresource
+   * @param {function} urlConstructor Method that returns a URL
+   * @param {Object} headerOptions Header keys and values
+   * @param {Array<Object>} [params=[]] Parameters for the API call
+   * @param {string} params[].name Name of the parameter
+   * @param {string} params[].val Value of the parameter
+   * @returns {Promise<Object>} Generic fetch promise
+   * @returns
+   */
+  async getData(
+    method,
+    resource,
+    subResource,
+    headerOptions = [],
+    body = null,
+    params = [],
+    subResourceSpecifiers = []
+  ) {
+    let { location, parameters } = this.validateCall(
+      resource,
+      subResource,
+      params,
+      subResourceSpecifiers
+    );
+
+    let url = this.constructUrl(location, parameters);
+
     let headers = {
       accept: "application/json",
     };
-    // Add header auth
-    if (this.#headerAuth) {
-      Object.keys(this.#headerAuth).forEach((key) => {
-        headers[key] = this.#headerAuth[key];
+
+    Object.keys(headerOptions).forEach((option) => {
+      headers[option] = headerOptions[option];
+    });
+
+    if (this.headerAuth !== null) {
+      Object.keys(this.headerAuth).forEach((key) => {
+        headers[key] = this.headerAuth[key];
       });
     }
 
     return fetch(url, {
-      method: "GET",
+      method,
       headers,
+      body,
     }).then(this.handleResponse);
+  }
+
+  async getDataWithToken(
+    method,
+    resource,
+    subResource,
+    body = null,
+    params = [],
+    subResourceSpecifiers = []
+  ) {
+    let promise;
+    await this.refreshToken().then(async (res) => {
+      promise = await this.getData(
+        method,
+        resource,
+        subResource,
+        [],
+        body,
+        params,
+        subResourceSpecifiers
+      );
+    });
+
+    return promise;
   }
 }
 
@@ -143,7 +244,6 @@ class YelpAPI extends API {
       {
         businesses: {
           location: "businesses/",
-
           subResources: {
             searchByCategory: {
               specifyResource: () => "search",
@@ -156,8 +256,6 @@ class YelpAPI extends API {
           },
         },
       },
-      null,
-      null,
       {
         Authorization:
           "Bearer NdsssKx2ir8nv7oCjugA6W3xuCcDKf8mWFYBsvGebSjzP2kEvWl08ihRgpQae9YjKprA-rKIG-ndVQorYhOFU2ByUfK_HiliUEIl_Fs1RsWxL4YbAwSfxodkBpKwZHYx",
@@ -165,41 +263,87 @@ class YelpAPI extends API {
     );
   }
 
-  fetchBusinessesByCategory = async (location, categories) =>
-    super
-      .fetchResponse(
-        "businesses",
-        "searchByCategory",
-        [],
-        [
-          {
-            name: "location",
-            val: location.replace(/ /g, "%20"),
-          },
-          ...categories.map((cat) => {
-            return {
-              name: "categories",
-              val: cat,
-            };
-          }),
-          {
-            name: "sort_by",
-            val: "best_match",
-          },
-          {
-            name: "limit",
-            val: "20",
-          },
-        ]
-      )
+  async fetchBusinessesByCategory(location, categories) {
+    return super
+      .getData("GET", "businesses", "searchByCategory", {}, null, [
+        {
+          name: "location",
+          val: location.replace(/ /g, "%20"),
+        },
+        ...categories.map((cat) => {
+          return {
+            name: "categories",
+            val: cat,
+          };
+        }),
+        {
+          name: "sort_by",
+          val: "best_match",
+        },
+        {
+          name: "limit",
+          val: "20",
+        },
+      ])
       .then((data) => {
-        console.log(data);
         return data;
       })
       .catch((error) => {
         console.log(error);
       });
+  }
 
   fetchBusinessById = async (id) =>
-    super.fetchResponse("businesses", "searchById", [id]);
+    super
+      .getData("GET", "businesses", "searchById", {}, null, [], [id])
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+}
+
+class GamesAPI extends API {
+  /**
+   *
+   */
+  constructor() {
+    super(
+      "https://api.igdb.com/v4/",
+      true,
+      {
+        games: {
+          location: "games/",
+        },
+      },
+      null,
+      null,
+      {
+        urlConstructor: (id, secret) =>
+          `https://id.twitch.tv/oauth2/token?client_id=${id}&client_secret=${secret}&grant_type=client_credentials`,
+        id: "lawi0eumazvfp1qjuk5r4tgt2nx1w2",
+        secret: "5wb2rf226eq4m5j6pnds140uzrsnta",
+      }
+    );
+
+    super.refreshToken();
+  }
+
+  async fetchGameGenresByNames(...names) {
+    let bodyNames = names
+      .map((name) => {
+        return `"${name}"`;
+      })
+      .join(",");
+    return super
+      .getDataWithToken(
+        "POST",
+        "games",
+        "",
+        `fields genres; where name = (${bodyNames});`
+      )
+      .then((data) => console.log(data))
+      .catch((error) => console.log(error));
+  }
 }
