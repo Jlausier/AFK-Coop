@@ -419,3 +419,19 @@ YelpAPI.prototype.fetchBusinessTest = async (id) => {
     });
   });
 };
+
+let Yelp = new YelpAPI();
+
+let business = Yelp.fetchBusinessTest("");
+
+async function getBusinesses() {
+  await Yelp.fetchBusinessesSearchTest("").then(function (data) {
+    displayBusinesses(data);
+  });
+}
+
+$("#button").on("click", async function () {
+  await Yelp.fetchBusinessesSearchTest("").then(function (data) {
+    displayBusinesses(data);
+  });
+});

@@ -25,30 +25,47 @@ class API {
     this.apiKey = apiKey;
     this.client = client;
     this.start = 0;
-    this.expiration = 0;
+
+    if (this.client) {
+      this.headerAuth = {
+        "Client-ID": this.client.id,
+      };
+    }
   }
 
   /**
    * Refreshed auth token if necessary
    */
   async refreshToken() {
+    let exp = JSON.parse(localStorage.getItem("token_expiration")) || 0;
+    let token = localStorage.getItem("token");
     let currTime = Date.now();
-    if (!this.headerAuth || currTime > this.start + this.expiration * 1000) {
+
+    // Check if stored auth is valid
+    if (token && !(typeof token === "undefined") && currTime < exp) {
+      this.headerAuth.Authorization = token;
+      return new Promise((resolve, _) => resolve("Valid token"));
+    } else {
       return fetch(
-        this.client.urlConstructor(this.client.id, this.client.secret),
+        this.#proxy +
+          this.client.urlConstructor(this.client.id, this.client.secret),
         {
           method: "POST",
         }
       )
-        .then(this.handleResponse)
+        .then((response) => {
+          if (!response.ok)
+            throw new Error("Response is not ok:", response.status);
+          return response.json();
+        })
         .then((data) => {
-          this.start = currTime;
-          this.expiration = data["expires_in"];
-          this.headerAuth = {
-            "Client-ID": this.client.id,
-            Authorization: "Bearer " + data["access_token"],
-          };
-          return "success";
+          this.headerAuth.Authorization = "Bearer " + data["access_token"];
+          localStorage.setItem(
+            "token_expiration",
+            JSON.stringify(currTime + data["expires_in"] * 1000)
+          );
+          localStorage.setItem("token", this.headerAuth.Authorization);
+          return "Token refreshed";
         })
         .catch((error) => {
           throw new Error("Could not refresh auth token\n", error);
@@ -122,8 +139,11 @@ class API {
     if (!this.resources.hasOwnProperty(resource))
       throw new Error("Selected resource is not available");
 
+    let method = "GET";
     let validResource = this.resources[resource];
     let validResourceLocation = validResource.location;
+
+    if (validResource.hasOwnProperty("method")) method = validResource.method;
 
     let availableParams = validResource.params || [];
     if (subResource !== "") {
@@ -136,14 +156,17 @@ class API {
       )
         throw new Error("Selected subresource is not available");
 
+      let validSubresource = validResource.subResources[subResource];
       // Add subresource's available params
-      let availableSubResourceParams =
-        validResource.subResources[subResource].params || [];
+      let availableSubResourceParams = validSubresource.params || [];
       availableParams.push(...availableSubResourceParams);
       // Add resource specifier to location
-      validResourceLocation += validResource.subResources[
-        subResource
-      ].specifyResource(...subResourceSpecifiers);
+      validResourceLocation += validSubresource.specifyResource(
+        ...subResourceSpecifiers
+      );
+
+      if (validSubresource.hasOwnProperty("method"))
+        method = validSubresource.method;
     }
 
     // Get valid params
@@ -157,6 +180,7 @@ class API {
     return {
       location: validResourceLocation,
       parameters: validParams,
+      method,
     };
   }
 
@@ -173,7 +197,6 @@ class API {
    * @returns
    */
   async getData(
-    method,
     resource,
     subResource,
     headerOptions = [],
@@ -181,7 +204,7 @@ class API {
     params = [],
     subResourceSpecifiers = []
   ) {
-    let { location, parameters } = this.validateCall(
+    let { location, parameters, method } = this.validateCall(
       resource,
       subResource,
       params,
@@ -208,21 +231,18 @@ class API {
       method,
       headers,
       body,
-    }).then(this.handleResponse);
+    });
   }
 
   async getDataWithToken(
-    method,
     resource,
     subResource,
     body = null,
     params = [],
     subResourceSpecifiers = []
   ) {
-    let promise;
-    await this.refreshToken().then(async (res) => {
-      promise = await this.getData(
-        method,
+    return await this.refreshToken().then(async (res) => {
+      return await this.getData(
         resource,
         subResource,
         [],
@@ -231,8 +251,6 @@ class API {
         subResourceSpecifiers
       );
     });
-
-    return promise;
   }
 }
 
@@ -246,10 +264,12 @@ class YelpAPI extends API {
           location: "businesses/",
           subResources: {
             searchByCategory: {
+              method: "GET",
               specifyResource: () => "search",
               params: ["location", "term", "categories", "sort_by", "limit"],
             },
             searchById: {
+              method: "GET",
               specifyResource: (id) => id,
               params: ["locale"],
             },
@@ -285,6 +305,7 @@ class YelpAPI extends API {
           val: "20",
         },
       ])
+      .then(super.handleResponse)
       .then((data) => {
         return data;
       })
@@ -295,7 +316,7 @@ class YelpAPI extends API {
 
   fetchBusinessById = async (id) =>
     super
-      .getData("GET", "businesses", "searchById", {}, null, [], [id])
+      .getData("businesses", "searchById", {}, null, [], [id])
       .then((data) => {
         return data;
       })
@@ -314,23 +335,32 @@ class GamesAPI extends API {
       true,
       {
         games: {
+          method: "POST",
           location: "games/",
+        },
+        genres: {
+          method: "POST",
+          location: "genres/",
         },
       },
       null,
       null,
       {
+        method: "POST",
         urlConstructor: (id, secret) =>
           `https://id.twitch.tv/oauth2/token?client_id=${id}&client_secret=${secret}&grant_type=client_credentials`,
         id: "lawi0eumazvfp1qjuk5r4tgt2nx1w2",
         secret: "5wb2rf226eq4m5j6pnds140uzrsnta",
       }
     );
-
-    super.refreshToken();
   }
 
-  async fetchGameGenresByNames(...names) {
+  /**
+   *
+   * @param  {...string} names
+   * @returns {Promise}
+   */
+  fetchGameGenresByNames = async (...names) => {
     let bodyNames = names
       .map((name) => {
         return `"${name}"`;
@@ -338,12 +368,28 @@ class GamesAPI extends API {
       .join(",");
     return super
       .getDataWithToken(
-        "POST",
         "games",
         "",
         `fields genres; where name = (${bodyNames});`
       )
+      .then(super.handleResponse)
       .then((data) => console.log(data))
       .catch((error) => console.log(error));
-  }
+  };
+
+  /**
+   *
+   * @returns {Promise}
+   */
+  fetchGenres = async () => {
+    return super
+      .getDataWithToken("genres", "")
+      .then(super.handleResponse)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => console.log(error));
+  };
 }
+
+function mapGenresToCategories(genres) {}
