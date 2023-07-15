@@ -188,18 +188,19 @@ class API {
    *
    * @param {string} resource Named resource
    * @param {string} subResource Named subresource
-   * @param {function} urlConstructor Method that returns a URL
    * @param {Object} headerOptions Header keys and values
+   * @param {Object} body Body of the header
    * @param {Array<Object>} [params=[]] Parameters for the API call
    * @param {string} params[].name Name of the parameter
    * @param {string} params[].val Value of the parameter
+   * @param {Array<any>} subResourceSpecifiers Arguments to generate subresource location
    * @returns {Promise<Object>} Generic fetch promise
    * @returns
    */
   async getData(
     resource,
     subResource,
-    headerOptions = [],
+    headerOptions = {},
     body = null,
     params = [],
     subResourceSpecifiers = []
@@ -245,7 +246,7 @@ class API {
       return await this.getData(
         resource,
         subResource,
-        [],
+        {},
         body,
         params,
         subResourceSpecifiers
@@ -373,8 +374,9 @@ class GamesAPI extends API {
         `fields genres; where name = (${bodyNames});`
       )
       .then(super.handleResponse)
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        return new Error("Could not fetch game genres by names.\n", error);
+      });
   };
 
   /**
@@ -383,13 +385,21 @@ class GamesAPI extends API {
    */
   fetchGenres = async () => {
     return super
-      .getDataWithToken("genres", "")
-      .then(super.handleResponse)
-      .then((data) => {
-        console.log(data);
-      })
+      .getDataWithToken("genres", "", "fields name; limit 40;")
       .catch((error) => console.log(error));
   };
 }
 
-function mapGenresToCategories(genres) {}
+class APIManager {
+  constructor() {
+    this.Yelp = new YelpAPI();
+    this.Games = new GamesAPI();
+  }
+
+  async getBusinessesFromGames(...names) {
+    return this.Games.fetchGameGenresByNames(...names).then((data) => {
+      console.log(data);
+      // Convert game genres to Yelp categories
+    });
+  }
+}
