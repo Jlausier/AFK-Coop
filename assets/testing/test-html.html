@@ -1,0 +1,81 @@
+<!-- This file is used exclusively used to test JS functions and serves no function in the main file -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- favorites heart icon link -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+
+    <style>
+      main {
+        border: 1px dashed rgba(0, 0, 0, 0.5);
+
+        height: 940px;
+        width: 0px auto;
+
+        background-color: rgb(164, 164, 164);
+
+        position: relative;
+      }
+
+      .search-box {
+        border: 1px dashed rgba(0, 0, 0, 0.5);
+
+        height: 300px;
+        width: 15%;
+        padding: 2%;
+
+        background-color: rgb(202, 202, 202);
+
+        position: absolute;
+        bottom: 300px;
+        left: 2%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .results-container {
+        border: 1px dashed rgba(0, 0, 0, 0.5);
+
+        height: 630px;
+        width: 73%;
+        padding: 2%;
+
+        background-color: rgb(202, 202, 202);
+
+        position: absolute;
+        bottom: 0px;
+        right: 2%;
+      }
+
+      .search-btn {
+        width: 100px;
+        height: 50px;
+
+        background-color: rgb(82, 82, 82);
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <main>
+      <div class="search-box">
+        <a class="search-btn"></a>
+      </div>
+      <div id="results-container" class="results-container">
+        <a class="material-symbols-outlined">search</a>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script src="./display-card.js"></script>
+  </body>
+</html>
