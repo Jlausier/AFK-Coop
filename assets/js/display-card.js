@@ -1,6 +1,6 @@
 var searchBtn = document.getElementById('search-btn')
 
-$(searchBtn).on('click', makeDisplayCards)
+var returnEl = document.getElementById('home')
 
         
     function makeDisplayCards(event) {
@@ -56,4 +56,10 @@ $(searchBtn).on('click', makeDisplayCards)
 
         displayContainer.append(dispCardCont);
     }
-
+    $(returnEl).on('click', function(){
+        returnRedirect()
+    })
+function returnRedirect(event){
+    window.location.href = "/index.html"
+}
+makeDisplayCards()
