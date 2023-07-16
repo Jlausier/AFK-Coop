@@ -1,6 +1,9 @@
-$(document).ready(function() {
+var searchBtn = document.getElementById('search-btn')
+
+$(searchBtn).on('click', makeDisplayCards)
+
         
-    function makeDisplayCards() {
+    function makeDisplayCards(event) {
 
         var displayContainer = $('#results-container');
     
@@ -28,7 +31,7 @@ $(document).ready(function() {
     
 
         // ======= This is the placeholder text for the Display Card.
-        dispCardImg.attr('src', './arcade.jpg')
+        dispCardImg.attr('src', './assets/images/valken-paintball-header-josh-bella.jpg')
         dispCardName.text('Date Location Name');
         dispCardDescp.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec dictum magna. Curabitur ut nulla quis elit condimentum imperdiet sit amet sed leo. Curabitur ipsum nunc, rutrum non orci non, pharetra lobortis tortor. Aenean malesuada turpis lobortis posuere placerat. Fusce quis ullamcorper lorem, eget scelerisque sapien.');
 
@@ -54,36 +57,3 @@ $(document).ready(function() {
         displayContainer.append(dispCardCont);
     }
 
-  });
-
-//    dispCardCont
-//    dispCardImg
-//    dispCardDetailContainer
-//    dispCardName
-//    dispCardDescp
-//    dispCardMapBtn
-//    dispCardUrlBtn
-//    dispCardFavBtn
-
-
-// test iwth id
-
-// let Yelp = new YelpAPI()
-// yelp.fetchBusinessTest("")
-
-
-// let Yelp = new YelpAPI();
-
-// let business = Yelp.fetchBusinessTest("");
-
-// async function getBusinesses() {
-//   await Yelp.fetchBusinessesSearchTest("").then(function (data) {
-//     displayBusinesses(data);
-//   });
-// }
-
-// $("#button").on("click", async function () {
-//   await Yelp.fetchBusinessesSearchTest("").then(function (data) {
-//     displayBusinesses(data);
-//   });
-// });
