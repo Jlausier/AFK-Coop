@@ -8,7 +8,7 @@
     <meta name="description" content="" />
     <meta name="keywords" content="" />
 
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css" />
 
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
@@ -35,9 +35,10 @@
             class="flex items-center text-indigo-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
             href="#"
           >
-            <span
+            <a
+              href="index.html"
               class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500"
-              >AFK<br />Co-Op</span
+              >AFK<br />Co-Op</a
             >
           </a>
         </div>
@@ -69,6 +70,7 @@
           <form
             class="bg-gray-900 opacity-75 w-full shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 text-center"
           >
+            <!-- GAME NAME -->
             <div class="mb-4">
               <label
                 class="block text-blue-300 py-2 font-bold mb-2"
@@ -83,6 +85,7 @@
                 placeholder="MineCraft"
               />
             </div>
+            <!-- LOCATION -->
             <div class="mb-4">
               <label
                 class="block text-blue-300 py-2 font-bold mb-2"
@@ -97,15 +100,15 @@
                 placeholder="Orlando"
               />
             </div>
-
+            <!-- BUTTON -->
             <div class="flex items-center justify-between pt-4">
-              <button 
+              <a
                 class="ml-40 bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 rounded focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
-                type="button"
                 id="search-btn"
+                href="results.html"
               >
                 Find your Next Adventure!
-              </button>
+              </a>
             </div>
           </form>
         </div>
@@ -125,23 +128,27 @@
           <div
             class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in"
           >
-          
             <img
-            
               src="./assets/images/jake.jpg"
               class="h-12 pr-4 transform hover:scale-125 duration-300 ease-in-out"
             />
-            <a class="pr-12" href="https://github.com/Jlausier">Github.com/Jlausier</a>
+            <a class="pr-12" href="https://github.com/Jlausier"
+              >Github.com/Jlausier</a
+            >
             <img
               src="./assets/images/brian.jpg"
               class="h-12 pr-4 transform hover:scale-125 duration-300 ease-in-out"
             />
-            <a class="pr-12" href="https://github.com/GormanBrian">Github.com/GormanBrian</a>
+            <a class="pr-12" href="https://github.com/GormanBrian"
+              >Github.com/GormanBrian</a
+            >
             <img
               src="./assets/images/matthew.png"
               class="h-12 pr-4 transform hover:scale-125 duration-300 ease-in-out"
             />
-            <a class="pr-12" href="https://github.com/alfaro-matttthew">Github.com/alfaro-matttthew</a>
+            <a class="pr-12" href="https://github.com/alfaro-matttthew"
+              >Github.com/alfaro-matttthew</a
+            >
           </div>
         </div>
 
@@ -149,9 +156,8 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
-    <script src= "./assets/js/API.js"></script>
+    <script src="./assets/js/API.js"></script>
     <script src="./assets/js/logic.js"></script>
     <script src="./assets/js/script.js"></script>
   </body>
-  
 </html>

@@ -13,8 +13,8 @@
     />
 
     <style>
-       body {
-        background-image: url('./assets/images/header.png');
+      body {
+        background-image: url("./assets/images/header.png");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
@@ -22,15 +22,10 @@
       main {
         border: 1px dashed rgba(0, 0, 0, 0.5);
 
-        
         width: 0px auto;
-
-        
 
         position: relative;
       }
-
-      
 
       .results-container {
         border: 1px dashed rgba(0, 0, 0, 0.5);
@@ -38,15 +33,12 @@
         height: 90vh;
         width: 73%;
         padding: 2%;
-        
+
         background-color: rgba(202, 202, 202, 0.336);
 
-        
         bottom: 0px;
         right: 2%;
       }
-
-      
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
@@ -57,23 +49,31 @@
           class="flex items-center text-indigo-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
           href="#"
         >
-          <span
+          <a
+            href="index.html"
             class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500"
-            >AFK<br />Co-Op</span
+            >AFK<br />Co-Op</a
           >
         </a>
       </div>
     </div>
     <div class="container mx-auto">
-      <button  id="home" class="fixed top-0 right-0 m-4 bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 rounded focus:ring transform transition hover:scale-105 duration-300 ease-in-out">
+      <button
+        id="home"
+        class="fixed top-0 right-0 m-4 bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 rounded focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
+      >
         Home
       </button>
     </div>
     <main class="flex flex-row items-center">
-    
-      <form class="bg-gray-900 opacity-75 w-1/4 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 text-center">
+      <form
+        class="bg-gray-900 opacity-75 w-1/4 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 text-center"
+      >
         <div class="mb-4">
-          <label class="block text-blue-300 py-2 font-bold mb-2" for="game-search">
+          <label
+            class="block text-blue-300 py-2 font-bold mb-2"
+            for="game-search"
+          >
             Enter your Favorite game
           </label>
           <input
@@ -84,7 +84,10 @@
           />
         </div>
         <div class="mb-4">
-          <label class="block text-blue-300 py-2 font-bold mb-2" for="location-search">
+          <label
+            class="block text-blue-300 py-2 font-bold mb-2"
+            for="location-search"
+          >
             Enter your Desired City
           </label>
           <input
@@ -94,7 +97,7 @@
             placeholder="Orlando"
           />
         </div>
-      
+
         <div class="flex flex-col items-center pt-4">
           <button
             class="bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 text-white font-bold py-2 px-4 rounded focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
@@ -105,10 +108,11 @@
           </button>
         </div>
       </form>
-      
-      <div id="results-container" class="results-container overflow-y-auto">
-        
-      </div>
+
+      <div
+        id="results-container"
+        class="results-container overflow-y-auto"
+      ></div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
