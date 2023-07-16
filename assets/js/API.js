@@ -24,7 +24,6 @@ class API {
     this.headerAuth = headerAuth;
     this.apiKey = apiKey;
     this.client = client;
-    this.start = 0;
 
     if (this.client) {
       this.headerAuth = {
@@ -34,11 +33,11 @@ class API {
   }
 
   /**
-   * Refreshed auth token if necessary
+   * Refresh auth token if necessary
    */
   async refreshToken() {
-    let exp = JSON.parse(localStorage.getItem("token_expiration")) || 0;
-    let token = localStorage.getItem("token");
+    let exp = JSON.parse(sessionStorage.getItem("token_expiration")) || 0;
+    let token = sessionStorage.getItem("token");
     let currTime = Date.now();
 
     // Check if stored auth is valid
@@ -60,11 +59,11 @@ class API {
         })
         .then((data) => {
           this.headerAuth.Authorization = "Bearer " + data["access_token"];
-          localStorage.setItem(
+          sessionStorage.setItem(
             "token_expiration",
             JSON.stringify(currTime + data["expires_in"] * 1000)
           );
-          localStorage.setItem("token", this.headerAuth.Authorization);
+          sessionStorage.setItem("token", this.headerAuth.Authorization);
           return "Token refreshed";
         })
         .catch((error) => {
@@ -284,9 +283,9 @@ class YelpAPI extends API {
     );
   }
 
-  async fetchBusinessesByCategory(location, categories) {
+  async fetchBusinessesByCategories(location, categories) {
     return super
-      .getData("GET", "businesses", "searchByCategory", {}, null, [
+      .getData("businesses", "searchByCategory", {}, null, [
         {
           name: "location",
           val: location.replace(/ /g, "%20"),
@@ -307,9 +306,7 @@ class YelpAPI extends API {
         },
       ])
       .then(super.handleResponse)
-      .then((data) => {
-        return data;
-      })
+      .then((data) => data.businesses)
       .catch((error) => {
         console.log(error);
       });
@@ -339,10 +336,6 @@ class GamesAPI extends API {
           method: "POST",
           location: "games/",
         },
-        genres: {
-          method: "POST",
-          location: "genres/",
-        },
       },
       null,
       null,
@@ -358,48 +351,21 @@ class GamesAPI extends API {
 
   /**
    *
-   * @param  {...string} names
+   * @param {Array<string>} names
+   * @param {boolean} isExact
    * @returns {Promise}
    */
-  fetchGameGenresByNames = async (...names) => {
-    let bodyNames = names
-      .map((name) => {
-        return `"${name}"`;
-      })
-      .join(",");
+  fetchGameGenresAndThemes = async (names, isExact = false) => {
+    let joinedNames = names.map((name) => `"${name}"`).join(",");
     return super
       .getDataWithToken(
         "games",
         "",
-        `fields genres; where name = (${bodyNames});`
+        `fields genres, themes; where name = (${joinedNames});`
       )
       .then(super.handleResponse)
       .catch((error) => {
         return new Error("Could not fetch game genres by names.\n", error);
       });
   };
-
-  /**
-   *
-   * @returns {Promise}
-   */
-  fetchGenres = async () => {
-    return super
-      .getDataWithToken("genres", "", "fields name; limit 40;")
-      .catch((error) => console.log(error));
-  };
-}
-
-class APIManager {
-  constructor() {
-    this.Yelp = new YelpAPI();
-    this.Games = new GamesAPI();
-  }
-
-  async getBusinessesFromGames(...names) {
-    return this.Games.fetchGameGenresByNames(...names).then((data) => {
-      console.log(data);
-      // Convert game genres to Yelp categories
-    });
-  }
 }
