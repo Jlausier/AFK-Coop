@@ -17,6 +17,10 @@ and end. */
 
 body {
     border: 1px solid rgba(0, 0, 0, 0.5);
+    background-image: url('./assets/images/header.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     
 }
 
