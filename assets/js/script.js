@@ -33,10 +33,11 @@ $(document).ready(function () {
   }
 
   function displayCards(businesses) {
-    // Write a for loop here
 
     businesses.forEach((business) => {
-      //
+
+       // GENERATE DISPLAY CARD ELEMENTS
+
       var dispCardCont = $("<div>");
       var dispCardImg = $("<img>");
 
@@ -59,6 +60,8 @@ $(document).ready(function () {
       var dispCardUrlBtn = $("<a>");
       var dispCardFavBtn = $("<button>");
 
+      // ADD DISPLAY CARD CLASSES
+
       dispCardCont.addClass("mb-10 flex flex-wrap");
       dispCardImg.addClass("w-48 h-48 object-cover");
 
@@ -74,9 +77,6 @@ $(document).ready(function () {
       ratingStars.addClass(" text-sm tracking-wide");
 
       infoCont.addClass("ml-2 pl-2 text-slate-300");
-      // tags.addClass('');
-      // address.addClass('');
-      // phone.addClass('');
 
       dispCardBtnCont.addClass("mt-2 flex items-center");
       dispCardMapBtn.addClass(
@@ -86,6 +86,8 @@ $(document).ready(function () {
         "mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm"
       );
       dispCardFavBtn.addClass("material-symbols-outlined");
+
+      // CONNECT DISPLAY CARD WITH API DATA
 
       dispCardImg.attr("src", business["image_url"]);
       dispCardName.text(business.name);
@@ -117,6 +119,8 @@ $(document).ready(function () {
 
       dispCardFavBtn.text("favorite");
       dispCardFavBtn.attr(".fav-btn");
+
+      // INSERT DISPLAY CARD INTO CONTAINER
 
       dispCardBtnCont.append(dispCardMapBtn, dispCardUrlBtn, dispCardFavBtn);
 
