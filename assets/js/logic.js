@@ -22,9 +22,3 @@ function redirect(event) {
 // };
 
 // function with for loop fo reach yelp element returned
-
-let Manager = new APIManager()
-  .getBusinessesFromGames("NYC", ["Halo: Combat Evolved", "Minecraft"])
-  .then(({ businesses, categories }) => {
-    console.log(categories);
-  });
