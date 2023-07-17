@@ -59,22 +59,22 @@ $(document).ready (function() {
             dispCardImg.addClass('w-48 h-48 object-cover');
 
             dispCardDetailContainer.addClass('pl-5 pt-3');
-            dispCardName.addClass('mb-2 pt-5 font-sans text-3xl font-bold');
+            dispCardName.addClass('mb-2 text-slate-200 font-sans text-3xl font-bold');
 
-            dispCardStats.addClass('border p-2 flex');
+            dispCardStats.addClass('p-2 flex');
 
-            ratingCont.addClass('border bg- flex flex-col items-center');
-            ratingNumb.addClass('border text-2xl');
-            ratingStars.addClass('border');
+            ratingCont.addClass('px-2 rounded bg-gray-900/75 flex flex-col justify-center items-center');
+            ratingNumb.addClass(' text-4xl');
+            ratingStars.addClass(' text-sm tracking-wide');
 
-            infoCont.addClass('border ml-2');
-            tags.addClass('border');
-            address.addClass('border');
-            phone.addClass('border');
+            infoCont.addClass('ml-2 pl-2 text-slate-300');
+            // tags.addClass('');
+            // address.addClass('');
+            // phone.addClass('');
 
-            dispCardBtnCont.addClass('flex items-center');
-            dispCardMapBtn.addClass('mr-3 px-3 py-2 rounded-full bg-blue-300 text-sm');
-            dispCardUrlBtn.addClass('mr-3 px-3 py-2 rounded-full bg-blue-300 text-sm');
+            dispCardBtnCont.addClass('mt-2 flex items-center');
+            dispCardMapBtn.addClass('mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm');
+            dispCardUrlBtn.addClass('mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm');
             dispCardFavBtn.addClass('material-symbols-outlined');
         
 
@@ -82,12 +82,12 @@ $(document).ready (function() {
             dispCardImg.attr('src', './assets/images/valken-paintball-header-josh-bella.jpg');
             dispCardName.text('Date Location Name');
 
-            ratingNumb.text('5');
-            ratingStars.text('star_rate');
+            ratingNumb.text('BUSINESS.rating');
+            ratingStars.text('STARS');
 
             tags.text('tag');
-            address.text('555 code st Orlando, FL 39090');
-            phone.text('555-555-5555');
+            address.text('BUSINESS.location.display_address');
+            phone.text('BUSINESS.display_phone');
 
             // ======= This is the Display Card text/values that can be plugged into with the API Data
             // dispCardImg.attr('src', BUSINESS.image_url)
