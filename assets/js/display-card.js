@@ -82,12 +82,20 @@ $(document).ready (function() {
             dispCardImg.attr('src', './assets/images/valken-paintball-header-josh-bella.jpg');
             dispCardName.text('Date Location Name');
 
-            ratingNumb.text('BUSINESS.rating');
+            ratingNumb.text(business.rating);
             ratingStars.text('STARS');
 
-            tags.text('tag');
-            address.text('BUSINESS.location.display_address');
-            phone.text('BUSINESS.display_phone');
+            for (let i = 0; i < business.categories.length; i++) {
+                var tagName = $('<a>');
+                tagName.addClass('pr-2');
+                let categoryNumber = business.categories[i].title;
+                tagName.text(categoryNumber);
+                tags.append(tagName);
+            }
+
+            
+            address.text(business.location.display_address);
+            phone.text(business.display_phone);
 
             // ======= This is the Display Card text/values that can be plugged into with the API Data
             // dispCardImg.attr('src', BUSINESS.image_url)
@@ -126,7 +134,7 @@ $(document).ready (function() {
         resultsContainer.removeClass("w-3/5 flex justify-center items-center");
 
         searchContainer.addClass("w-1/4 flex flex-col ");
-        resultsContainer.addClass("w-3/4 ml-10 max-h-screen overflow-y-scroll flex flex-col items-start");
+        resultsContainer.addClass("w-3/4 ml-10 max-h-5/6 overflow-y-scroll flex flex-col items-start");
 
         tagLine.hide();
         subTagLine.hide();
