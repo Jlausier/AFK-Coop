@@ -42,15 +42,17 @@ $(document).ready(function () {
 
       var dispCardDetailContainer = $("<div>");
       var dispCardName = $("<h3>");
-      var dispCardDescp = $("<div>");
-      var dispCardStats = $('<div>');
-      var ratingCont = $('<div>');
-      var ratingNumb = $('<div>');
-      var ratingStars = $('<div>');
-      var infoCont = $('<div>');
-      var tags = $('<div>');
-      var address = $('<div>');
-      var phone = $('<div>');
+
+      var dispCardStats = $("<div>");
+
+      var ratingCont = $("<div>");
+      var ratingNumb = $("<div>");
+      var ratingStars = $("<div>");
+
+      var infoCont = $("<div>");
+      var tags = $("<div>");
+      var address = $("<div>");
+      var phone = $("<div>");
 
       var dispCardBtnCont = $("<div>");
       var dispCardMapBtn = $("<a>");
@@ -59,6 +61,17 @@ $(document).ready(function () {
 
       dispCardCont.addClass("mb-10 flex");
       dispCardImg.addClass("w-48 h-48 object-cover");
+
+      dispCardDetailContainer.addClass("pl-5 pt-3");
+      dispCardName.addClass("mb-2 text-slate-200 font-sans text-3xl font-bold");
+
+      dispCardStats.addClass("p-2 flex");
+
+      ratingCont.addClass(
+        "px-2 rounded bg-gray-900/75 flex flex-col justify-center items-center"
+      );
+      ratingNumb.addClass(" text-4xl");
+      ratingStars.addClass(" text-sm tracking-wide");
 
       infoCont.addClass("ml-2 pl-2 text-slate-300");
       // tags.addClass('');
@@ -77,11 +90,19 @@ $(document).ready(function () {
       // ======= This is the placeholder text for the Display Card.
       dispCardImg.attr("src", business["image_url"]);
       dispCardName.text(business.name);
-      dispCardDescp.text(
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis augue non mi consequat tincidunt. Etiam at neque odio. Aliquam convallis dictum nunc, varius gravida urna. Aliquam fringilla id lectus et pharetra. In ultrices erat et convallis efficitur. Pellentesque vestibulum purus ut risus viverra, volutpat consectetur nisi elementum."
-      );
 
-      address.text(business.location.display_address);
+      ratingNumb.text(business.rating);
+      ratingStars.text("STARS");
+
+      for (let i = 0; i < business.categories.length; i++) {
+        var tagName = $("<a>");
+        tagName.addClass("pr-2");
+        let categoryNumber = business.categories[i].title;
+        tagName.text(categoryNumber);
+        tags.append(tagName);
+      }
+
+      address.text(business.location.display_address.join(", "));
       phone.text(business.display_phone);
 
       dispCardMapBtn.text("Directions");
@@ -96,6 +117,7 @@ $(document).ready(function () {
       dispCardUrlBtn.attr("target", "_blank");
 
       dispCardFavBtn.text("favorite");
+      dispCardFavBtn.attr(".fav-btn");
 
       // dispCardMapBtn.attr('href', );
       // dispCardUrlBtn.attr('href', 'BUSINESS.url');
