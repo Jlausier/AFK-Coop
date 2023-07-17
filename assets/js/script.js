@@ -3,14 +3,9 @@ $(document).ready(function () {
   var tagLine = $("tag-line");
   var subTagLine = $("sub-tag-line");
 
-  // Get the modal
-  var modal = document.getElementById("contactModal");
-
-  // Get the button that opens the modal
-  var contactBtn = document.getElementById("contactBtn");
-
-  // Get the <span> element that closes the modal
-  var closeBtn = document.getElementsByClassName("close")[0];
+  var contactModal = $("#contact-modal");
+  var contactBtn = $("#contactBtn");
+  var contactCloseBtn = $("#contactCloseBtn");
 
   var searchContainer = $("#search-container");
   var gameSearchEl = $("#game-search");
@@ -23,22 +18,37 @@ $(document).ready(function () {
     resultsContainer.empty();
 
     let gameName = gameSearchEl.val().trim();
-    if (gameName === "") {
-      // Display modal
-      return;
-    }
     let locationName = locationSearchEl.val().trim();
-    if (locationName === "") {
-      // Display modal
+
+    // If input is invalid show a modal and return
+    if (gameName === "" && locationName === "") {
+      showErrorModal(
+        "Enter a Game and Location",
+        "Please enter the name of a game and a location to proceed."
+      );
+      return;
+    } else if (gameName === "") {
+      showErrorModal(
+        "Enter a Game",
+        "Please enter the name of a game to proceed."
+      );
+      return;
+    } else if (locationName === "") {
+      showErrorModal(
+        "Enter a Location",
+        "Please enter the location to proceed."
+      );
       return;
     }
 
-    Manager.getBusinessesFromGames(locationName, [gameName]).then(
-      ({ businesses, categories }) => {
+    Manager.getBusinessesFromGames(locationName, [gameName])
+      .then(({ businesses, categories }) => {
         console.log(businesses);
         displayCards(businesses);
-      }
-    );
+      })
+      .catch(({ title, message }) => {
+        showErrorModal(title, message);
+      });
   }
 
   function displayCards(businesses) {
@@ -166,38 +176,44 @@ $(document).ready(function () {
     subTagLine.hide();
   }
 
-  function showModal(title, message) {
-    $("#modal-title").text(title);
-    $("#modal-message").text(message);
-    $("#modal-overlay").show().addClass("modal-open");
+  function showErrorModal(title, message) {
+    $("#error-modal-title").text(title);
+    $("#error-modal-message").text(message);
+    $("#error-modal-overlay").show().addClass("error-modal-open");
   }
 
-  $("#modal-close").on("click", function () {
-    var modal = $("#modalOverlay");
-    modal.removeClass("modal-open");
+  $("#error-modal-close").on("click", function () {
+    var modal = $("#error-modal-overlay");
+    modal.removeClass("error-modal-open");
     setTimeout(function () {
       modal.hide();
-      $("#modal-title").text("");
-      $("#modal-message").text("");
     }, 200);
   });
 
   searchBtnEl.on("click", getBusinesses);
 
+  /**
+   * Hides the contact modal and disables the body event listener
+   */
+  function hideContactModal() {
+    contactModal.hide();
+    $("body").off("click.contact-modal");
+  }
+
   // When the user clicks the button, open the modal
-  contactBtn.on("click", function () {
-    modal.style.display = "block";
+  contactBtn.on("click", function (e) {
+    e.stopPropagation();
+    contactModal.show();
+    // When the user clicks anywhere outside of the modal, close it
+    $("body").on("click.contact-modal", function (event) {
+      if (event.target !== contactModal) {
+        hideContactModal();
+      }
+    });
   });
 
   // When the user clicks on <span> (x), close the modal
-  closeBtn.on("click", function () {
-    modal.style.display = "none";
-  });
-
-  // When the user clicks anywhere outside of the modal, close it
-  $("body").on("click", function (event) {
-    if (event.target !== modal) {
-      modal.style.display = "none";
-    }
+  contactCloseBtn.on("click", function () {
+    hideContactModal();
   });
 });
