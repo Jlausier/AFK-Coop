@@ -76,7 +76,7 @@ $(document).ready(function () {
 
       // ======= This is the placeholder text for the Display Card.
       dispCardImg.attr("src", business["image_url"]);
-      dispCardName.text("Date Location Name");
+      dispCardName.text(business.name);
       dispCardDescp.text(
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin quis augue non mi consequat tincidunt. Etiam at neque odio. Aliquam convallis dictum nunc, varius gravida urna. Aliquam fringilla id lectus et pharetra. In ultrices erat et convallis efficitur. Pellentesque vestibulum purus ut risus viverra, volutpat consectetur nisi elementum."
       );
