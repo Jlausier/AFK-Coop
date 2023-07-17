@@ -134,7 +134,7 @@ $(document).ready (function() {
         resultsContainer.removeClass("w-3/5 flex justify-center items-center");
 
         searchContainer.addClass("w-1/4 flex flex-col ");
-        resultsContainer.addClass("w-3/4 ml-10 max-h-5/6 overflow-y-scroll flex flex-col items-start");
+        resultsContainer.addClass("w-3/4 ml-10 mx-h-5/6 overflow-y-scroll flex flex-col items-start");
 
         tagLine.hide();
         subTagLine.hide();
