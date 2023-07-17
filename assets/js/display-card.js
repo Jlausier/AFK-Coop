@@ -95,11 +95,6 @@ $(document).ready(function () {
       // address.text('555 code st Orlando, FL 39090')
       // phone.text('555-555-5555')
 
-      // ======= This is the Display Card text/values that can be plugged into with the API Data
-      // dispCardImg.attr('src', BUSINESS.image_url)
-      // dispCardName.text(BUSINESS.name);
-      // dispCardStats.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nec dictum magna. Curabitur ut nulla quis elit condimentum imperdiet sit amet sed leo. Curabitur ipsum nunc, rutrum non orci non, pharetra lobortis tortor. Aenean malesuada turpis lobortis posuere placerat. Fusce quis ullamcorper lorem, eget scelerisque sapien.');
-
       dispCardMapBtn.text("Directions");
       dispCardMapBtn.attr(
         "href",
@@ -108,6 +103,9 @@ $(document).ready(function () {
       dispCardMapBtn.attr("target", "_blank");
 
       dispCardUrlBtn.text("Yelp Page");
+      dispCardUrlBtn.attr("href", business.url);
+      dispCardUrlBtn.attr("target", "_blank");
+
       dispCardFavBtn.text("favorite");
 
       // dispCardMapBtn.attr('href', );
