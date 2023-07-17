@@ -43,14 +43,14 @@ $(document).ready(function () {
       var dispCardDetailContainer = $("<div>");
       var dispCardName = $("<h3>");
       var dispCardDescp = $("<div>");
-      // var dispCardStats = $('<div>');
-      // var ratingCont = $('<div>');
-      // var ratingNumb = $('<div>');
-      // var ratingStars = $('<div>');
-      // var infoCont = $('<div>');
-      // var tags = $('<div>');
-      // var address = $('<div>');
-      // var phone = $('<div>');
+      var dispCardStats = $('<div>');
+      var ratingCont = $('<div>');
+      var ratingNumb = $('<div>');
+      var ratingStars = $('<div>');
+      var infoCont = $('<div>');
+      var tags = $('<div>');
+      var address = $('<div>');
+      var phone = $('<div>');
 
       var dispCardBtnCont = $("<div>");
       var dispCardMapBtn = $("<a>");
