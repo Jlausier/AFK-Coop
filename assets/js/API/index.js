@@ -3,8 +3,25 @@ class API {
   client;
   apiKey;
 
+  static noResourceError(apiName, details = "") {
+    return {
+      title: "Information not Available",
+      message: `The requested information is not available from the ${apiName} API, please try again.`,
+      details,
+    };
+  }
+
+  static authenticationError(apiName, details = "") {
+    return {
+      title: "Authentication Issue",
+      message: `Could not authenticate with the ${apiName} API, please try again.`,
+      details,
+    };
+  }
+
   /**
    * Constructor for generic API class
+   * @param {string} name Name of the API
    * @param {string} baseUrl Base URL of the API
    * @param {boolean} useProxy Whether to use proxy to bypass CORS issues
    * @param {Array<Object>} resources Available resources and their potential parameters
@@ -13,7 +30,8 @@ class API {
    * @param {Object} resources[].subResources Additional resources
    * @param {Object} headers Header fields to be present in every API call
    */
-  constructor(baseUrl, useProxy, resources, headers = {}) {
+  constructor(name, baseUrl, useProxy, resources, headers = {}) {
+    this.name = name;
     this.baseUrl = baseUrl;
     this.useProxy = useProxy;
     this.resources = resources;
@@ -39,7 +57,7 @@ class API {
    */
   async refreshToken() {
     // Gets the current token
-    let token = JSON.parse(localStorage.getItem("token_" + this.baseUrl));
+    let token = JSON.parse(localStorage.getItem("token_" + this.name));
     let currTime = Date.now();
 
     // Checks if stored authorization is valid
@@ -62,15 +80,18 @@ class API {
           this.headers.Authorization = "Bearer " + data["access_token"];
           // Stores the token and expiration time in local storage
           localStorage.setItem(
-            "token_" + this.baseUrl,
+            "token_" + this.name,
             JSON.stringify({
               value: this.headers.Authorization,
               expiration: currTime + data["expires_in"] * 1000,
             })
           );
         })
-        .catch((error) => {
-          throw new Error("Could not refresh auth token\n", error);
+        .catch((_) => {
+          throw API.authenticationError(
+            this.name,
+            `There was an error while attempting to refresh the client authorization token for the ${this.name} API.`
+          );
         });
     }
   }
@@ -139,7 +160,10 @@ class API {
   validateCall(resource, subResource, params = [], subResourceParameters = []) {
     // Validates base resource
     if (!(resource in this.resources && "location" in this.resources[resource]))
-      throw new Error("Selected resource is not available");
+      throw API.noResourceError(
+        this.name,
+        `The ${resource} resource was not found in the list of available resources for the ${this.name} API.`
+      );
 
     // Gets the resource and resource location
     let validResource = this.resources[resource];
@@ -157,7 +181,10 @@ class API {
           subResource in validResource.subResources
         )
       )
-        throw new Error("Selected subresource is not available");
+        throw API.noResourceError(
+          this.name,
+          `The ${subResource} subresource was not found in the list of available subresources for the ${this.name} API.`
+        );
 
       // Gets the subresource
       let validSubresource = validResource.subResources[subResource];
@@ -175,7 +202,11 @@ class API {
     // Validates requested parameters against available parameters
     let validParams = params.filter((param) => {
       if (!availableParams.includes(param.name)) {
-        throw new Error("Parameter not found");
+        throw {
+          title: "Search Parameters Invalid",
+          message: `The search parameters were invalid for the ${this.name} API, please try again.`,
+          details: `Parameter ${param.name} was not found in the list of available params for the ${resource} resource in the ${this.name} API.`,
+        };
       } else if (param.val !== "") return param; // Adds validated parameter
     });
 
@@ -281,6 +312,7 @@ class YelpAPI extends API {
   constructor() {
     // Calls API class constructor with static properties
     super(
+      "Yelp Fusion",
       "https://api.yelp.com/v3/",
       true,
       {
@@ -343,7 +375,12 @@ class YelpAPI extends API {
       .then(super.handleResponse)
       .then((data) => data.businesses)
       .catch((error) => {
-        console.log(error);
+        throw {
+          title: "Unable to Find Businesses",
+          message:
+            "There was an error while fetching businesses from the Yelp Fusion API, please try again.",
+          details: error,
+        };
       });
   }
 
@@ -357,7 +394,11 @@ class YelpAPI extends API {
       .getData("businesses", "searchById", [id])
       .then(super.handleResponse)
       .catch((error) => {
-        console.log(error);
+        throw {
+          title: "Unable to Find Business",
+          message: "We were unable to find that business, please try again.",
+          details: error,
+        };
       });
 }
 
@@ -375,7 +416,7 @@ class GamesAPI extends API {
    */
   constructor() {
     // Calls API class constructor with static properties
-    super("https://api.igdb.com/v4/", true, {
+    super("IGDB", "https://api.igdb.com/v4/", true, {
       games: {
         method: "POST",
         location: "games/",
@@ -411,7 +452,12 @@ class GamesAPI extends API {
       )
       .then(super.handleResponse)
       .catch((error) => {
-        return new Error("Could not fetch game genres by names.\n", error);
+        throw {
+          title: `Unable to Find Game${names.length === 0 ? "" : "s"}`,
+          message:
+            "There was an error while fetching game information from the IGDB API, please try again.",
+          details: error,
+        };
       });
   };
 }
