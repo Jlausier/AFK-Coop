@@ -62,8 +62,8 @@ $(document).ready(function () {
 
       // ADD DISPLAY CARD CLASSES
 
-      dispCardCont.addClass("mb-10 flex flex-wrap");
-      dispCardImg.addClass("w-48 h-48 object-cover");
+      dispCardCont.addClass("mb-28 md:mb-14 lg:mb-10 flex flex-wrap md:flex-nowrap ");
+      dispCardImg.addClass("w-full md:w-48 md:h-48 object-cover");
 
       dispCardDetailContainer.addClass("pl-5 pt-3");
       dispCardName.addClass("mb-2 text-slate-200 font-sans text-3xl font-bold");
@@ -71,19 +71,19 @@ $(document).ready(function () {
       dispCardStats.addClass("p-2 flex");
 
       ratingCont.addClass(
-        "px-2 rounded bg-gray-900/75 flex flex-col justify-center items-center"
+        "px-2 h-24 rounded bg-gray-900/75 flex flex-col justify-center items-center"
       );
-      ratingNumb.addClass(" text-4xl");
-      ratingStars.addClass(" text-sm tracking-wide");
+      ratingNumb.addClass("text-2xl");
+      ratingStars.addClass("text-sm tracking-wide");
 
-      infoCont.addClass("ml-2 pl-2 text-slate-300");
+      infoCont.addClass("border ml-2 pl-2 text-slate-300");
 
       dispCardBtnCont.addClass("mt-2 flex items-center");
       dispCardMapBtn.addClass(
-        "mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm"
+        " mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm"
       );
       dispCardUrlBtn.addClass(
-        "mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm"
+        " mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm"
       );
       dispCardFavBtn.addClass("material-symbols-outlined");
 
@@ -145,12 +145,12 @@ $(document).ready(function () {
   }
 
   function reformat() {
-    searchContainer.removeClass("w-full md:w-2/5 flex flex-col justify-center");
+    searchContainer.removeClass("w-full lg:w-2/5 flex flex-col justify-center");
     resultsContainer.removeClass("w-3/5 flex justify-center items-center");
 
-    searchContainer.addClass("w-1/4 flex flex-col ");
+    searchContainer.addClass("w-full lg:w-1/4 flex flex-col ");
     resultsContainer.addClass(
-      "w-3/4 ml-10 mx-h-5/6 overflow-y-scroll flex flex-col items-start"
+      "w-full lg:w-3/4 lg:ml-10 mx-h-5/6 overflow-y-scroll flex flex-col items-start"
     );
 
     tagLine.hide();
