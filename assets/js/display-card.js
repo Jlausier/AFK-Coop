@@ -59,7 +59,7 @@ $(document).ready(function () {
       var dispCardUrlBtn = $("<a>");
       var dispCardFavBtn = $("<button>");
 
-      dispCardCont.addClass("mb-10 flex");
+      dispCardCont.addClass("mb-10 flex flex-wrap");
       dispCardImg.addClass("w-48 h-48 object-cover");
 
       dispCardDetailContainer.addClass("pl-5 pt-3");
