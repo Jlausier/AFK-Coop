@@ -3,7 +3,7 @@ $(document).ready(function () {
   var tagLine = $("tag-line");
   var subTagLine = $("sub-tag-line");
 
-  var contactModal = $("#contactModal");
+  var contactModal = $("#contact-modal");
   var contactBtn = $("#contactBtn");
   var contactCloseBtn = $("#contactCloseBtn");
 
@@ -22,16 +22,22 @@ $(document).ready(function () {
 
     // If input is invalid show a modal and return
     if (gameName === "" && locationName === "") {
-      showModal(
+      showErrorModal(
         "Enter a Game and Location",
         "Please enter the name of a game and a location to proceed."
       );
       return;
     } else if (gameName === "") {
-      showModal("Enter a Game", "Please enter the name of a game to proceed.");
+      showErrorModal(
+        "Enter a Game",
+        "Please enter the name of a game to proceed."
+      );
       return;
     } else if (locationName === "") {
-      showModal("Enter a Location", "Please enter the location to proceed.");
+      showErrorModal(
+        "Enter a Location",
+        "Please enter the location to proceed."
+      );
       return;
     }
 
@@ -41,7 +47,7 @@ $(document).ready(function () {
         displayCards(businesses);
       })
       .catch(({ title, message }) => {
-        showModal(title, message);
+        showErrorModal(title, message);
       });
   }
 
@@ -170,19 +176,17 @@ $(document).ready(function () {
     subTagLine.hide();
   }
 
-  function showModal(title, message) {
-    $("#modal-title").text(title);
-    $("#modal-message").text(message);
-    $("#modal-overlay").show().addClass("modal-open");
+  function showErrorModal(title, message) {
+    $("#error-modal-title").text(title);
+    $("#error-modal-message").text(message);
+    $("#error-modal-overlay").show().addClass("error-modal-open");
   }
 
-  $("#modal-close").on("click", function () {
-    var modal = $("#modal-overlay");
-    modal.removeClass("modal-open");
+  $("#error-modal-close").on("click", function () {
+    var modal = $("#error-modal-overlay");
+    modal.removeClass("error-modal-open");
     setTimeout(function () {
       modal.hide();
-      $("#modal-title").text("");
-      $("#modal-message").text("");
     }, 200);
   });
 
@@ -193,7 +197,7 @@ $(document).ready(function () {
    */
   function hideContactModal() {
     contactModal.hide();
-    $("body").off("click.contactModal");
+    $("body").off("click.contact-modal");
   }
 
   // When the user clicks the button, open the modal
@@ -201,7 +205,7 @@ $(document).ready(function () {
     e.stopPropagation();
     contactModal.show();
     // When the user clicks anywhere outside of the modal, close it
-    $("body").on("click.contactModal", function (event) {
+    $("body").on("click.contact-modal", function (event) {
       if (event.target !== contactModal) {
         hideContactModal();
       }
