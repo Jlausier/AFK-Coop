@@ -3,7 +3,7 @@
  *  - title: User friendly name
  *  - yelpCategories: Yelp categories that the genre or theme maps onto
  */
-const GameCategories = {
+APIManager.GameCategories = {
   Genres: {
     5: { title: "Shooter", yelpCategories: [1, 21, 30, 40, 48, 77] },
     8: { title: "Platform", yelpCategories: [2, 4, 17, 19, 39, 41, 43, 74] },
@@ -50,7 +50,7 @@ const GameCategories = {
  *  - title: User friendly name
  *  - alias: URL friendly name
  */
-const YelpCategories = {
+APIManager.YelpCategories = {
   0: { title: "Airsoft (airsoft, All)", alias: "airsoft" },
   1: { title: "Amusement Parks", alias: "amusementparks" },
   2: { title: "Arcades", alias: "arcades" },
@@ -76,7 +76,7 @@ const YelpCategories = {
   22: { title: "Disc Golf", alias: "discgolf" },
   23: { title: "Diving", alias: "diving" },
   24: { title: "Drive-In Theater", alias: "driveintheater" },
-  25: { title: "Escape Games (escapegames, All)", alias: "" },
+  25: { title: "Escape Games (escapegames, All)", alias: "escapegames" },
   26: { title: "Flyboarding", alias: "flyboarding" },
   27: { title: "Gliding", alias: "gliding" },
   28: { title: "Go Karts", alias: "gokarts" },
@@ -137,102 +137,3 @@ const YelpCategories = {
   80: { title: "Zoos", alias: "zoos" },
   81: { title: "Zorbing", alias: "zorbing" },
 };
-
-/**
- * Durstenfeld shuffle algorithm to randomize array elements
- * @param {Array<any>} array Array to be shuffled
- * @returns {Array<any>} Shuffled array
- */
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
-/**
- * API Manager that bridges data between IGDB and Yelp Fusion
- */
-class APIManager {
-  constructor() {
-    this.Yelp = new YelpAPI();
-    this.Games = new GamesAPI();
-  }
-
-  /**
-   * Gets the genres and themes for a list of games,
-   *  gets the associated yelp categories,
-   *  returns a list of businesses based on the categories
-   *
-   * @param  {...any} names Names of the game(s) with usable genres and themes
-   * @returns {Promise<Array<Object>>} Promise that returns businesses or throws an error
-   */
-  async getBusinessesFromGames(location, ...names) {
-    return this.Games.fetchGameGenresAndThemes(names).then(async (data) => {
-      let processedData = { genres: [], themes: [] };
-      // Reduces game data into the genres and themes
-      data.forEach((game) => {
-        processedData.genres = processedData.genres.concat(game.genres);
-        processedData.themes = processedData.themes.concat(game.themes);
-      });
-      // Sorts the genres and themes to group duplicates
-      processedData.genres = processedData.genres.sort((a, b) => a - b);
-      processedData.themes = processedData.themes.sort((a, b) => a - b);
-      // Get the associated categories
-      let categoryIds = this.mapGenresAndThemesToCategories(processedData);
-      let categories = categoryIds.map((id) => {
-        if (id in YelpCategories) return YelpCategories[id].alias;
-      });
-
-      return await this.Yelp.fetchBusinessesByCategories(location, categories);
-    });
-  }
-
-  /**
-   *
-   * @param {Object} data Data with game genres and themes arrays
-   * @param {Array<string>} data.genres Array of game genres
-   * @param {Array<string>} data.themes Array of game themes
-   * @returns {Array<>}
-   */
-  mapGenresAndThemesToCategories(data) {
-    let mappedData = {};
-    data.genres.forEach((genre) => {
-      if (!(genre in GameCategories.Genres)) return;
-      GameCategories.Genres[genre].yelpCategories.forEach((category) => {
-        if (category in mappedData) mappedData[category] += 1;
-        else mappedData[category] = 1;
-      });
-    });
-
-    data.themes.forEach((theme) => {
-      if (!(theme in GameCategories.Themes)) return;
-      GameCategories.Themes[theme].yelpCategories.forEach((category) => {
-        if (category in mappedData) mappedData[category] += 1;
-        else mappedData[category] = 1;
-      });
-    });
-
-    let sortable = [];
-    for (let id in mappedData) sortable.push([id, mappedData[id]]);
-    sortable.sort((a, b) => b[1] - a[1]);
-
-    let total = sortable.reduce((acc, curr) => acc + parseInt(curr[1]), 0);
-    let counter = 0,
-      index = 0;
-    while (counter <= total / 2) {
-      counter += sortable[index][1];
-      index++;
-    }
-    return sortable.slice(0, index).map((id) => id[0]);
-  }
-}
-
-let Manager = new APIManager();
-Manager.getBusinessesFromGames(
-  "NYC",
-  "Halo: Combat Evolved",
-  "Halo 2",
-  "Fortnite"
-).then((data) => console.log(data));

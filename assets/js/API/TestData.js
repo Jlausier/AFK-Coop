@@ -1,5 +1,5 @@
-YelpAPI.prototype.fetchBusinessesSearchTest = async (id) => {
-  return new Promise((resolve, reject) => {
+APIManager.fetchBusinessesTest = async () => {
+  return new Promise((resolve, _) => {
     resolve([
       {
         id: "33sV1AC_s-h0ckLvyO34Hw",
@@ -380,8 +380,8 @@ YelpAPI.prototype.fetchBusinessesSearchTest = async (id) => {
   });
 };
 
-YelpAPI.prototype.fetchBusinessTest = async (id) => {
-  return new Promise((resolve, reject) => {
+APIManager.fetchBusinessTest = async () => {
+  return new Promise((resolve, _) => {
     resolve({
       id: "zBP5zG8xRpe9hZVuX2XHVQ",
       alias: "komnata-quest-brooklyn-15",
@@ -419,19 +419,3 @@ YelpAPI.prototype.fetchBusinessTest = async (id) => {
     });
   });
 };
-
-let Yelp = new YelpAPI();
-
-// let business = Yelp.fetchBusinessTest("");
-
-// async function getBusinesses() {
-//   await Yelp.fetchBusinessesSearchTest("").then(function (data) {
-//     displayBusinesses(data);
-//   });
-// }
-
-// $("#button").on("click", async function () {
-//   await Yelp.fetchBusinessesSearchTest("").then(function (data) {
-//     displayBusinesses(data);
-//   });
-// });
