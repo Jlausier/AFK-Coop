@@ -1,24 +1,26 @@
-var games = document.getElementById("game-search");
-var loacation = document.getElementById("location-search");
-var buttonEl = document.getElementById("search-btn");
-var formEl = document.getElementById("main-search-game");
-var yelpEl = document.getElementById("yelp-container");
+$(document).ready(function () {
+  var games = $("#game-search");
+  var loacation = $("#location-search");
+  var buttonEl = $("#search-btn");
+  // var formEl = $('#main-search-game')
+  // var yelpEl = $('#yelp-container')
 
-// button gets values from both inputs
-$(buttonEl).on("click", function () {
-  // let gameInput = games.value
-  // let locationInput  = location.value
-  //      (gameInput)
-  //      (locationInput);
-  redirect();
+  function saveSearchValues() {
+    // takes values from the form
+    var gameName = games.val();
+    var cityName = loacation.val();
+    console.log(gameName);
+    console.log(cityName);
+
+    // places form values into an array
+    let searchedItems = [gameName, cityName];
+    console.log(searchedItems);
+
+    // uploads the
+    localStorage.setItem("Recent Search", JSON.stringify(searchedItems));
+
+    //
+  }
+
+  buttonEl.on("click", saveSearchValues);
 });
-
-// dateResults(gameInput, locationInput){
-// //fetch
-function redirect(event) {
-  window.location.href = "/results.html";
-}
-
-// };
-
-// function with for loop fo reach yelp element returned
