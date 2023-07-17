@@ -38,6 +38,7 @@ class APIManager {
           title: "Game Not Found",
           message:
             "We were unable to find a game with that name, please check your spelling and try again.",
+          details: `The game "${names[0]}" could not be found.`,
         };
       // Reduces game data into the genres and themes
       let processedData = { genres: [], themes: [] };
