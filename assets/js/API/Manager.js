@@ -118,9 +118,6 @@ class APIManager {
       }
     } else index = sortable.length;
 
-    console.log("Index: " + index);
-    console.log("Length: " + sortable.length);
-
     // Returns array of Yelp category IDs
     return sortable.slice(0, index).map((id) => id[0]);
   }
