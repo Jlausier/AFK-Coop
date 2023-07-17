@@ -2,6 +2,7 @@ $(document).ready(function () {
   var games = $("#game-search");
   var loacation = $("#location-search");
   var buttonEl = $("#search-btn");
+  
   // var formEl = $('#main-search-game')
   // var yelpEl = $('#yelp-container')
 
@@ -18,7 +19,7 @@ $(document).ready(function () {
 
     // uploads the
     localStorage.setItem("Recent Search", JSON.stringify(searchedItems));
-
+ 
     //
   }
 
