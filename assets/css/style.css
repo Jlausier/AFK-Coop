@@ -6,102 +6,31 @@ and end. */
 
 /* !! Any selectors that are not used by the end of the project may be deleted !! */
 
-:root{
-    --pinkz: #b252f2
-    --purpz: #44118c
-    --darkpurpz: #2e0f59
-    --darkz: #090526
-    --tealz: #9cd9c8
+/* ===== MODAL SELECTORS ============================================================= */
+
+#modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
 }
 
-
-/* ===== HEADER SELECTORS ============================================================ */
-
-
-
-
-
-
-/* ===== STARTER PAGE CONTENT SELECTORS ============================================== */
-
-main {
-    /* border: 1px solid rgba(0, 0, 0, 0.5); */
+#modal {
+  position: fixed;
+  top: 55%;
+  left: 50%;
+  text-align: center;
+  background-color: #fafafa;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: all 300ms ease-in-out;
 }
 
-/* ----- Toggle "by Game" or "by Genre" ----- */
-                                          /* <--- USE THESE IDs FOR JS PURPOSES */
-#search-by-game-toggle { 
-    border: 1px solid rgba(0, 0, 0, 0.5);
-}
-                                            /* <--- USE THESE IDs FOR JS PURPOSES */
-#search-by-genre-toggle {
-    border: 1px solid rgba(0, 0, 0, 0.5);
-}
-
-
-/* ----- Search by GENRE Dialog Box ----- */
-
-                                         /* <--- USE THESE IDs FOR JS PURPOSES */
-#game-search-form-game { 
-    border: 1px solid rgba(0, 0, 0, 0.5);
-}
-                                            /* <--- USE THESE IDs FOR JS PURPOSES */
-#game-search-form-location {
-    border: 1px solid rgba(0, 0, 0, 0.5);
-}
-                                            /* <--- USE THESE IDs FOR JS PURPOSES */
-#game-search-form-submit {
-    border: 1px solid rgba(0, 0, 0, 0.5);
-}
-
-
-/* ----- Search by GENRE Dialog Box ----- */
-
-
-#genre-1 {
-    border: 1px solid rgba(0, 0, 0, 0.5); 
-}
-
-#genre-2 {
-    border: 1px solid rgba(0, 0, 0, 0.5); 
-}
-
-#genre-3 {
-    border: 1px solid rgba(0, 0, 0, 0.5); 
-}
-
-#genre-4 {
-    border: 1px solid rgba(0, 0, 0, 0.5); 
-}
-
-#genre-5 {
-    border: 1px solid rgba(0, 0, 0, 0.5); 
-}
-
-#genre-6 {
-    border: 1px solid rgba(0, 0, 0, 0.5); 
-}
-
-#genre-7 {
-    border: 1px solid rgba(0, 0, 0, 0.5); 
-}
-
-#genre-8 {
-    border: 1px solid rgba(0, 0, 0, 0.5); 
-}
-/* ------- */
-                                            /* <--- USE THESE IDs FOR JS PURPOSES */
-#genre-search-form-location {
-    border: 1px solid rgba(0, 0, 0, 0.5);
-}
-                                            /* <--- USE THESE IDs FOR JS PURPOSES */
-#genre-search-form-submit {
-    border: 1px solid rgba(0, 0, 0, 0.5);
-}
-
-/* ===== RESULTS PAGE CONTENT SELECTORS ============================================== */
-
-                                          /* <--- USE THESE IDs FOR JS PURPOSES */
-#results-main-container {
-    border: 1px solid rgba(0, 0, 0, 0.5);
+#modal-overlay.modal-open #modal {
+  opacity: 1;
+  top: 50%;
 }
