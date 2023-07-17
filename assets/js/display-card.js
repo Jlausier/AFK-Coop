@@ -57,7 +57,7 @@ $(document).ready(function () {
       var dispCardUrlBtn = $("<a>");
       var dispCardFavBtn = $("<button>");
 
-      dispCardCont.addClass("mb-10 flex");
+      dispCardCont.addClass("mb-10 flex flex-wrap");
       dispCardImg.addClass("w-48 h-48 object-cover");
 
       dispCardDetailContainer.addClass("pl-5 pt-3");
@@ -134,12 +134,12 @@ $(document).ready(function () {
   }
 
   function reformat() {
-    searchContainer.removeClass("w-2/5 flex flex-col justify-center");
+    searchContainer.removeClass("w-full md:w-2/5 flex flex-col justify-center");
     resultsContainer.removeClass("w-3/5 flex justify-center items-center");
 
-    searchContainer.addClass("w-1/4 flex flex-col ");
+    searchContainer.addClass(" md:w-1/4  flex flex-col ");
     resultsContainer.addClass(
-      "w-3/4 ml-10 overflow-auto flex flex-col items-center"
+      "w-3/4 ml-10 mx-h-5/6 overflow-y-auto flex flex-col items-center "
     );
 
     tagLine.hide();
