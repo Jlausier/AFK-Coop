@@ -31,7 +31,7 @@ class APIManager {
    * @param  {Array<string>} names Names of the game(s) with usable genres and themes
    * @returns {Promise<Array<Object>>} Promise that returns businesses or throws an error
    */
-  async getBusinessesFromGames(location, names) {
+  getBusinessesFromGames = async (location, names) => {
     return this.Games.fetchGameGenresAndThemes(names).then(async (data) => {
       // Reduces game data into the genres and themes
       let processedData = { genres: [], themes: [] };
@@ -62,7 +62,7 @@ class APIManager {
         };
       });
     });
-  }
+  };
 
   /**
    * Maps IGDB genres and themes into a weighted, sorted,
@@ -73,7 +73,7 @@ class APIManager {
    * @param {Array<string>} data.themes Array of game themes
    * @returns {Array<>}
    */
-  mapGenresAndThemesToCategories(data) {
+  mapGenresAndThemesToCategories = (data) => {
     let mappedData = {};
 
     // Extracts related Yelp categories from each genre
@@ -120,5 +120,15 @@ class APIManager {
 
     // Returns array of Yelp category IDs
     return sortable.slice(0, index).map((id) => id[0]);
-  }
+  };
+
+  createGoogleMapsLink = (displayAddress) => {
+    let baseUrl = "http://maps.google.com/?q=";
+    displayAddress.forEach((line, index) => {
+      let newLine = line.split(" ").join("%20");
+      baseUrl += newLine;
+      if (index < displayAddress.length - 1) baseUrl += ",";
+    });
+    return baseUrl;
+  };
 }

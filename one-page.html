@@ -41,8 +41,8 @@
     class="px-6 md:px-20 leading-normal tracking-normal text-indigo-400 m-6 bg-cover bg-fixed"
     style="background-image: url('./assets/images/header.png')"
   >
-    <header class="flex ">
-      <div >
+    <header class="flex">
+      <div>
         <!-- SITE TITLE -->
         <h1
           class="p-3 text-4xl md:text-5xl leading-5 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 font-bold text-center bg-clip-text"
@@ -52,7 +52,10 @@
       </div>
     </header>
     <main class="flex flex-col md:pt-36 md:flex-row">
-      <div id="search-container" class="w-full md:w-2/5 flex flex-col justify-center">
+      <div
+        id="search-container"
+        class="w-full md:w-2/5 flex flex-col justify-center"
+      >
         <!-- TAG LINE -->
         <h2
           id="tag-line"
@@ -79,6 +82,7 @@
           >
           <input
             type="text"
+            id="location-search"
             class="border p-2 my-2 focus:ring hover:scale-105 duration-300 ease-in-out"
             placeholder="Orlando"
           />
@@ -141,9 +145,11 @@
       </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
-    <script src="./assets/js/display-card.js"></script>
-    <script src="./assets/js/API.js"></script>
+    <script src="./assets/js/API/index.js"></script>
+    <script src="./assets/js/API/Manager.js"></script>
+    <script src="./assets/js/API/Categories.js"></script>
     <script src="./assets/js/logic.js"></script>
     <script src="./assets/js/script.js"></script>
+    <script src="./assets/js/display-card.js"></script>
   </body>
 </html>
