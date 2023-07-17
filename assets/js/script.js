@@ -3,6 +3,15 @@ $(document).ready(function () {
   var tagLine = $("tag-line");
   var subTagLine = $("sub-tag-line");
 
+  // Get the modal
+  var modal = document.getElementById("contactModal");
+
+  // Get the button that opens the modal
+  var contactBtn = document.getElementById("contactBtn");
+
+  // Get the <span> element that closes the modal
+  var closeBtn = document.getElementsByClassName("close")[0];
+
   var searchContainer = $("#search-container");
   var gameSearchEl = $("#game-search");
   var locationSearchEl = $("#location-search");
@@ -63,7 +72,9 @@ $(document).ready(function () {
       dispCardImg.addClass("w-48 h-48 object-cover");
 
       dispCardDetailContainer.addClass("pl-5 pt-3");
-      dispCardName.addClass("mb-2 text-slate-200 font-sans text-3xl font-bold");
+      dispCardName.addClass(
+        "mb-2 text-slate-200 font-sans text-xl md:text-2xl font-bold"
+      );
 
       dispCardStats.addClass("p-2 flex");
 
@@ -142,11 +153,13 @@ $(document).ready(function () {
 
   function reformat() {
     searchContainer.removeClass("w-full md:w-2/5 flex flex-col justify-center");
-    resultsContainer.removeClass("w-3/5 flex justify-center items-center");
+    resultsContainer.removeClass(
+      "w-full md:w-3/5 flex justify-center items-center"
+    );
 
-    searchContainer.addClass("w-1/4 flex flex-col ");
+    searchContainer.addClass("md:w-1/4 flex flex-col ");
     resultsContainer.addClass(
-      "w-3/4 ml-10 mx-h-5/6 overflow-y-scroll flex flex-col items-start"
+      "w-3/4  ml-10 md:pl-10 md:h-96 md:overflow-y-scroll lg:h-[40rem] lg:overflow-y-scroll flex flex-col  items-start "
     );
 
     tagLine.hide();
@@ -170,4 +183,21 @@ $(document).ready(function () {
   });
 
   searchBtnEl.on("click", getBusinesses);
+
+  // When the user clicks the button, open the modal
+  contactBtn.on("click", function () {
+    modal.style.display = "block";
+  });
+
+  // When the user clicks on <span> (x), close the modal
+  closeBtn.on("click", function () {
+    modal.style.display = "none";
+  });
+
+  // When the user clicks anywhere outside of the modal, close it
+  $("body").on("click", function (event) {
+    if (event.target !== modal) {
+      modal.style.display = "none";
+    }
+  });
 });
