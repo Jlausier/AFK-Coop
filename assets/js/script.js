@@ -62,28 +62,35 @@ $(document).ready(function () {
 
       // ADD DISPLAY CARD CLASSES
 
-      dispCardCont.addClass("mb-28 md:mb-14 lg:mb-10 flex justify-center items-center flex-wrap md:items-start md:flex-nowrap ");
-      dispCardImg.addClass("w-64 md:w-48 aspect-square object-cover");
+      resultsContainer.addClass('#')
 
-      dispCardDetailContainer.addClass("pl-5 pt-3 lg:pt-0 flex flex-col items-center md:items-start");
-      dispCardName.addClass("mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold");
+      dispCardCont.addClass(" mb-28 md:mb-14 lg:mb-10 2xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap");
+      dispCardImg.addClass("w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover");
 
-      dispCardStats.addClass("p-2 flex");
+      dispCardDetailContainer.addClass("pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start");
+      dispCardName.addClass(" mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold");
+
+      dispCardStats.addClass(" p-2 flex");
 
       ratingCont.addClass(
-        "px-2 h-24 2xl:h-20 rounded bg-gray-900/75 flex flex-col justify-center items-center"
+        " px-2 h-24 2xl:h-20 rounded bg-gray-900/75 flex flex-col justify-center items-center"
       );
       ratingNumb.addClass("text-2xl");
       ratingStars.addClass("text-sm tracking-wide");
 
-      infoCont.addClass("ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300");
+      infoCont.addClass(" w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 break-words");
+
+      tags.addClass('mb-2 text-xs font-bold');
+      address.addClass('px-2');
+      phone.addClass('px-2');
+
 
       dispCardBtnCont.addClass("mt-2 flex items-center");
       dispCardMapBtn.addClass(
-        " mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm"
+        " mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm hover:bg-gradient-to-r hover:from-pink-500 hover:to-green-500 hover:text-white transition ease-in-out"
       );
       dispCardUrlBtn.addClass(
-        " mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm"
+        " mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm hover:bg-gradient-to-r hover:from-pink-500 hover:to-green-500 hover:text-white transition ease-in-out"
       );
       dispCardFavBtn.addClass("material-symbols-outlined");
 
@@ -100,6 +107,7 @@ $(document).ready(function () {
         tagName.addClass("pr-2");
         let categoryNumber = business.categories[i].title;
         tagName.text(categoryNumber);
+        tagName.addClass('py-1 px-2 mr-2 border border-slate-300 rounded-full')
         tags.append(tagName);
       }
 
@@ -148,9 +156,9 @@ $(document).ready(function () {
     searchContainer.removeClass("w-full lg:w-2/5 flex flex-col justify-center");
     resultsContainer.removeClass("w-3/5 flex justify-center items-center");
 
-    searchContainer.addClass("w-full lg:w-2/5 flex flex-col ");
+    searchContainer.addClass("w-full lg:w-2/5 2xl:w1/6 flex flex-col ");
     resultsContainer.addClass(
-      "w-full lg:w-3/5 lg:ml-10 mx-h-5/6 overflow-y-scroll flex flex-col items-start"
+      "w-full lg:w-3/5 lg:ml-10 2xl:w-5/6 mx-h-5/6 overflow-y-scroll flex flex-col items-start"
     );
 
     tagLine.hide();
