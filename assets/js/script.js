@@ -3,6 +3,10 @@ $(document).ready(function () {
   var tagLine = $("tag-line");
   var subTagLine = $("sub-tag-line");
 
+  var contactModal = $("#contact-modal");
+  var contactBtn = $("#contactBtn");
+  var contactCloseBtn = $("#contactCloseBtn");
+
   var searchContainer = $("#search-container");
   var gameSearchEl = $("#game-search");
   var locationSearchEl = $("#location-search");
@@ -14,22 +18,37 @@ $(document).ready(function () {
     resultsContainer.empty();
 
     let gameName = gameSearchEl.val().trim();
-    if (gameName === "") {
-      // Display modal
-      return;
-    }
     let locationName = locationSearchEl.val().trim();
-    if (locationName === "") {
-      // Display modal
+
+    // If input is invalid show a modal and return
+    if (gameName === "" && locationName === "") {
+      showErrorModal(
+        "Enter a Game and Location",
+        "Please enter the name of a game and a location to proceed."
+      );
+      return;
+    } else if (gameName === "") {
+      showErrorModal(
+        "Enter a Game",
+        "Please enter the name of a game to proceed."
+      );
+      return;
+    } else if (locationName === "") {
+      showErrorModal(
+        "Enter a Location",
+        "Please enter the location to proceed."
+      );
       return;
     }
 
-    Manager.getBusinessesFromGames(locationName, [gameName]).then(
-      ({ businesses, categories }) => {
+    Manager.getBusinessesFromGames(locationName, [gameName])
+      .then(({ businesses, categories }) => {
         console.log(businesses);
         displayCards(businesses);
-      }
-    );
+      })
+      .catch(({ title, message }) => {
+        showErrorModal(title, message);
+      });
   }
 
   function displayCards(businesses) {
@@ -67,8 +86,10 @@ $(document).ready(function () {
       dispCardCont.addClass(" mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap");
       dispCardImg.addClass("w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover");
 
+
       dispCardDetailContainer.addClass("pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start");
       dispCardName.addClass(" mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold");
+
 
       dispCardStats.addClass(" p-2 flex");
 
@@ -165,21 +186,44 @@ $(document).ready(function () {
     subTagLine.hide();
   }
 
-  function showModal(title, message) {
-    $("#modal-title").text(title);
-    $("#modal-message").text(message);
-    $("#modal-overlay").show().addClass("modal-open");
+  function showErrorModal(title, message) {
+    $("#error-modal-title").text(title);
+    $("#error-modal-message").text(message);
+    $("#error-modal-overlay").show().addClass("error-modal-open");
   }
 
-  $("#modal-close").on("click", function () {
-    var modal = $("#modalOverlay");
-    modal.removeClass("modal-open");
+  $("#error-modal-close").on("click", function () {
+    var modal = $("#error-modal-overlay");
+    modal.removeClass("error-modal-open");
     setTimeout(function () {
       modal.hide();
-      $("#modal-title").text("");
-      $("#modal-message").text("");
     }, 200);
   });
 
   searchBtnEl.on("click", getBusinesses);
+
+  /**
+   * Hides the contact modal and disables the body event listener
+   */
+  function hideContactModal() {
+    contactModal.hide();
+    $("body").off("click.contact-modal");
+  }
+
+  // When the user clicks the button, open the modal
+  contactBtn.on("click", function (e) {
+    e.stopPropagation();
+    contactModal.show();
+    // When the user clicks anywhere outside of the modal, close it
+    $("body").on("click.contact-modal", function (event) {
+      if (event.target !== contactModal) {
+        hideContactModal();
+      }
+    });
+  });
+
+  // When the user clicks on <span> (x), close the modal
+  contactCloseBtn.on("click", function () {
+    hideContactModal();
+  });
 });

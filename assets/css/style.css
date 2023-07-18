@@ -6,9 +6,32 @@ and end. */
 
 /* !! Any selectors that are not used by the end of the project may be deleted !! */
 
+.modal {
+  display: none;
+
+  background: linear-gradient(rgb(211, 97, 187) 0%, rgb(51, 206, 154) 100%);
+  border-radius: 10px;
+  color: white;
+}
+
+.modal-content {
+  padding: 20px;
+  border: 1px solid #888;
+
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+  color: purple;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 /* ===== MODAL SELECTORS ============================================================= */
 
-#modal-overlay {
+#error-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -18,7 +41,7 @@ and end. */
   z-index: 9999;
 }
 
-#modal {
+#error-modal {
   position: fixed;
   top: 55%;
   left: 50%;
@@ -30,7 +53,7 @@ and end. */
   transition: all 300ms ease-in-out;
 }
 
-#modal-overlay.modal-open #modal {
+#error-modal-overlay.error-modal-open #error-modal {
   opacity: 1;
   top: 50%;
 }

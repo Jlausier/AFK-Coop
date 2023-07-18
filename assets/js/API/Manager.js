@@ -33,6 +33,13 @@ class APIManager {
    */
   getBusinessesFromGames = async (location, names) => {
     return this.Games.fetchGameGenresAndThemes(names).then(async (data) => {
+      if (data.length === 0)
+        throw {
+          title: "Game Not Found",
+          message:
+            "We were unable to find a game with that name, please check your spelling and try again.",
+          details: `The game "${names[0]}" could not be found.`,
+        };
       // Reduces game data into the genres and themes
       let processedData = { genres: [], themes: [] };
       data.forEach((game) => {
@@ -51,16 +58,30 @@ class APIManager {
           return APIManager.YelpCategories[id].alias;
       });
 
-      // Fetches businesses by the categories and returns both
-      return await this.Yelp.fetchBusinessesByCategories(
-        location,
-        categories
-      ).then((businesses) => {
-        return {
-          businesses,
-          categories,
+      if (categories.length === 0)
+        throw {
+          title: "No Categories Matched",
+          message:
+            "That game did not match with any known Yelp categories, please try again.",
+          details: `The game "${names[0]}" did not match any preprocessed Yelp categories.`,
         };
-      });
+
+      // Fetches businesses by the categories and returns both
+      return await this.Yelp.fetchBusinessesByCategories(location, categories)
+        .then((businesses) => {
+          return {
+            businesses,
+            categories,
+          };
+        })
+        .catch((error) => {
+          throw {
+            title: "Unable to Search for Businesses",
+            message:
+              "An error occurred while searching for businesses, please try again.",
+            details: error,
+          };
+        });
     });
   };
 
