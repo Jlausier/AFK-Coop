@@ -8,18 +8,18 @@ and end. */
 
 .modal {
   display: none;
-
+    position: fixed;
+  top: 2%;
+  left: 40%;
+  right: 0;
+  bottom: 0;
   background: linear-gradient(rgb(211, 97, 187) 0%, rgb(51, 206, 154) 100%);
-  border-radius: 10px;
-  color: white;
+  z-index: 9999;
+  height: 30%;
+  border-radius: 15px;
 }
 
-.modal-content {
-  padding: 20px;
-  border: 1px solid #888;
 
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
 
 .close {
   color: purple;
