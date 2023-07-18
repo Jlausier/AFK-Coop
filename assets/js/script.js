@@ -228,22 +228,8 @@ $(document).ready(function () {
   });
 });
 
-// const steps = [{
 
-//   content: "This is a short guide to get you set up and show you where things are"
+
+
   
-//   title: "Welcome to AFK 👋"
-  
-//   target: ""
-  
-//   order: ""
-  
-//   group: ""
-  
-//   }]
-  
-//   const tg = new TourGuideClient({
-  
-//   steps: steps
-  
-//   })
+

@@ -16,7 +16,8 @@ and end. */
 }
 
 .modal {
-  position: fixed;
+  
+    position: fixed;
   top: 55%;
   left: 50%;
   text-align: center;
