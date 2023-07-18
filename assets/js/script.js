@@ -12,13 +12,12 @@ $(document).ready(function () {
   var locationSearchEl = $("#location-search");
   var searchBtnEl = $("#search-btn");
 
-  var recentSearchesEl = $('#recently-searched');
-  var revealRecentSearch = $('#reveal-recent-btn');
+  var recentSearchesEl = $("#recently-searched");
+  var revealRecentSearch = $("#reveal-recent-btn");
 
   var resultsContainer = $("#results-container");
 
   function getBusinessesFromForm(event) {
-
     let gameName = gameSearchEl.val().trim();
     let locationName = locationSearchEl.val().trim();
 
@@ -47,22 +46,20 @@ $(document).ready(function () {
 
   function getBusinesses(locationName, gameName) {
     Manager.getBusinessesFromGames(locationName, [gameName])
-    .then(({ businesses, categories }) => {
-      saveSearches(locationName, gameName);
-      displayCards(businesses);
-    })
-    .catch(({ title, message }) => {
-      showErrorModal(title, message);
-    });
+      .then(({ businesses, categories }) => {
+        saveSearches(locationName, gameName);
+        displayCards(businesses);
+      })
+      .catch(({ title, message }) => {
+        showErrorModal(title, message);
+      });
   }
 
   function displayCards(businesses) {
-
     resultsContainer.empty();
 
     businesses.forEach((business) => {
-
-       // GENERATE DISPLAY CARD ELEMENTS
+      // GENERATE DISPLAY CARD ELEMENTS
 
       var dispCardCont = $("<div>");
       var dispCardImg = $("<img>");
@@ -88,15 +85,19 @@ $(document).ready(function () {
 
       // ADD DISPLAY CARD CLASSES
 
-      
+      dispCardCont.addClass(
+        " mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap"
+      );
+      dispCardImg.addClass(
+        "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover"
+      );
 
-      dispCardCont.addClass(" mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap");
-      dispCardImg.addClass("w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover");
-
-
-      dispCardDetailContainer.addClass("pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start");
-      dispCardName.addClass(" mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold");
-
+      dispCardDetailContainer.addClass(
+        "pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start"
+      );
+      dispCardName.addClass(
+        " mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold"
+      );
 
       dispCardStats.addClass(" p-2 flex");
 
@@ -106,12 +107,13 @@ $(document).ready(function () {
       ratingNumb.addClass("text-2xl");
       ratingStars.addClass("text-sm tracking-wide");
 
-      infoCont.addClass(" w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 ");
+      infoCont.addClass(
+        " w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 "
+      );
 
-      tags.addClass('mb-2 text-xs font-bold');
-      address.addClass('px-2');
-      phone.addClass('px-2');
-
+      tags.addClass("mb-2 text-xs font-bold");
+      address.addClass("px-2");
+      phone.addClass("px-2");
 
       dispCardBtnCont.addClass("mt-2 flex items-center");
       dispCardMapBtn.addClass(
@@ -135,7 +137,7 @@ $(document).ready(function () {
         tagName.addClass("pr-2");
         let categoryNumber = business.categories[i].title;
         tagName.text(categoryNumber);
-        tagName.addClass('py-1 px-2 mr-2  border-slate-300 rounded-full')
+        tagName.addClass("py-1 px-2 mr-2  border-slate-300 rounded-full");
         tags.append(tagName);
       }
 
@@ -234,118 +236,112 @@ $(document).ready(function () {
     hideContactModal();
   });
 
+  // ================== Search History ================== //
 
-      // ================== Search History ================== //
+  // Retain data from local storage
 
-      // Retain data from local storage
+  function readSearchesFromStorage() {
+    return JSON.parse(localStorage.getItem("AFK Game Searches")) || [];
+  }
 
-      function readSearchesFromStorage() {
-        var searches = localStorage.getItem('AFK Game Searches');
-        if (searches) {
-            searches = JSON.parse(searches);
-        } else {
-            searches = [];
-        }
-        return searches;
-        
+  // Display data from local storage
+
+  function printSearchHistory() {
+    //clear current list of searches on page
+    recentSearchesEl.empty(); //
+
+    // attaches the array made from readSearchesFromStorage and applies it to searches
+    let searches = readSearchesFromStorage();
+
+    // loop through each project and create a new li and add it to the list
+
+    searches.forEach((searchedItem) => {
+      let listEl = $("<p>");
+
+      listEl.addClass("saved-search");
+
+      listEl.text(searchedItem.game + " in " + searchedItem.location);
+      listEl.attr("style", "list-style-type: none");
+
+      listEl.on("click", function () {
+        getBusinesses(searchedItem.location, searchedItem.game);
+      });
+
+      recentSearchesEl.append(listEl);
+
+      // recentSearchesEl.slowDown('slow');
+    });
+  }
+
+  // add searched item to local storage
+  function saveSearches(searchLocation, searchGameName) {
+    // Get the old searches from local storage
+    let searchHistory = readSearchesFromStorage();
+
+    // Find the index of the new search item
+    let index = searchHistory.indexOf(
+      (search) =>
+        search.game === searchGameName && search.location === searchLocation
+    );
+
+    // If it's already the most recent search no change is necessary
+    if (index !== 0) {
+      // Remove new search item if it already existed
+      if (index !== -1) {
+        searchHistory.splice(index, 1);
       }
 
-      // Save NEW data to local storage
-
-      function saveSearchesToStorage(searchItem) {
-        localStorage.setItem('AFK Game Searches', JSON.stringify(searchItem));
-      }
-
-    // Display data from local storage
-
-    function printSearchHistory() {
-      //clear current list of searches on page
-      recentSearchesEl.empty(); // 
-      
-      // attaches the array made from readSearchesFromStorage and applies it to searches
-      var searches = readSearchesFromStorage();
-      
-      // loop through each project and create a new li and add it to the list
-      for (var i = 0; i < searches.length; i++) {
-          var searchedItems = searches[i];
-          
-          var listEl = $('<p>');
-
-          listEl.addClass('saved-search');
-
-          listEl.text(searchedItems.game +  ' in ' + searchedItems.location);
-          listEl.attr('style','list-style-type: none');
-
-          listEl.on("click", function() {
-              getBusinesses(searchedItems.location, searchedItems.game);
-          });
-
-          recentSearchesEl.append(listEl);
-
-          // recentSearchesEl.slowDown('slow');
-      }
-    };  
-
-    function saveSearches(searchLocation, searchGameName) {
-      let searchData = {
+      // Add new search item to the beginning
+      searchHistory.unshift({
         game: searchGameName,
-        location: searchLocation
+        location: searchLocation,
+      });
+
+      // Remove excess search items
+      if (searchHistory.length > 4) {
+        searchHistory.pop();
       }
 
-      // add searched item to local storage
-      var searchHistory = readSearchesFromStorage();
-
-      if (!searchHistory.some(search => search.game === searchGameName)) {
-          searchHistory.unshift(searchData);
-          if (searchHistory.length > 4) {
-            searchHistory.pop();
-          }
-          saveSearchesToStorage(searchHistory);
-      }
+      // Add the search history back into local storage
+      localStorage.setItem("AFK Game Searches", JSON.stringify(searchItems));
 
       printSearchHistory();
-    };
+    }
+  }
 
-    
+  // ===== Recent Searches ===== //
 
+  let open = "";
 
-    // ===== Recent Searches ===== //
+  revealRecentSearch.on("click", () => {
+    let arrow = $("#toggle-arrow");
 
-    let open = '';
+    if (!open) {
+      arrow.text("arrow_drop_up");
+      recentSearchesEl.slideDown("slow");
+      open = true;
+      console.log("if" + open);
+    } else {
+      arrow.text("arrow_drop_down");
+      recentSearchesEl.slideUp("slow");
+      open = false;
+      console.log("else" + open);
+    }
+  });
 
-    revealRecentSearch.on( "click", () => {
-        var arrow = $('#toggle-arrow');
-        
-        if (!open) {
-          arrow.text('arrow_drop_up');
-          recentSearchesEl.slideDown("slow");
-          open = true;
-          console.log('if' + open);
-        } else {
-          arrow.text('arrow_drop_down');
-          recentSearchesEl.slideUp("slow");
-          open = false;
-          console.log('else' + open);
-        }
+  printSearchHistory();
 
-       
-    });
+  // $(".saved-search").on("click", function() {
+  //   console.log('click');
+  //   let searches = readSearchesFromStorage();
+  //   let savedSearch = searches.find((saved) => {
+  //     console.log('good')
+  //     return saved.game + saved.location == $(this).attr("data-game");
 
-    printSearchHistory();
-      
-      // $(".saved-search").on("click", function() {
-      //   console.log('click');
-      //   let searches = readSearchesFromStorage();
-      //   let savedSearch = searches.find((saved) => {
-      //     console.log('good')
-      //     return saved.game + saved.location == $(this).attr("data-game");
-
-      //   });
-      // console.log(typeof savedSearch);
-      //   if (typeof savedSearch !== "undefined") {
-      //     getBusinesses(savedSearch.location, savedSearch.game);
-      //   }
-      // });
-
-      
-  })
+  //   });
+  // console.log(typeof savedSearch);
+  //   if (typeof savedSearch !== "undefined") {
+  //     getBusinesses(savedSearch.location, savedSearch.game);
+  //   }
+  // });
+});
