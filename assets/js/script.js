@@ -62,9 +62,9 @@ $(document).ready(function () {
 
       // ADD DISPLAY CARD CLASSES
 
-      resultsContainer.addClass('#')
+      
 
-      dispCardCont.addClass(" mb-28 md:mb-14 lg:mb-10 2xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap");
+      dispCardCont.addClass(" mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap");
       dispCardImg.addClass("w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover");
 
       dispCardDetailContainer.addClass("pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start");
@@ -78,7 +78,7 @@ $(document).ready(function () {
       ratingNumb.addClass("text-2xl");
       ratingStars.addClass("text-sm tracking-wide");
 
-      infoCont.addClass(" w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 break-words");
+      infoCont.addClass(" w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 ");
 
       tags.addClass('mb-2 text-xs font-bold');
       address.addClass('px-2');
@@ -107,7 +107,7 @@ $(document).ready(function () {
         tagName.addClass("pr-2");
         let categoryNumber = business.categories[i].title;
         tagName.text(categoryNumber);
-        tagName.addClass('py-1 px-2 mr-2 border border-slate-300 rounded-full')
+        tagName.addClass('py-1 px-2 mr-2  border-slate-300 rounded-full')
         tags.append(tagName);
       }
 
@@ -156,9 +156,9 @@ $(document).ready(function () {
     searchContainer.removeClass("w-full lg:w-2/5 flex flex-col justify-center");
     resultsContainer.removeClass("w-3/5 flex justify-center items-center");
 
-    searchContainer.addClass("w-full lg:w-2/5 2xl:w1/6 flex flex-col ");
+    searchContainer.addClass("w-full lg:w-2/5 2xl:w1/2 flex flex-col");
     resultsContainer.addClass(
-      "w-full lg:w-3/5 lg:ml-10 2xl:w-5/6 mx-h-5/6 overflow-y-scroll flex flex-col items-start"
+      "w-full lg:w-3/5 lg:ml-10 2xl:w-1/2 lg:h-[40rem] xl:h-[50rem] overflow-y-scroll flex flex-col justify-start items-start"
     );
 
     tagLine.hide();
