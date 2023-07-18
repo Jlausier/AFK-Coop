@@ -12,6 +12,8 @@ $(document).ready(function () {
   var locationSearchEl = $("#location-search");
   var searchBtnEl = $("#search-btn");
 
+  var recentSearchesEl = $('#recently-searched');
+
   var resultsContainer = $("#results-container");
 
   function getBusinesses(event) {
@@ -226,4 +228,76 @@ $(document).ready(function () {
   contactCloseBtn.on("click", function () {
     hideContactModal();
   });
+
+
+      // ================== Search History ================== //
+
+      // Retain data from local storage
+
+      function readSearchesFromStorage() {
+        var searches = localStorage.getItem('AFK Game Searches');
+        if (searches) {
+            searches = JSON.parse(searches);
+        } else {
+            searches = [];
+        }
+        return searches;
+      }
+
+      // Save NEW data to local storage
+
+      function saveSearchesToStorage(searchItem) {
+        localStorage.setItem('AFK Game Searches', JSON.stringify(searchItem));
+      }
+
+    // Display data from local storage
+
+    function printSearchHistory() {
+      //clear current list of searches on page
+      recentSearchesEl.empty(); // 
+      
+      // attaches the array made from readSearchesFromStorage and applies it to searches
+      var searches = readSearchesFromStorage();
+      
+      // loop through each project and create a new li and add it to the list
+      for (var i = 0; i < searches.length; i++) {
+          var searchedItems = searches[i];
+          console.log(searchedItems);
+          
+          // var listEl = $('<li>');
+
+          // listEl.addClass('#')
+
+          // listEl.text(searchedItems);
+          // listEl.attr('style','list-style-type: none');
+
+          // searchHistoryEl.append(listEl);
+      }
+    };  
+
+    function saveSearches() {
+
+      var searchGameName = $('#game-search').val();
+      var searchLocation = $('#location-search').val();
+      let searchData = {
+        game: searchGameName,
+        location: searchLocation
+      }
+
+      // add searched item to local storage
+      var searchHistory = readSearchesFromStorage();
+
+      if (!searchHistory.includes(searchGameName)) {
+          if (searchHistory.length > 5) {
+            searchHistory.pop();
+          }
+          searchHistory.unshift(searchData);
+          saveSearchesToStorage(searchHistory);
+      }
+
+      printSearchHistory();
+    };
+
+    searchBtnEl.on('click', saveSearches);
+
 });
