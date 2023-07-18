@@ -201,7 +201,7 @@
         <span id="sub-tag-line" class="px-5 text-xl">Welcome Gamers</span>
         <!-- FORM -->
         <form
-          class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900 flex flex-col"
+          class="mt-5 pt-5 px-5 opacity-75 rounded-lg shadow-lg bg-gray-900 flex flex-col"
         >
           <label class="mb-1 mt-5 text-blue-300 font-bold"
             >Enter Your Favorite Game</label
@@ -229,7 +229,16 @@
             >
           </div>
         </form>
-        <div id="recently-searched"></div>
+        <!-- Recently Searched -->
+        <div class="flex justify-center">
+          <div id="recently-searched" class="p-5 invisible"></div>
+          <div
+          id="reveal-recent-btn"
+            class="h-8 w-80 rounded-b-lg bg-gray-900/50 text-white text-center justify-self-center"
+          >
+            Recent Searches
+          </div>
+        </div>
       </div>
       <div
         id="results-container"

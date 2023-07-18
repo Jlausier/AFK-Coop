@@ -13,6 +13,7 @@ $(document).ready(function () {
   var searchBtnEl = $("#search-btn");
 
   var recentSearchesEl = $('#recently-searched');
+  var revealRecentSearch = $('reveal-recent-btn');
 
   var resultsContainer = $("#results-container");
 
@@ -241,7 +242,9 @@ $(document).ready(function () {
         } else {
             searches = [];
         }
+        console.log(searches);
         return searches;
+        
       }
 
       // Save NEW data to local storage
@@ -258,20 +261,25 @@ $(document).ready(function () {
       
       // attaches the array made from readSearchesFromStorage and applies it to searches
       var searches = readSearchesFromStorage();
+      console.log('this one!!!!');
+      console.log(searches);
       
       // loop through each project and create a new li and add it to the list
       for (var i = 0; i < searches.length; i++) {
           var searchedItems = searches[i];
           console.log(searchedItems);
           
-          // var listEl = $('<li>');
+          var listEl = $('<p>');
 
-          // listEl.addClass('#')
+          recentSearchesEl.addClass('bg-gray-900/50')
+          listEl.addClass('#');
 
-          // listEl.text(searchedItems);
-          // listEl.attr('style','list-style-type: none');
+          listEl.text(searchedItems.game +  ' in ' + searchedItems.location);
+          listEl.attr('style','list-style-type: none');
 
-          // searchHistoryEl.append(listEl);
+          recentSearchesEl.append(listEl);
+
+          recentSearchesEl.slowDown('slow');
       }
     };  
 
@@ -288,7 +296,7 @@ $(document).ready(function () {
       var searchHistory = readSearchesFromStorage();
 
       if (!searchHistory.includes(searchGameName)) {
-          if (searchHistory.length > 5) {
+          if (searchHistory.length > 4) {
             searchHistory.pop();
           }
           searchHistory.unshift(searchData);
@@ -299,5 +307,7 @@ $(document).ready(function () {
     };
 
     searchBtnEl.on('click', saveSearches);
+
+
 
 });
