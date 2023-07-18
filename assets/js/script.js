@@ -1,12 +1,13 @@
 $(document).ready(function () {
   let Manager = new APIManager();
-  let root = document.querySelector(":root");
   var tagLine = $("tag-line");
   var subTagLine = $("sub-tag-line");
 
   var contactModal = $("#contact-modal");
   var contactBtn = $("#contactBtn");
   var contactCloseBtn = $("#contactCloseBtn");
+
+  let favoritesBtn = $("#favorites-button");
 
   var searchContainer = $("#search-container");
   var gameSearchEl = $("#game-search");
@@ -15,9 +16,10 @@ $(document).ready(function () {
 
   var resultsContainer = $("#results-container");
 
-  function getBusinesses(event) {
-    resultsContainer.empty();
+  let isDisplayingFavorites = false;
 
+  function getBusinessesFromForm(event) {
+    isDisplayingFavorites = false;
     let gameName = gameSearchEl.val().trim();
     let locationName = locationSearchEl.val().trim();
 
@@ -41,7 +43,10 @@ $(document).ready(function () {
       );
       return;
     }
+    getBusinesses(locationName, gameName);
+  }
 
+  function getBusinesses(locationName, gameName) {
     Manager.getBusinessesFromGames(locationName, [gameName])
       .then(({ businesses, categories }) => {
         console.log(businesses);
@@ -53,6 +58,7 @@ $(document).ready(function () {
   }
 
   function displayCards(businesses) {
+    resultsContainer.empty();
     let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
     businesses.forEach((business) => {
       // GENERATE DISPLAY CARD ELEMENTS
@@ -193,18 +199,6 @@ $(document).ready(function () {
     reformat();
   }
 
-  /**
-   * Saves or removes a favorite business into local storage
-   * @param {Object} business Full business object to save
-   */
-  function saveFavorite(business) {
-    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    let index = favorites.findIndex((fav) => fav.id === business.id);
-    if (index === -1) favorites.unshift(business);
-    else favorites.splice(index, 1);
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }
-
   function reformat() {
     searchContainer.removeClass("w-full lg:w-2/5 flex flex-col justify-center");
     resultsContainer.removeClass("w-3/5 flex justify-center items-center");
@@ -232,7 +226,7 @@ $(document).ready(function () {
     }, 200);
   });
 
-  searchBtnEl.on("click", getBusinesses);
+  searchBtnEl.on("click", getBusinessesFromForm);
 
   /**
    * Hides the contact modal and disables the body event listener
@@ -258,4 +252,30 @@ $(document).ready(function () {
   contactCloseBtn.on("click", function () {
     hideContactModal();
   });
+
+  /**
+   * Saves or removes a favorite business into local storage
+   * @param {Object} business Full business object to save
+   */
+  function saveFavorite(business) {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    let index = favorites.findIndex((fav) => fav.id === business.id);
+    if (index === -1) favorites.unshift(business);
+    else favorites.splice(index, 1);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    if (isDisplayingFavorites && index !== -1) displayFavorites();
+  }
+
+  /**
+   * Displays favorites cards in results container
+   */
+  function displayFavorites() {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    if (isDisplayingFavorites || favorites.length !== 0) {
+      isDisplayingFavorites = true;
+      displayCards(favorites);
+    }
+  }
+
+  favoritesBtn.on("click", displayFavorites);
 });
