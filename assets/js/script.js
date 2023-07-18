@@ -18,7 +18,11 @@ $(document).ready(function () {
 
   let isDisplayingFavorites = false;
 
-  function getBusinessesFromForm(event) {
+  /**
+   * Checks if inputs are valid and gets the calls getBusinesses
+   * @returns {null} Return if conditons for search are not met
+   */
+  function getBusinessesFromForm() {
     isDisplayingFavorites = false;
     let gameName = gameSearchEl.val().trim();
     let locationName = locationSearchEl.val().trim();
@@ -46,6 +50,11 @@ $(document).ready(function () {
     getBusinesses(locationName, gameName);
   }
 
+  /**
+   * Gets businesses from the API Manager, displays results or an error modal
+   * @param {string} locationName Geographic area to search for businesses
+   * @param {string} gameName Name of the game to get the genres and themes from
+   */
   function getBusinesses(locationName, gameName) {
     Manager.getBusinessesFromGames(locationName, [gameName])
       .then(({ businesses, categories }) => {
@@ -274,6 +283,11 @@ $(document).ready(function () {
     if (isDisplayingFavorites || favorites.length !== 0) {
       isDisplayingFavorites = true;
       displayCards(favorites);
+    } else if (!isDisplayingFavorites && favorites.length === 0) {
+      showErrorModal(
+        "No Favorites",
+        "You have no favorited businesses yet, click the heart icon to save a business as a favorite."
+      );
     }
   }
 
