@@ -24,10 +24,7 @@ class APIManager {
   }
 
   /**
-   * Gets the genres and themes for a list of games,
-   *  gets the associated yelp categories,
-   *  returns a list of businesses based on the categories
-   *
+   * Gets the genres and themes for a list of games, calls function to get businesses
    * @param  {Array<string>} names Names of the game(s) with usable genres and themes
    * @returns {Promise<Array<Object>>} Promise that returns businesses or throws an error
    */
@@ -47,42 +44,49 @@ class APIManager {
         processedData.themes = processedData.themes.concat(game.themes);
       });
 
-      // Sorts the genres and themes to group duplicates
-      processedData.genres = processedData.genres.sort((a, b) => a - b);
-      processedData.themes = processedData.themes.sort((a, b) => a - b);
-
-      // Gets the associated categories
-      let categoryIds = this.mapGenresAndThemesToCategories(processedData);
-      let categories = categoryIds.map((id) => {
-        if (id in APIManager.YelpCategories)
-          return APIManager.YelpCategories[id].alias;
-      });
-
-      if (categories.length === 0)
-        throw {
-          title: "No Categories Matched",
-          message:
-            "That game did not match with any known Yelp categories, please try again.",
-          details: `The game "${names[0]}" did not match any preprocessed Yelp categories.`,
-        };
-
-      // Fetches businesses by the categories and returns both
-      return await this.Yelp.fetchBusinessesByCategories(location, categories)
-        .then((businesses) => {
-          return {
-            businesses,
-            categories,
-          };
-        })
-        .catch((error) => {
-          throw {
-            title: "Unable to Search for Businesses",
-            message:
-              "An error occurred while searching for businesses, please try again.",
-            details: error,
-          };
-        });
+      return this.getBusinessesFromGameCategories(location, processedData);
     });
+  };
+
+  /**
+   * Gets the Yelp categories from genres and themes,
+   * @param {string} location
+   * @param {Object} gameData Data with game genres and themes arrays
+   * @param {Array<string>} gameData.genres Array of game genres
+   * @param {Array<string>} gameData.themes Array of game themes
+   * @returns Promise that returns businesses or throws an error
+   */
+  getBusinessesFromGameCategories = async (location, gameData) => {
+    // Sorts the genres and themes to group duplicates
+    let categories = this.mapGenresAndThemesToCategories({
+      genres: gameData.genres.sort((a, b) => a - b),
+      themes: gameData.themes.sort((a, b) => a - b),
+    });
+
+    // Check if any categories match
+    if (categories.length === 0)
+      throw {
+        title: "No Categories Matched",
+        message:
+          "Your selections did not match with any known Yelp categories, please try again.",
+      };
+
+    // Fetches businesses by the categories and returns both
+    return await this.Yelp.fetchBusinessesByCategories(location, categories)
+      .then((businesses) => {
+        return {
+          businesses,
+          categories,
+        };
+      })
+      .catch((error) => {
+        throw {
+          title: "Unable to Search for Businesses",
+          message:
+            "An error occurred while searching for businesses, please try again.",
+          details: error,
+        };
+      });
   };
 
   /**
@@ -140,9 +144,17 @@ class APIManager {
     } else index = sortable.length;
 
     // Returns array of Yelp category IDs
-    return sortable.slice(0, index).map((id) => id[0]);
+    return sortable.slice(0, index).map((id) => {
+      if (id[0] in APIManager.YelpCategories)
+        return APIManager.YelpCategories[id[0]].alias;
+    });
   };
 
+  /**
+   * Creates a Google Maps link from an address
+   * @param {Array<string>} displayAddress Array of address lines
+   * @returns {string} Google Maps link
+   */
   createGoogleMapsLink = (displayAddress) => {
     let baseUrl = "http://maps.google.com/?q=";
     displayAddress.forEach((line, index) => {

@@ -290,6 +290,6 @@ $(document).ready(function () {
       );
     }
   }
-
+  // Displays favorites when button in header is clicked
   favoritesBtn.on("click", displayFavorites);
 });
