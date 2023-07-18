@@ -52,10 +52,11 @@ $(document).ready(function () {
   }
 
   function displayCards(businesses) {
-    // Write a for loop here
 
     businesses.forEach((business) => {
-      //
+
+       // GENERATE DISPLAY CARD ELEMENTS
+
       var dispCardCont = $("<div>");
       var dispCardImg = $("<img>");
 
@@ -78,35 +79,43 @@ $(document).ready(function () {
       var dispCardUrlBtn = $("<a>");
       var dispCardFavBtn = $("<button>");
 
-      dispCardCont.addClass("mb-10 flex flex-wrap");
-      dispCardImg.addClass("w-48 h-48 object-cover");
+      // ADD DISPLAY CARD CLASSES
 
-      dispCardDetailContainer.addClass("pl-5 pt-3");
-      dispCardName.addClass(
-        "mb-2 text-slate-200 font-sans text-xl md:text-2xl font-bold"
-      );
+      
 
-      dispCardStats.addClass("p-2 flex");
+      dispCardCont.addClass(" mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap");
+      dispCardImg.addClass("w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover");
+
+
+      dispCardDetailContainer.addClass("pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start");
+      dispCardName.addClass(" mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold");
+
+
+      dispCardStats.addClass(" p-2 flex");
 
       ratingCont.addClass(
-        "px-2 rounded bg-gray-900/75 flex flex-col justify-center items-center"
+        " px-2 h-24 2xl:h-20 rounded bg-gray-900/75 flex flex-col justify-center items-center"
       );
-      ratingNumb.addClass(" text-4xl");
-      ratingStars.addClass(" text-sm tracking-wide");
+      ratingNumb.addClass("text-2xl");
+      ratingStars.addClass("text-sm tracking-wide");
 
-      infoCont.addClass("ml-2 pl-2 text-slate-300");
-      // tags.addClass('');
-      // address.addClass('');
-      // phone.addClass('');
+      infoCont.addClass(" w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 ");
+
+      tags.addClass('mb-2 text-xs font-bold');
+      address.addClass('px-2');
+      phone.addClass('px-2');
+
 
       dispCardBtnCont.addClass("mt-2 flex items-center");
       dispCardMapBtn.addClass(
-        "mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm"
+        " mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm hover:bg-gradient-to-r hover:from-pink-500 hover:to-green-500 hover:text-white transition ease-in-out"
       );
       dispCardUrlBtn.addClass(
-        "mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm"
+        " mr-3 px-3 py-1 rounded-full bg-gray-900/50 text-sm hover:bg-gradient-to-r hover:from-pink-500 hover:to-green-500 hover:text-white transition ease-in-out"
       );
       dispCardFavBtn.addClass("material-symbols-outlined");
+
+      // CONNECT DISPLAY CARD WITH API DATA
 
       dispCardImg.attr("src", business["image_url"]);
       dispCardName.text(business.name);
@@ -119,6 +128,7 @@ $(document).ready(function () {
         tagName.addClass("pr-2");
         let categoryNumber = business.categories[i].title;
         tagName.text(categoryNumber);
+        tagName.addClass('py-1 px-2 mr-2  border-slate-300 rounded-full')
         tags.append(tagName);
       }
 
@@ -138,6 +148,8 @@ $(document).ready(function () {
 
       dispCardFavBtn.text("favorite");
       dispCardFavBtn.attr(".fav-btn");
+
+      // INSERT DISPLAY CARD INTO CONTAINER
 
       dispCardBtnCont.append(dispCardMapBtn, dispCardUrlBtn, dispCardFavBtn);
 
@@ -162,14 +174,12 @@ $(document).ready(function () {
   }
 
   function reformat() {
-    searchContainer.removeClass("w-full md:w-2/5 flex flex-col justify-center");
-    resultsContainer.removeClass(
-      "w-full md:w-3/5 flex justify-center items-center"
-    );
+    searchContainer.removeClass("w-full lg:w-2/5 flex flex-col justify-center");
+    resultsContainer.removeClass("w-3/5 flex justify-center items-center");
 
-    searchContainer.addClass("md:w-1/4 flex flex-col ");
+    searchContainer.addClass("w-full lg:w-2/5 2xl:w1/2 flex flex-col");
     resultsContainer.addClass(
-      "w-3/4  ml-10 md:pl-10 md:h-96 md:overflow-y-scroll lg:h-[40rem] lg:overflow-y-scroll flex flex-col  items-start "
+      "w-full lg:w-3/5 lg:ml-10 2xl:w-1/2 lg:h-[40rem] xl:h-[50rem] overflow-y-scroll flex flex-col justify-start items-start"
     );
 
     tagLine.hide();
