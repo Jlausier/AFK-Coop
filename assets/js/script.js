@@ -279,17 +279,15 @@ $(document).ready(function () {
     let searchHistory = readSearchesFromStorage();
 
     // Find the index of the new search item
-    let index = searchHistory.indexOf(
+    let index = searchHistory.findIndex(
       (search) =>
-        search.game === searchGameName && search.location === searchLocation
+        search.game == searchGameName && search.location == searchLocation
     );
 
     // If it's already the most recent search no change is necessary
     if (index !== 0) {
       // Remove new search item if it already existed
-      if (index !== -1) {
-        searchHistory.splice(index, 1);
-      }
+      if (index !== -1) searchHistory.splice(index, 1);
 
       // Add new search item to the beginning
       searchHistory.unshift({
@@ -298,13 +296,9 @@ $(document).ready(function () {
       });
 
       // Remove excess search items
-      if (searchHistory.length > 4) {
-        searchHistory.pop();
-      }
+      if (searchHistory.length > 4) searchHistory.pop();
 
-      // Add the search history back into local storage
-      localStorage.setItem("AFK Game Searches", JSON.stringify(searchItems));
-
+      localStorage.setItem("AFK Game Searches", JSON.stringify(searchHistory));
       printSearchHistory();
     }
   }
