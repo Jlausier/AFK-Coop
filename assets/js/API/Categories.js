@@ -46,6 +46,22 @@ APIManager.GameCategories = {
 };
 
 /**
+ * Extracts the ids and titles from genres and themes
+ * @returns {Object} Genres and themes arrays with ids and titles
+ */
+APIManager.getGameCategories = function () {
+  function getCategoriesObject(obj) {
+    return Object.keys(obj).map((id) => {
+      return { id, title: obj[id].title };
+    });
+  }
+  return {
+    genres: getCategoriesObject(APIManager.GameCategories.Genres),
+    themes: getCategoriesObject(APIManager.GameCategories.Themes),
+  };
+};
+
+/**
  * Yelp categories keyed by local ID
  *  - title: User friendly name
  *  - alias: URL friendly name

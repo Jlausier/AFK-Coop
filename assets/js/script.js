@@ -293,9 +293,3 @@ $(document).ready(function () {
 
   favoritesBtn.on("click", displayFavorites);
 });
-
-
-
-
-  
-
