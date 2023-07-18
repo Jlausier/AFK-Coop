@@ -52,10 +52,8 @@ $(document).ready(function () {
   }
 
   function displayCards(businesses) {
-
     businesses.forEach((business) => {
-
-       // GENERATE DISPLAY CARD ELEMENTS
+      // GENERATE DISPLAY CARD ELEMENTS
 
       var dispCardCont = $("<div>");
       var dispCardImg = $("<img>");
@@ -81,15 +79,19 @@ $(document).ready(function () {
 
       // ADD DISPLAY CARD CLASSES
 
-      
+      dispCardCont.addClass(
+        " mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap"
+      );
+      dispCardImg.addClass(
+        "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover"
+      );
 
-      dispCardCont.addClass(" mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap");
-      dispCardImg.addClass("w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover");
-
-
-      dispCardDetailContainer.addClass("pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start");
-      dispCardName.addClass(" mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold");
-
+      dispCardDetailContainer.addClass(
+        "pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start"
+      );
+      dispCardName.addClass(
+        " mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold"
+      );
 
       dispCardStats.addClass(" p-2 flex");
 
@@ -99,12 +101,13 @@ $(document).ready(function () {
       ratingNumb.addClass("text-2xl");
       ratingStars.addClass("text-sm tracking-wide");
 
-      infoCont.addClass(" w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 ");
+      infoCont.addClass(
+        " w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 "
+      );
 
-      tags.addClass('mb-2 text-xs font-bold');
-      address.addClass('px-2');
-      phone.addClass('px-2');
-
+      tags.addClass("mb-2 text-xs font-bold");
+      address.addClass("px-2");
+      phone.addClass("px-2");
 
       dispCardBtnCont.addClass("mt-2 flex items-center");
       dispCardMapBtn.addClass(
@@ -128,7 +131,7 @@ $(document).ready(function () {
         tagName.addClass("pr-2");
         let categoryNumber = business.categories[i].title;
         tagName.text(categoryNumber);
-        tagName.addClass('py-1 px-2 mr-2  border-slate-300 rounded-full')
+        tagName.addClass("py-1 px-2 mr-2  border-slate-300 rounded-full");
         tags.append(tagName);
       }
 
@@ -147,7 +150,28 @@ $(document).ready(function () {
       dispCardUrlBtn.attr("target", "_blank");
 
       dispCardFavBtn.text("favorite");
-      dispCardFavBtn.attr(".fav-btn");
+      dispCardFavBtn.addClass(".fav-btn");
+      dispCardFavBtn.on("click", () => {
+        let currentState = $(this).attr("data-state");
+        console.log(currentState);
+        $(this).attr(
+          "data-state",
+          currentState == "active" ? "inactive" : "active"
+        );
+
+        document.documentElement.style.getPropertyValue("--variation");
+
+        document.documentElement.style.setProperty(
+          "--variation",
+          currentState == "active"
+            ? `'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24`
+            : `'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24`
+        );
+
+        document.documentElement.style.getPropertyValue("--variation");
+
+        saveFavorite(business);
+      });
 
       // INSERT DISPLAY CARD INTO CONTAINER
 
@@ -171,6 +195,13 @@ $(document).ready(function () {
     });
 
     reformat();
+  }
+
+  function saveFavorite(business) {
+    let currentFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    if (!currentFavorites.some((f) => f.id === business.id)) {
+      //
+    }
   }
 
   function reformat() {
