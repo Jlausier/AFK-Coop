@@ -29,7 +29,7 @@ and end. */
   cursor: pointer;
 }
 
-/* ===== MODAL SELECTORS ============================================================= */
+/* ===== ERROR MODAL SELECTORS ======================================================= */
 
 #error-modal-overlay {
   position: fixed;
@@ -56,4 +56,16 @@ and end. */
 #error-modal-overlay.error-modal-open #error-modal {
   opacity: 1;
   top: 50%;
+}
+
+/* ===== FAVORITES SELECTORS ========================================================= */
+
+.fav-btn {
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
+  transition-property: font-variation-settings;
+  transition-duration: 0.1s;
+}
+
+.fav-btn[data-state="active"] {
+  font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 24;
 }

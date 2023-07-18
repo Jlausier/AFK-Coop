@@ -1,5 +1,6 @@
 $(document).ready(function () {
   let Manager = new APIManager();
+  let root = document.querySelector(":root");
   var tagLine = $("tag-line");
   var subTagLine = $("sub-tag-line");
 
@@ -52,6 +53,7 @@ $(document).ready(function () {
   }
 
   function displayCards(businesses) {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
     businesses.forEach((business) => {
       // GENERATE DISPLAY CARD ELEMENTS
 
@@ -120,7 +122,7 @@ $(document).ready(function () {
 
       // CONNECT DISPLAY CARD WITH API DATA
 
-      dispCardImg.attr("src", business["image_url"]);
+      dispCardImg.attr("src", business.image_url);
       dispCardName.text(business.name);
 
       ratingNumb.text(business.rating);
@@ -149,27 +151,21 @@ $(document).ready(function () {
       dispCardUrlBtn.attr("href", business.url);
       dispCardUrlBtn.attr("target", "_blank");
 
+      // Create favorites button
       dispCardFavBtn.text("favorite");
-      dispCardFavBtn.addClass(".fav-btn");
+      dispCardFavBtn.addClass("fav-btn");
+      // Set the current favorite state
+      dispCardFavBtn.attr(
+        "data-state",
+        favorites.some((fav) => fav.id === business.id) ? "active" : ""
+      );
       dispCardFavBtn.on("click", () => {
-        let currentState = $(this).attr("data-state");
-        console.log(currentState);
-        $(this).attr(
+        // Toggle the favorites state
+        dispCardFavBtn.attr(
           "data-state",
-          currentState == "active" ? "inactive" : "active"
+          dispCardFavBtn.attr("data-state") == "active" ? "" : "active"
         );
-
-        document.documentElement.style.getPropertyValue("--variation");
-
-        document.documentElement.style.setProperty(
-          "--variation",
-          currentState == "active"
-            ? `'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24`
-            : `'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24`
-        );
-
-        document.documentElement.style.getPropertyValue("--variation");
-
+        // Add or remove from localStorage
         saveFavorite(business);
       });
 
@@ -197,11 +193,16 @@ $(document).ready(function () {
     reformat();
   }
 
+  /**
+   * Saves or removes a favorite business into local storage
+   * @param {Object} business Full business object to save
+   */
   function saveFavorite(business) {
-    let currentFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    if (!currentFavorites.some((f) => f.id === business.id)) {
-      //
-    }
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    let index = favorites.findIndex((fav) => fav.id === business.id);
+    if (index === -1) favorites.unshift(business);
+    else favorites.splice(index, 1);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
   }
 
   function reformat() {
