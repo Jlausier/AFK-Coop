@@ -7,6 +7,8 @@ $(document).ready(function () {
   var contactBtn = $("#contactBtn");
   var contactCloseBtn = $("#contactCloseBtn");
 
+  let favoritesBtn = $("#favorites-button");
+
   var searchContainer = $("#search-container");
   var gameSearchEl = $("#game-search");
   var locationSearchEl = $("#location-search");
@@ -14,9 +16,14 @@ $(document).ready(function () {
 
   var resultsContainer = $("#results-container");
 
-  function getBusinesses(event) {
-    resultsContainer.empty();
+  let isDisplayingFavorites = false;
 
+  /**
+   * Checks if inputs are valid and gets the calls getBusinesses
+   * @returns {null} Return if conditons for search are not met
+   */
+  function getBusinessesFromForm() {
+    isDisplayingFavorites = false;
     let gameName = gameSearchEl.val().trim();
     let locationName = locationSearchEl.val().trim();
 
@@ -40,7 +47,15 @@ $(document).ready(function () {
       );
       return;
     }
+    getBusinesses(locationName, gameName);
+  }
 
+  /**
+   * Gets businesses from the API Manager, displays results or an error modal
+   * @param {string} locationName Geographic area to search for businesses
+   * @param {string} gameName Name of the game to get the genres and themes from
+   */
+  function getBusinesses(locationName, gameName) {
     Manager.getBusinessesFromGames(locationName, [gameName])
       .then(({ businesses, categories }) => {
         console.log(businesses);
@@ -52,10 +67,10 @@ $(document).ready(function () {
   }
 
   function displayCards(businesses) {
-
+    resultsContainer.empty();
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
     businesses.forEach((business) => {
-
-       // GENERATE DISPLAY CARD ELEMENTS
+      // GENERATE DISPLAY CARD ELEMENTS
 
       var dispCardCont = $("<div>");
       var dispCardImg = $("<img>");
@@ -81,15 +96,19 @@ $(document).ready(function () {
 
       // ADD DISPLAY CARD CLASSES
 
-      
+      dispCardCont.addClass(
+        " mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap"
+      );
+      dispCardImg.addClass(
+        "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover"
+      );
 
-      dispCardCont.addClass(" mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap");
-      dispCardImg.addClass("w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover");
-
-
-      dispCardDetailContainer.addClass("pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start");
-      dispCardName.addClass(" mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold");
-
+      dispCardDetailContainer.addClass(
+        "pl-5 pt-3 lg:pt-0 2xl:max-w-2/3 flex flex-col items-center md:items-start"
+      );
+      dispCardName.addClass(
+        " mb-2 text-slate-200 font-sans text-center md:text-left text-3xl font-bold"
+      );
 
       dispCardStats.addClass(" p-2 flex");
 
@@ -99,12 +118,13 @@ $(document).ready(function () {
       ratingNumb.addClass("text-2xl");
       ratingStars.addClass("text-sm tracking-wide");
 
-      infoCont.addClass(" w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 ");
+      infoCont.addClass(
+        " w-full ml-2 pl-2 text-sm md:text-base lg:text-sm text-slate-300 "
+      );
 
-      tags.addClass('mb-2 text-xs font-bold');
-      address.addClass('px-2');
-      phone.addClass('px-2');
-
+      tags.addClass("mb-2 text-xs font-bold");
+      address.addClass("px-2");
+      phone.addClass("px-2");
 
       dispCardBtnCont.addClass("mt-2 flex items-center");
       dispCardMapBtn.addClass(
@@ -117,7 +137,7 @@ $(document).ready(function () {
 
       // CONNECT DISPLAY CARD WITH API DATA
 
-      dispCardImg.attr("src", business["image_url"]);
+      dispCardImg.attr("src", business.image_url);
       dispCardName.text(business.name);
 
       ratingNumb.text(business.rating);
@@ -128,7 +148,7 @@ $(document).ready(function () {
         tagName.addClass("pr-2");
         let categoryNumber = business.categories[i].title;
         tagName.text(categoryNumber);
-        tagName.addClass('py-1 px-2 mr-2  border-slate-300 rounded-full')
+        tagName.addClass("py-1 px-2 mr-2  border-slate-300 rounded-full");
         tags.append(tagName);
       }
 
@@ -146,8 +166,23 @@ $(document).ready(function () {
       dispCardUrlBtn.attr("href", business.url);
       dispCardUrlBtn.attr("target", "_blank");
 
+      // Create favorites button
       dispCardFavBtn.text("favorite");
-      dispCardFavBtn.attr(".fav-btn");
+      dispCardFavBtn.addClass("fav-btn");
+      // Set the current favorite state
+      dispCardFavBtn.attr(
+        "data-state",
+        favorites.some((fav) => fav.id === business.id) ? "active" : ""
+      );
+      dispCardFavBtn.on("click", () => {
+        // Toggle the favorites state
+        dispCardFavBtn.attr(
+          "data-state",
+          dispCardFavBtn.attr("data-state") == "active" ? "" : "active"
+        );
+        // Add or remove from localStorage
+        saveFavorite(business);
+      });
 
       // INSERT DISPLAY CARD INTO CONTAINER
 
@@ -200,7 +235,7 @@ $(document).ready(function () {
     }, 200);
   });
 
-  searchBtnEl.on("click", getBusinesses);
+  searchBtnEl.on("click", getBusinessesFromForm);
 
   /**
    * Hides the contact modal and disables the body event listener
@@ -226,6 +261,37 @@ $(document).ready(function () {
   contactCloseBtn.on("click", function () {
     hideContactModal();
   });
+
+  /**
+   * Saves or removes a favorite business into local storage
+   * @param {Object} business Full business object to save
+   */
+  function saveFavorite(business) {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    let index = favorites.findIndex((fav) => fav.id === business.id);
+    if (index === -1) favorites.unshift(business);
+    else favorites.splice(index, 1);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    if (isDisplayingFavorites && index !== -1) displayFavorites();
+  }
+
+  /**
+   * Displays favorites cards in results container
+   */
+  function displayFavorites() {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    if (isDisplayingFavorites || favorites.length !== 0) {
+      isDisplayingFavorites = true;
+      displayCards(favorites);
+    } else if (!isDisplayingFavorites && favorites.length === 0) {
+      showErrorModal(
+        "No Favorites",
+        "You have no favorited businesses yet, click the heart icon to save a business as a favorite."
+      );
+    }
+  }
+
+  favoritesBtn.on("click", displayFavorites);
 });
 
 
