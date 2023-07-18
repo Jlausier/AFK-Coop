@@ -23,6 +23,16 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
+    <!-- Down -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <!-- Up -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -186,7 +196,7 @@
       </div>
     </header>
     <!-- CONTENT -->
-    <main class="flex flex-col lg:flex-row 2xl:mx 2xl:justify-center">
+    <main class="h-[45rem] flex flex-col lg:flex-row 2xl:mx 2xl:justify-center">
       <div
         id="search-container"
         class="w-full lg:w-2/5 2xl:w-1/2 mb-20 lg:mb-0 flex flex-col justify-center 2xl:w-96 2xl:flex-end"
@@ -194,7 +204,7 @@
         <!-- TAG LINE -->
         <h2
           id="tag-line"
-          class="mt-10 2xl:mt-1 p-5 text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500"
+          class="mt-4 2xl:mt-1 p-5 text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500"
         >
           Away From Keyboard.<br />Still in Game.
         </h2>
@@ -230,14 +240,22 @@
           </div>
         </form>
         <!-- Recently Searched -->
-        <div class="flex justify-center">
-          <div id="recently-searched" class="p-5 invisible"></div>
-          <div
-          id="reveal-recent-btn"
-            class="h-8 w-80 rounded-b-lg bg-gray-900/50 text-white text-center justify-self-center"
+        <div id="erics-solution" class="flex flex-col items-center">
+          <a
+            id="reveal-recent-btn"
+            class="p-1 h-11 w-96 2xl:w-80 rounded-b-lg text-sm text-center bg-gray-900/50 cursor-pointer"
           >
-            Recent Searches
-          </div>
+            Recent Searches<br /><span
+              id="toggle-arrow"
+              class="material-symbols-outlined leading-3"
+            >
+              arrow_drop_down
+            </span>
+          </a>
+          <div
+            id="recently-searched"
+            class="h-24 w-96 2xl:w-80 rounded-b-lg text-center bg-gray-900/50 hidden"
+          ></div>
         </div>
       </div>
       <div

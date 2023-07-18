@@ -13,12 +13,11 @@ $(document).ready(function () {
   var searchBtnEl = $("#search-btn");
 
   var recentSearchesEl = $('#recently-searched');
-  var revealRecentSearch = $('reveal-recent-btn');
+  var revealRecentSearch = $('#reveal-recent-btn');
 
   var resultsContainer = $("#results-container");
 
-  function getBusinesses(event) {
-    resultsContainer.empty();
+  function getBusinessesFromForm(event) {
 
     let gameName = gameSearchEl.val().trim();
     let locationName = locationSearchEl.val().trim();
@@ -43,18 +42,23 @@ $(document).ready(function () {
       );
       return;
     }
+    getBusinesses(locationName, gameName);
+  }
 
+  function getBusinesses(locationName, gameName) {
     Manager.getBusinessesFromGames(locationName, [gameName])
-      .then(({ businesses, categories }) => {
-        console.log(businesses);
-        displayCards(businesses);
-      })
-      .catch(({ title, message }) => {
-        showErrorModal(title, message);
-      });
+    .then(({ businesses, categories }) => {
+      saveSearches(locationName, gameName);
+      displayCards(businesses);
+    })
+    .catch(({ title, message }) => {
+      showErrorModal(title, message);
+    });
   }
 
   function displayCards(businesses) {
+
+    resultsContainer.empty();
 
     businesses.forEach((business) => {
 
@@ -203,7 +207,7 @@ $(document).ready(function () {
     }, 200);
   });
 
-  searchBtnEl.on("click", getBusinesses);
+  searchBtnEl.on("click", getBusinessesFromForm);
 
   /**
    * Hides the contact modal and disables the body event listener
@@ -242,7 +246,6 @@ $(document).ready(function () {
         } else {
             searches = [];
         }
-        console.log(searches);
         return searches;
         
       }
@@ -261,32 +264,29 @@ $(document).ready(function () {
       
       // attaches the array made from readSearchesFromStorage and applies it to searches
       var searches = readSearchesFromStorage();
-      console.log('this one!!!!');
-      console.log(searches);
       
       // loop through each project and create a new li and add it to the list
       for (var i = 0; i < searches.length; i++) {
           var searchedItems = searches[i];
-          console.log(searchedItems);
           
           var listEl = $('<p>');
 
-          recentSearchesEl.addClass('bg-gray-900/50')
-          listEl.addClass('#');
+          listEl.addClass('saved-search');
 
           listEl.text(searchedItems.game +  ' in ' + searchedItems.location);
           listEl.attr('style','list-style-type: none');
 
+          listEl.on("click", function() {
+              getBusinesses(searchedItems.location, searchedItems.game);
+          });
+
           recentSearchesEl.append(listEl);
 
-          recentSearchesEl.slowDown('slow');
+          // recentSearchesEl.slowDown('slow');
       }
     };  
 
-    function saveSearches() {
-
-      var searchGameName = $('#game-search').val();
-      var searchLocation = $('#location-search').val();
+    function saveSearches(searchLocation, searchGameName) {
       let searchData = {
         game: searchGameName,
         location: searchLocation
@@ -295,19 +295,57 @@ $(document).ready(function () {
       // add searched item to local storage
       var searchHistory = readSearchesFromStorage();
 
-      if (!searchHistory.includes(searchGameName)) {
+      if (!searchHistory.some(search => search.game === searchGameName)) {
+          searchHistory.unshift(searchData);
           if (searchHistory.length > 4) {
             searchHistory.pop();
           }
-          searchHistory.unshift(searchData);
           saveSearchesToStorage(searchHistory);
       }
 
       printSearchHistory();
     };
 
-    searchBtnEl.on('click', saveSearches);
+    
 
 
+    // ===== Recent Searches ===== //
 
-});
+    let open = '';
+
+    revealRecentSearch.on( "click", () => {
+        var arrow = $('#toggle-arrow');
+        
+        if (!open) {
+          arrow.text('arrow_drop_up');
+          recentSearchesEl.slideDown("slow");
+          open = true;
+          console.log('if' + open);
+        } else {
+          arrow.text('arrow_drop_down');
+          recentSearchesEl.slideUp("slow");
+          open = false;
+          console.log('else' + open);
+        }
+
+       
+    });
+
+    printSearchHistory();
+      
+      // $(".saved-search").on("click", function() {
+      //   console.log('click');
+      //   let searches = readSearchesFromStorage();
+      //   let savedSearch = searches.find((saved) => {
+      //     console.log('good')
+      //     return saved.game + saved.location == $(this).attr("data-game");
+
+      //   });
+      // console.log(typeof savedSearch);
+      //   if (typeof savedSearch !== "undefined") {
+      //     getBusinesses(savedSearch.location, savedSearch.game);
+      //   }
+      // });
+
+      
+  })
