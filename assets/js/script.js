@@ -342,6 +342,9 @@ $(document).ready(function () {
     showModal();
   }
 
+  // Close error modal
+  $("#error-modal-close").on("click", hideModal);
+
   // Show the contact modal
   $("#contact-btn").on("click", function (e) {
     e.stopPropagation();
