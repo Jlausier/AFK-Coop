@@ -52,35 +52,61 @@
       }
 
       #l-body {
-        transition: 0.7s ease-in-out;
+        transition: 0.4s ease-in-out;
       }
 
       #r-body {
-        transition: 0.7s ease-in-out;
+        transition: 0.4s ease-in-out;
       }
 
       #l-wires {
-        transition: 0.7s ease-in-out;
+        transition: 0.4s ease-in-out;
       }
 
       #r-wires {
-        transition: 0.7s ease-in-out;
+        transition: 0.4s ease-in-out;
+      }
+
+      #firework-1 {
+        transition: 0.4s ease-in-out;
+      }
+
+      #firework-2 {
+        transition: 0.4s ease-in-out;
       }
 
       #results-container:hover #l-body {
-        transform: rotate(-20deg);
+        translate: -50px -20px;
+        transform: rotate(20deg);
+        scale: 1.3;
       }
 
       #results-container:hover #r-body {
-        transform: rotate(20deg);
+        translate: 50px -5px;
+        transform: rotate(-10deg);
+        scale: 1.1;
       }
 
       #results-container:hover #l-wires {
-        transform: rotate(-20deg);
+        translate: -50px -20px;
+        transform: rotate(20deg);
       }
 
       #results-container:hover #r-wires {
+        translate: 50px -5px;
+        transform: rotate(-10deg);
+      }
+
+      #results-container:hover #firework-1 {
+        translate: -50px -20px;
         transform: rotate(20deg);
+        scale: 5;
+      }
+
+      #results-container:hover #firework-2 {
+        translate: 50px -5px;
+        transform: rotate(-10deg);
+        scale: 5;
       }
     </style>
 
@@ -274,28 +300,38 @@
 
       <div
         id="results-container"
-        class="border w-full lg:w-3/5 2xl:w-1/2 flex justify-center items-center"
+        class="w-full lg:w-3/5 2xl:w-1/2 flex justify-center items-center"
       >
         <!-- IMAGE -->
         <img
+          src="./assets/images/fireworks-01.png"
+          id="firework-1"
+          class="w-36 absolute left-3/5 top-2/5 transform rotate-12"
+        />
+        <img
+          src="./assets/images/fireworks-02.png"
+          id="firework-2"
+          class="w-36 absolute left-3/5 top-2/5 transform rotate-12"
+        />
+        <img
           id="r-wires"
           src="./assets/images/controller-R-Wires.png"
-          class="w-96 absolute left-3/5 top-2/5 transform rotate-6"
+          class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
         />
         <img
           id="l-wires"
           src="./assets/images/controller-L-Wires.png"
-          class="w-96 absolute left-3/5 top-2/5 transform rotate-6"
+          class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
         />
         <img
           id="r-body"
           src="./assets/images/controller-R-Body.png"
-          class="w-96 absolute left-3/5 top-2/5 transform rotate-6"
+          class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
         />
         <img
           src="./assets/images/controller-L-Body.png"
           id="l-body"
-          class="w-96 absolute left-3/5 top-2/5 transform rotate-6"
+          class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
         />
 
         <!-- <img
@@ -312,6 +348,3 @@
     <script src="./assets/js/script.js"></script>
   </body>
 </html>
-
-w-96 absolute left-3/5 top-2/5 transform rotate-6 hover:scale-105 duration-700
-ease-in-out hover:-rotate-12
