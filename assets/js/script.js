@@ -1,18 +1,30 @@
 $(document).ready(function () {
   let Manager = new APIManager();
-  var searchContainer = $("#search-container");
-  var gameSearchEl = $("#game-search");
-  var locationSearchEl = $("#location-search");
-  var searchBtnEl = $("#search-btn");
 
-  var resultsContainer = $("#results-container");
-  var revealRecentSearch = $("#reveal-recent-btn");
-  var recentSearchesEl = $("#recently-searched");
+  let searchContainer = $("#search-container");
+  let genresBtn = $("#toggle");
+  let gameToggle = $("#toggle-back");
+
+  let gameLabelEl = $("#game-label");
+  let gameSearchEl = $("#game-search");
+  let genreGrid = $("#genre-grid");
+
+  let locationSearchEl = $("#location-search");
+  let searchBtnEl = $("#search-btn");
+
+  let resultsContainer = $("#results-container");
+
+  let gameCategories = APIManager.getGameCategories();
+  let selectedCategories = {
+    genres: [],
+    themes: [],
+  };
+
+  let revealRecentSearch = $("#reveal-recent-btn");
+  let recentSearchesEl = $("#recently-searched");
 
   let searchType = "game";
   let isDisplayingFavorites = false;
-
-  let homeButton = $("#afk");
 
   /**
    * Checks if inputs are valid and gets the calls getBusinesses
@@ -32,6 +44,11 @@ $(document).ready(function () {
     }
   }
 
+  /**
+   * Validates location and game name inputs
+   * @param {string} locationName Geographic area to search for businesses
+   * @returns {null} Exits function if input is invalid
+   */
   function validateBusinessesByGame(locationName) {
     let gameName = gameSearchEl.val().trim();
 
@@ -57,6 +74,11 @@ $(document).ready(function () {
     getBusinesses(locationName, gameName);
   }
 
+  /**
+   * Validates location and selected categories inputs
+   * @param {string} locationName Geographic area to search for businesses
+   * @returns {null} Exits function if input is invalid
+   */
   function validateBusinessesByGenre(locationName) {
     let categoriesEmpty =
       selectedCategories.genres.length === 0 &&
@@ -81,20 +103,15 @@ $(document).ready(function () {
       return;
     }
 
-    getBusinessesByCategory(locationName);
-  }
-
-  function getBusinessesByCategory() {
-    // TODO: MERGE BRANCH TO ACCESS NEWEST APIMANAGER FUNCTIONS
+    getBusinessesByGenre(locationName);
   }
 
   /**
-   * Gets businesses from the API Manager, displays results or an error modal
-   * @param {string} locationName Geographic area to search for businesses
-   * @param {string} gameName Name of the game to get the genres and themes from
+   * Displays result cards or shows an error modal
+   * @param {Promise<Object>} promise API call
    */
-  function getBusinesses(locationName, gameName) {
-    Manager.getBusinessesFromGames(locationName, [gameName])
+  function handleResponse(promise) {
+    promise
       .then(({ businesses, categories }) => {
         displayCards(businesses);
       })
@@ -103,6 +120,29 @@ $(document).ready(function () {
       });
   }
 
+  /**
+   * Gets businesses by game genres, displays results or an error modal
+   * @param {string} locationName Geographic area to search for businesses
+   */
+  function getBusinessesByGenre(locationName) {
+    handleResponse(
+      Manager.getBusinessesFromGameCategories(locationName, selectedCategories)
+    );
+  }
+
+  /**
+   * Gets businesses by game name, displays results or an error modal
+   * @param {string} locationName Geographic area to search for businesses
+   * @param {string} gameName Name of the game to get the genres and themes from
+   */
+  function getBusinesses(locationName, gameName) {
+    handleResponse(Manager.getBusinessesFromGames(locationName, [gameName]));
+  }
+
+  /**
+   * Displays list of business cards in results list
+   * @param {Array<Object>} businesses Business objects from Yelp
+   */
   function displayCards(businesses) {
     resultsContainer.empty();
 
@@ -111,27 +151,27 @@ $(document).ready(function () {
     businesses.forEach((business) => {
       // GENERATE DISPLAY CARD ELEMENTS
 
-      var dispCardCont = $("<div>");
-      var dispCardImg = $("<img>");
+      let dispCardCont = $("<div>");
+      let dispCardImg = $("<img>");
 
-      var dispCardDetailContainer = $("<div>");
-      var dispCardName = $("<h3>");
+      let dispCardDetailContainer = $("<div>");
+      let dispCardName = $("<h3>");
 
-      var dispCardStats = $("<div>");
+      let dispCardStats = $("<div>");
 
-      var ratingCont = $("<div>");
-      var ratingNumb = $("<div>");
-      var ratingStars = $("<div>");
+      let ratingCont = $("<div>");
+      let ratingNumb = $("<div>");
+      let ratingStars = $("<div>");
 
-      var infoCont = $("<div>");
-      var tags = $("<div>");
-      var address = $("<div>");
-      var phone = $("<div>");
+      let infoCont = $("<div>");
+      let tags = $("<div>");
+      let address = $("<div>");
+      let phone = $("<div>");
 
-      var dispCardBtnCont = $("<div>");
-      var dispCardMapBtn = $("<a>");
-      var dispCardUrlBtn = $("<a>");
-      var dispCardFavBtn = $("<button>");
+      let dispCardBtnCont = $("<div>");
+      let dispCardMapBtn = $("<a>");
+      let dispCardUrlBtn = $("<a>");
+      let dispCardFavBtn = $("<button>");
 
       // ADD DISPLAY CARD CLASSES
 
@@ -183,7 +223,7 @@ $(document).ready(function () {
       ratingStars.text("STARS");
 
       for (let i = 0; i < business.categories.length; i++) {
-        var tagName = $("<a>");
+        let tagName = $("<a>");
         tagName.addClass("pr-2");
         let categoryNumber = business.categories[i].title;
         tagName.text(categoryNumber);
@@ -247,6 +287,9 @@ $(document).ready(function () {
     reformat();
   }
 
+  /**
+   * Reformats containers after search
+   */
   function reformat() {
     searchContainer.removeClass("w-full lg:w-2/5 flex flex-col justify-center");
     resultsContainer.removeClass("w-3/5 flex justify-center items-center");
@@ -264,6 +307,9 @@ $(document).ready(function () {
 
   /* ===== MODALS ======================================================= */
 
+  /**
+   * Show a generic modal
+   */
   function showModal() {
     $("#modal-overlay").show().addClass("modal-open");
     $("body").on("click.modal", function (event) {
@@ -271,6 +317,9 @@ $(document).ready(function () {
     });
   }
 
+  /**
+   * Hide a generic modal
+   */
   function hideModal() {
     $("body").off("click.modal");
     let modal = $("#modal-overlay");
@@ -281,6 +330,11 @@ $(document).ready(function () {
     }, 200);
   }
 
+  /**
+   * Show an error modal
+   * @param {string} title Title of the error
+   * @param {string} message Longer error message
+   */
   function showErrorModal(title, message) {
     $("#error-modal-title").text(title);
     $("#error-modal-message").text(message);
@@ -288,8 +342,10 @@ $(document).ready(function () {
     showModal();
   }
 
+  // Close error modal
   $("#error-modal-close").on("click", hideModal);
 
+  // Show the contact modal
   $("#contact-btn").on("click", function (e) {
     e.stopPropagation();
     $("#contact-modal").show();
@@ -330,21 +386,50 @@ $(document).ready(function () {
   // Displays favorites when button in header is clicked
   $("#favorites-btn").on("click", displayFavorites);
 
-  var generesBtn = document.getElementById("toggle");
-  generesBtn.addEventListener("click", function () {
-    displayGameCategories();
-  });
+  // ================================================================================
 
-  var gameLabelEl = document.getElementById("game-label");
+  /**
+   * Hides game input and shows genres
+   * @returns {null} Exit if already showing genres
+   */
+  function toggleGenres() {
+    if (searchType === "genres") return;
 
-  let gameCategories = APIManager.getGameCategories();
-  let selectedCategories = {
-    genres: [],
-    themes: [],
-  };
-
-  function displayGameCategories() {
     searchType = "genres";
+
+    /**
+     * Creates a checkbox for a genre or theme
+     * @param {string} category Name of the category
+     * @param {string} type Genre or theme
+     */
+    function createGenreCheckbox(category, type) {
+      let genreDiv = $("<div>");
+      let inputDiv = $("<input>");
+      let labelDiv = $("<label>");
+
+      genreDiv.addClass("flex items-center");
+      inputDiv.attr("type", "checkbox");
+
+      labelDiv.addClass("ml-2 text-white");
+
+      labelDiv.text(category.title);
+      gameSearchEl.hide();
+
+      genreDiv.append(inputDiv);
+      genreDiv.append(labelDiv);
+      genreGrid.append(genreDiv);
+
+      inputDiv.on("change", function (_) {
+        if (inputDiv.is(":checked")) {
+          selectedCategories[type].push(category.id);
+        } else {
+          selectedCategories[type] = selectedCategories[type].filter(
+            (a) => a !== category.id
+          );
+        }
+      });
+    }
+
     gameCategories.genres.forEach((category) => {
       createGenreCheckbox(category, "genres");
     });
@@ -352,41 +437,44 @@ $(document).ready(function () {
     gameCategories.themes.forEach((category) => {
       createGenreCheckbox(category, "themes");
     });
+
+    gameLabelEl.text("Select Your Favorite Genres");
+    genreGrid.show();
+    resetForm();
+  }
+  // Toggle genres on click
+  genresBtn.on("click", toggleGenres);
+
+  /**
+   * Hides genres and shows game input
+   * @returns {null} Exit if already showing genres
+   */
+  function toggleGame() {
+    if (searchType === "game") return;
+
+    genreGrid.empty();
+
+    searchType = "game";
+    gameLabelEl.text("Enter Your Favorite Game");
+    genreGrid.hide();
+    gameSearchEl.show();
+    resetForm();
+  }
+  // Toggle game input on click
+  $(gameToggle).on("click", toggleGame);
+
+  /**
+   * Clears inputs on toggle
+   */
+  function resetForm() {
+    // Clear the input field
+    gameSearchEl.val("");
+    // Clear the selected categories
+    selectedCategories.genres = [];
+    selectedCategories.themes = [];
   }
 
-  function createGenreCheckbox(category, type) {
-    var gridDiv = document.createElement("div");
-    var genereDiv = document.createElement("div");
-    var inputdiv = document.createElement("input");
-    var labelDiv = document.createElement("label");
-
-    gridDiv.id = "grid-id";
-    gridDiv.setAttribute("class", " grid grid cols-3 gap-2");
-    genereDiv.setAttribute("class", "flex items-center");
-    inputdiv.type = "checkbox";
-
-    labelDiv.setAttribute("class", "ml-2 text-white");
-
-    labelDiv.innerText = category.title;
-    document.getElementById("game-search").setAttribute("class", "invisible");
-
-    genereDiv.appendChild(inputdiv);
-    genereDiv.appendChild(labelDiv);
-    gridDiv.appendChild(genereDiv);
-    gameLabelEl.appendChild(gridDiv);
-
-    inputdiv.addEventListener("change", function (event) {
-      if (event.target.checked) {
-        selectedCategories[type].push(category.id);
-      } else {
-        selectedCategories[type] = selectedCategories[type].filter(
-          (a) => a !== category.id
-        );
-      }
-    });
-  }
-
-  homeButton.click(function () {
+  $("#afk").click(function () {
     location.reload();
   });
 

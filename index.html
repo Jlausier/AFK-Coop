@@ -61,7 +61,6 @@
         font-family: "Moirai One", cursive;
       }
 
-
       /* w-96 absolute left-3/5 top-2/5 transform rotate-6
       hover:scale-105 duration-700 ease-in-out hover:-rotate-12 */
 
@@ -124,7 +123,6 @@
         translate: 50px -5px;
         transform: rotate(-10deg);
         scale: 5;
-
       }
     </style>
 
@@ -249,7 +247,6 @@
           </div>
         </div>
         <!-- END MODALS -->
-
       </div>
     </div>
     <header class="flex justify-between">
@@ -263,22 +260,18 @@
         >
           AFK
         </a>
-
       </div>
       <!-- NAV BAR -->
       <div class="flex mt-4 space-x-4 items-center">
         <button
-
           id="contact-btn"
           class="text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 font-bold text-center bg-clip-text transform transition hover:scale-105 duration-300 ease-in-out rounded py-2 px-4"
-
         >
           Contact Us
         </button>
 
         <button
           id="favorites-btn"
-
           class="py-2 px-5 text-sm font-bold text-white my-5 text-center tracking-wider rounded justify-self-end focus:ring bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 transform transition hover:scale-105 duration-300 ease-in-out rounded"
         >
           Favorites
@@ -288,7 +281,6 @@
     <!-- CONTENT -->
 
     <main class="flex flex-col lg:flex-row 2xl:mx 2xl:justify-center">
-
       <div
         id="search-container"
         class="w-full lg:w-2/5 2xl:w-1/2 mb-20 lg:mb-0 flex flex-col justify-center 2xl:w-96 2xl:flex-end"
@@ -296,7 +288,6 @@
         <!-- TAG LINE -->
         <h2
           id="tag-line"
-
           class="mt-10 2xl:mt-1 p-5 text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500"
         >
           Away From Keyboard.<br />Still in Game.
@@ -304,27 +295,46 @@
         <span id="sub-tag-line" class="px-5 text-xl"
           >Welcome, Gamers&trade;</span
         >
-        <div id="toggle" class="flex justify-center">
-          <button
-            class="w-16 text-white my-5 text-center font-bold rounded justify-self-end focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
-          >
-            By Genre
-          </button>
+        <div
+          class="mt-5 flex flex-row justify-around p-5 opacity-75 rounded-lg shadow-lg bg-gray-900"
+        >
+          <div id="toggle-back" class="flex">
+            <button
+              class="py-4 px-6 text-white cursor-pointer select-none text-center font-bold rounded justify-self-end focus:ring bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 transform transition hover:scale-105 duration-300 ease-in-out"
+            >
+              By Game
+            </button>
+          </div>
+          <div id="toggle" class="flex">
+            <button
+              class="py-4 px-6 text-white cursor-pointer select-none text-center font-bold rounded justify-self-end focus:ring bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 transform transition hover:scale-105 duration-300 ease-in-out"
+            >
+              By Genre
+            </button>
+          </div>
         </div>
         <!-- FORM -->
         <form
+          id="search-form"
           class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900 flex flex-col"
         >
           <label id="game-label" class="mb-1 mt-5 text-blue-300 font-bold"
-
             >Enter Your Favorite Game</label
           >
+
+          <div
+            id="genre-grid"
+            class="grid cols-3 gap-2"
+            style="display: none"
+          ></div>
+
           <input
             type="text"
             id="game-search"
             class="p-2 my-2 focus:ring hover:scale-105 duration-300 ease-in-out"
             placeholder="Minecraft"
           />
+
           <label class="mb-1 mt-5 text-blue-300 font-bold"
             >Enter Your Desired City</label
           >
@@ -337,9 +347,7 @@
           <div class="flex justify-center">
             <a
               id="search-btn"
-
               class="w-56 p-2 text-white my-5 cursor-pointer select-none text-center font-bold rounded justify-self-end focus:ring bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 transform transition hover:scale-105 duration-300 ease-in-out"
-
               >Find Your Next Adventure</a
             >
           </div>
@@ -368,7 +376,6 @@
         id="results-container"
         class="w-full lg:w-3/5 2xl:w-1/2 flex justify-center items-center"
       >
-
         <div
           id="controller-box"
           class="w-full h-full relative flex justify-center items-center"
@@ -410,7 +417,6 @@
           src="./assets/images/control_ps4.jpg"
           class="md:w-96 transform -rotate-6 transition hover:scale-105 duration-700 ease-in-out hover:rotate-6"
         /> -->
-
       </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
