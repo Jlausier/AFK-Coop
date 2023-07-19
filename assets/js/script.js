@@ -3,7 +3,6 @@ $(document).ready(function () {
   var tagLine = $("tag-line");
   var subTagLine = $("sub-tag-line");
 
-  var contactModal = $("#contact-modal");
   var contactBtn = $("#contactBtn");
   var contactCloseBtn = $("#contactCloseBtn");
 
@@ -22,9 +21,13 @@ $(document).ready(function () {
    * Checks if inputs are valid and gets the calls getBusinesses
    * @returns {null} Return if conditons for search are not met
    */
-  function getBusinessesFromForm() {
+  function getBusinessesFromForm(e) {
+    e.stopPropagation();
+
     isDisplayingFavorites = false;
+
     let gameName = gameSearchEl.val().trim();
+
     let locationName = locationSearchEl.val().trim();
 
     // If input is invalid show a modal and return
@@ -221,46 +224,60 @@ $(document).ready(function () {
     subTagLine.hide();
   }
 
+  searchBtnEl.on("click", getBusinessesFromForm);
+
+  /* ===== MODALS ======================================================= */
+
+  function showModal() {
+    $("#modal-overlay").show().addClass("modal-open");
+    $("body").on("click.modal", function (event) {
+      if (event.target.id !== "modal") {
+        hideModal();
+      }
+    });
+  }
+
+  function hideModal() {
+    $("body").off("click.modal");
+    let modal = $("#modal-overlay");
+    modal.removeClass("modal-open");
+
+    setTimeout(function () {
+      modal.hide();
+      $(".modal-content").hide();
+    }, 200);
+  }
+
   function showErrorModal(title, message) {
     $("#error-modal-title").text(title);
     $("#error-modal-message").text(message);
-    $("#error-modal-overlay").show().addClass("error-modal-open");
+
+    $("#error-modal").show();
+    showModal();
   }
 
-  $("#error-modal-close").on("click", function () {
-    var modal = $("#error-modal-overlay");
-    modal.removeClass("error-modal-open");
-    setTimeout(function () {
-      modal.hide();
-    }, 200);
+  $("#error-modal-close").on("click", hideModal);
+
+  contactBtn.on("click", function (e) {
+    e.stopPropagation();
+    $("#contact-modal").show();
+    showModal();
   });
 
-  searchBtnEl.on("click", getBusinessesFromForm);
+  /* ===== CONTACT MODAL ===================================================== */
 
   /**
    * Hides the contact modal and disables the body event listener
    */
-  function hideContactModal() {
-    contactModal.hide();
-    $("body").off("click.contact-modal");
-  }
 
   // When the user clicks the button, open the modal
-  contactBtn.on("click", function (e) {
-    e.stopPropagation();
-    contactModal.show();
-    // When the user clicks anywhere outside of the modal, close it
-    $("body").on("click.contact-modal", function (event) {
-      if (event.target !== contactModal) {
-        hideContactModal();
-      }
-    });
-  });
 
-  // When the user clicks on <span> (x), close the modal
-  contactCloseBtn.on("click", function () {
-    hideContactModal();
-  });
+  // // When the user clicks on <span> (x), close the modal
+  // contactCloseBtn.on("click", function () {
+  //   hideContactModal();
+  // });
+
+  /* ===== FAVORITES ======================================================= */
 
   /**
    * Saves or removes a favorite business into local storage
@@ -293,9 +310,3 @@ $(document).ready(function () {
 
   favoritesBtn.on("click", displayFavorites);
 });
-
-
-
-
-  
-
