@@ -402,47 +402,6 @@ $(document).ready(function () {
 
     searchType = "genres";
 
-    // /**
-    //  * Creates a checkbox for a genre or theme
-    //  * @param {string} category Name of the category
-    //  * @param {string} type Genre or theme
-    //  */
-    // function createGenreCheckbox(category, type) {
-    //   let genreDiv = $("<div>");
-    //   let inputDiv = $("<input>");
-    //   let labelDiv = $("<label>");
-
-    //   genreDiv.addClass("flex items-center");
-    //   inputDiv.attr("type", "checkbox");
-
-    //   labelDiv.addClass("ml-2 text-white");
-
-    //   labelDiv.text(category.title);
-    //   gameSearchEl.hide();
-
-    //   genreDiv.append(inputDiv);
-    //   genreDiv.append(labelDiv);
-    //   genreGrid.append(genreDiv);
-
-    //   inputDiv.on("change", function (_) {
-    //     if (inputDiv.is(":checked")) {
-    //       selectedCategories[type].push(category.id);
-    //     } else {
-    //       selectedCategories[type] = selectedCategories[type].filter(
-    //         (a) => a !== category.id
-    //       );
-    //     }
-    //   });
-    // }
-
-    // gameCategories.genres.forEach((category) => {
-    //   createGenreCheckbox(category, "genres");
-    // });
-
-    // gameCategories.themes.forEach((category) => {
-    //   createGenreCheckbox(category, "themes");
-    // });
-
     gameLabelEl.text("Select Your Favorite Genres");
     gameSearchEl.hide();
     genreGrid.show();
