@@ -262,6 +262,7 @@ $(document).ready(function () {
 
       listEl.text(searchedItem.game + " in " + searchedItem.location);
       listEl.attr("style", "list-style-type: none");
+      listEl.addClass('pb-2 cursor-pointer text-white/50 hover:text-white/75 transition');
 
       listEl.on("click", function () {
         getBusinesses(searchedItem.location, searchedItem.game);
@@ -298,7 +299,7 @@ $(document).ready(function () {
       });
 
       // Remove excess search items
-      if (searchHistory.length > 4) {
+      if (searchHistory.length > 3) {
         searchHistory.pop();
       }
 
@@ -315,15 +316,21 @@ $(document).ready(function () {
 
   revealRecentSearch.on("click", () => {
     let arrow = $("#toggle-arrow");
-
     if (!open) {
       arrow.text("arrow_drop_up");
       recentSearchesEl.slideDown("slow");
+      setTimeout(function () {
+        revealRecentSearch.removeClass('rounded-b-lg');
+      }, 50);
       open = true;
       console.log("if" + open);
     } else {
       arrow.text("arrow_drop_down");
       recentSearchesEl.slideUp("slow");
+      setTimeout(function () {
+        revealRecentSearch.addClass('rounded-b-lg');
+      }, 575);
+  
       open = false;
       console.log("else" + open);
     }
