@@ -111,8 +111,16 @@ $(document).ready(function () {
    * @param {Promise<Object>} promise API call
    */
   function handleResponse(promise) {
-    promise
-      .then(({ businesses, categories }) => {
+    promise;
+  }
+
+  /**
+   * Gets businesses by game genres, displays results or an error modal
+   * @param {string} locationName Geographic area to search for businesses
+   */
+  function getBusinessesByGenre(locationName) {
+    Manager.getBusinessesFromGameCategories(locationName, selectedCategories)
+      .then(({ businesses, _ }) => {
         displayCards(businesses);
       })
       .catch(({ title, message }) => {
@@ -121,22 +129,19 @@ $(document).ready(function () {
   }
 
   /**
-   * Gets businesses by game genres, displays results or an error modal
-   * @param {string} locationName Geographic area to search for businesses
-   */
-  function getBusinessesByGenre(locationName) {
-    handleResponse(
-      Manager.getBusinessesFromGameCategories(locationName, selectedCategories)
-    );
-  }
-
-  /**
    * Gets businesses by game name, displays results or an error modal
    * @param {string} locationName Geographic area to search for businesses
    * @param {string} gameName Name of the game to get the genres and themes from
    */
   function getBusinesses(locationName, gameName) {
-    handleResponse(Manager.getBusinessesFromGames(locationName, [gameName]));
+    Manager.getBusinessesFromGames(locationName, [gameName])
+      .then(({ businesses, _ }) => {
+        saveSearches(locationName, gameName);
+        displayCards(businesses);
+      })
+      .catch(({ title, message }) => {
+        showErrorModal(title, message);
+      });
   }
 
   /**
@@ -397,51 +402,30 @@ $(document).ready(function () {
 
     searchType = "genres";
 
-    /**
-     * Creates a checkbox for a genre or theme
-     * @param {string} category Name of the category
-     * @param {string} type Genre or theme
-     */
-    function createGenreCheckbox(category, type) {
-      let genreDiv = $("<div>");
-      let inputDiv = $("<input>");
-      let labelDiv = $("<label>");
-
-      genreDiv.addClass("flex items-center");
-      inputDiv.attr("type", "checkbox");
-
-      labelDiv.addClass("ml-2 text-white");
-
-      labelDiv.text(category.title);
-      gameSearchEl.hide();
-
-      genreDiv.append(inputDiv);
-      genreDiv.append(labelDiv);
-      genreGrid.append(genreDiv);
-
-      inputDiv.on("change", function (_) {
-        if (inputDiv.is(":checked")) {
-          selectedCategories[type].push(category.id);
-        } else {
-          selectedCategories[type] = selectedCategories[type].filter(
-            (a) => a !== category.id
-          );
-        }
-      });
-    }
-
-    gameCategories.genres.forEach((category) => {
-      createGenreCheckbox(category, "genres");
-    });
-
-    gameCategories.themes.forEach((category) => {
-      createGenreCheckbox(category, "themes");
-    });
-
     gameLabelEl.text("Select Your Favorite Genres");
+    gameSearchEl.hide();
     genreGrid.show();
     resetForm();
   }
+
+  $(".genre-btn").on("click", function () {
+    let state = $(this).attr("data-state");
+    let type = $(this).attr("data-type");
+    let id = $(this).attr("id");
+
+    if (state == "active") {
+      $(this).removeClass("ring ring-pink-500");
+      selectedCategories[type] = selectedCategories[type].filter(
+        (a) => a !== id
+      );
+    } else {
+      $(this).addClass("ring ring-pink-500");
+      selectedCategories[type].push(id);
+    }
+
+    $(this).attr("data-state", state == "active" ? "" : "active");
+  });
+
   // Toggle genres on click
   genresBtn.on("click", toggleGenres);
 
@@ -451,8 +435,6 @@ $(document).ready(function () {
    */
   function toggleGame() {
     if (searchType === "game") return;
-
-    genreGrid.empty();
 
     searchType = "game";
     gameLabelEl.text("Enter Your Favorite Game");
