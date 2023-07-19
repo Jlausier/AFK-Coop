@@ -19,6 +19,8 @@ $(document).ready(function () {
   let searchType = "game";
   let isDisplayingFavorites = false;
 
+  let homeButton = $("#afk");
+
   /**
    * Checks if inputs are valid and gets the calls getBusinesses
    * @returns {null} Return if conditons for search are not met
@@ -390,17 +392,11 @@ $(document).ready(function () {
     });
   }
 
-  function controllerAnimation() {
+  homeButton.click(function() {
+    location.reload();
+  });
 
-    var leftBody = $('#l-body');
-    var rightBody = $('#r-body');
-    var leftWires = $('#l-wires');
-    var rightWires = $('#r-wires');
 
-    resultsContainer.on('mouseenter' () => {
-      
-    })
-  }
 
 
 });

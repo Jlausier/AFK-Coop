@@ -48,7 +48,7 @@
       /* w-96 absolute left-3/5 top-2/5 transform rotate-6
       hover:scale-105 duration-700 ease-in-out hover:-rotate-12 */
 
-      #results-container {
+      #controller-box {
       }
 
       #l-body {
@@ -75,35 +75,35 @@
         transition: 0.4s ease-in-out;
       }
 
-      #results-container:hover #l-body {
+      #controller-box:hover #l-body {
         translate: -50px -20px;
         transform: rotate(20deg);
         scale: 1.3;
       }
 
-      #results-container:hover #r-body {
+      #controller-box:hover #r-body {
         translate: 50px -5px;
         transform: rotate(-10deg);
         scale: 1.1;
       }
 
-      #results-container:hover #l-wires {
+      #controller-box:hover #l-wires {
         translate: -50px -20px;
         transform: rotate(20deg);
       }
 
-      #results-container:hover #r-wires {
+      #controller-box:hover #r-wires {
         translate: 50px -5px;
         transform: rotate(-10deg);
       }
 
-      #results-container:hover #firework-1 {
+      #controller-box:hover #firework-1 {
         translate: -50px -20px;
         transform: rotate(20deg);
         scale: 5;
       }
 
-      #results-container:hover #firework-2 {
+      #controller-box:hover #firework-2 {
         translate: 50px -5px;
         transform: rotate(-10deg);
         scale: 5;
@@ -302,37 +302,42 @@
         id="results-container"
         class="w-full lg:w-3/5 2xl:w-1/2 flex justify-center items-center"
       >
-        <!-- IMAGE -->
-        <img
-          src="./assets/images/fireworks-01.png"
-          id="firework-1"
-          class="w-36 absolute left-3/5 top-2/5 transform rotate-12"
-        />
-        <img
-          src="./assets/images/fireworks-02.png"
-          id="firework-2"
-          class="w-36 absolute left-3/5 top-2/5 transform rotate-12"
-        />
-        <img
-          id="r-wires"
-          src="./assets/images/controller-R-Wires.png"
-          class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
-        />
-        <img
-          id="l-wires"
-          src="./assets/images/controller-L-Wires.png"
-          class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
-        />
-        <img
-          id="r-body"
-          src="./assets/images/controller-R-Body.png"
-          class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
-        />
-        <img
-          src="./assets/images/controller-L-Body.png"
-          id="l-body"
-          class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
-        />
+        <div
+          id="controller-box"
+          class="w-full h-full relative flex justify-center items-center"
+        >
+          <!-- IMAGE -->
+          <img
+            src="./assets/images/fireworks-01-Bright.png"
+            id="firework-1"
+            class="w-36 absolute left-3/5 top-2/5 transform rotate-12"
+          />
+          <img
+            src="./assets/images/fireworks-02-Bright.png"
+            id="firework-2"
+            class="w-36 absolute left-3/5 top-2/5 transform rotate-12"
+          />
+          <img
+            id="r-wires"
+            src="./assets/images/controller-R-Wires-dull.png"
+            class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
+          />
+          <img
+            id="l-wires"
+            src="./assets/images/controller-L-Wires-dull.png"
+            class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
+          />
+          <img
+            id="r-body"
+            src="./assets/images/controller-R-Body-dull.png"
+            class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
+          />
+          <img
+            src="./assets/images/controller-L-Body-dull.png"
+            id="l-body"
+            class="w-96 absolute left-3/5 top-2/5 transform rotate-12"
+          />
+        </div>
 
         <!-- <img
           src="./assets/images/control_ps4.jpg"
