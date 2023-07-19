@@ -6,6 +6,7 @@ $(document).ready(function () {
   var searchBtnEl = $("#search-btn");
   var resultsContainer = $("#results-container");
 
+  let searchType = "game";
   let isDisplayingFavorites = false;
 
   /**
@@ -17,11 +18,18 @@ $(document).ready(function () {
 
     isDisplayingFavorites = false;
 
-    let gameName = gameSearchEl.val().trim();
-
     let locationName = locationSearchEl.val().trim();
 
-    // If input is invalid show a modal and return
+    if (searchType === "game") {
+      validateBusinessesByGame(locationName);
+    } else if (searchType === "genres") {
+      validateBusinessesByGenre(locationName);
+    }
+  }
+
+  function validateBusinessesByGame(locationName) {
+    let gameName = gameSearchEl.val().trim();
+
     if (gameName === "" && locationName === "") {
       showErrorModal(
         "Enter a Game and Location",
@@ -41,7 +49,39 @@ $(document).ready(function () {
       );
       return;
     }
+
     getBusinesses(locationName, gameName);
+  }
+
+  function validateBusinessesByGenre(locationName) {
+    let categoriesEmpty =
+      selectedCategories.genres.length === 0 &&
+      selectedCategories.themes.length === 0;
+    if (categoriesEmpty && locationName === "") {
+      showErrorModal(
+        "Select a Category and Enter a Location",
+        "Please select one of the categories above and enter a location to proceed."
+      );
+      return;
+    } else if (categoriesEmpty) {
+      showErrorModal(
+        "Select a Category",
+        "Please select one of the categories above to proceed."
+      );
+      return;
+    } else if (locationName === "") {
+      showErrorModal(
+        "Enter a Location",
+        "Please enter the location to proceed."
+      );
+      return;
+    }
+
+    getBusinessesByCategory(locationName);
+  }
+
+  function getBusinessesByCategory() {
+    // TODO: MERGE BRANCH TO ACCESS NEWEST APIMANAGER FUNCTIONS
   }
 
   /**
@@ -52,7 +92,6 @@ $(document).ready(function () {
   function getBusinesses(locationName, gameName) {
     Manager.getBusinessesFromGames(locationName, [gameName])
       .then(({ businesses, categories }) => {
-        console.log(businesses);
         displayCards(businesses);
       })
       .catch(({ title, message }) => {
@@ -281,6 +320,64 @@ $(document).ready(function () {
       );
     }
   }
-
+  
+  // Displays favorites when button in header is clicked
   $("#favorites-btn").on("click", displayFavorites);
+
+  var generesBtn = document.getElementById("toggle");
+  generesBtn.addEventListener("click", function () {
+    displayGameCategories();
+  });
+
+  var gameLabelEl = document.getElementById("game-label");
+
+  let gameCategories = APIManager.getGameCategories();
+  let selectedCategories = {
+    genres: [],
+    themes: [],
+  };
+
+  function displayGameCategories() {
+    searchType = "genres";
+    gameCategories.genres.forEach((category) => {
+      createGenreCheckbox(category, "genres");
+    });
+
+    gameCategories.themes.forEach((category) => {
+      createGenreCheckbox(category, "themes");
+    });
+  }
+
+  function createGenreCheckbox(category, type) {
+    var gridDiv = document.createElement("div");
+    var genereDiv = document.createElement("div");
+    var inputdiv = document.createElement("input");
+    var labelDiv = document.createElement("label");
+
+    gridDiv.id = "grid-id";
+    gridDiv.setAttribute("class", " grid grid cols-3 gap-2");
+    genereDiv.setAttribute("class", "flex items-center");
+    inputdiv.type = "checkbox";
+
+    labelDiv.setAttribute("class", "ml-2 text-white");
+
+    labelDiv.innerText = category.title;
+    document.getElementById("game-search").setAttribute("class", "invisible");
+
+    genereDiv.appendChild(inputdiv);
+    genereDiv.appendChild(labelDiv);
+    gridDiv.appendChild(genereDiv);
+    gameLabelEl.appendChild(gridDiv);
+
+    inputdiv.addEventListener("change", function (event) {
+      if (event.target.checked) {
+        selectedCategories[type].push(category.id);
+      } else {
+        selectedCategories[type] = selectedCategories[type].filter(
+          (a) => a !== category.id
+        );
+      }
+    });
+  }
 });
+
