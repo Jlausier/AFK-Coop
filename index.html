@@ -195,11 +195,19 @@
           Enjoy Our Convenient Searching App
         </h2>
         <span id="sub-tag-line" class="px-5 text-xl">Welcome Gamers</span>
+        <div id='toggle' class="flex justify-center">
+          <button
+            
+            class="w-16  text-white my-5 text-center font-bold rounded justify-self-end focus:ring  transform transition hover:scale-105 duration-300 ease-in-out"
+            >By Genre</button>
+        </div>
         <!-- FORM -->
         <form
-          class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900 flex flex-col"
+          class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900 flex flex-col "
         >
-          <label class="mb-1 mt-5 text-blue-300 font-bold"
+        
+       
+          <label id="game-label" class="mb-1 mt-5 text-blue-300 font-bold"
             >Enter Your Favorite Game</label
           >
           <input
@@ -226,6 +234,7 @@
           </div>
         </form>
       </div>
+     
       <div
         id="results-container"
         class="w-full lg:w-3/5 2xl:w-1/2 flex justify-center items-center"
