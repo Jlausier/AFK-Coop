@@ -20,6 +20,9 @@ $(document).ready(function () {
     themes: [],
   };
 
+  let revealRecentSearch = $("#reveal-recent-btn");
+  let recentSearchesEl = $("#recently-searched");
+
   let searchType = "game";
   let isDisplayingFavorites = false;
 
@@ -68,7 +71,6 @@ $(document).ready(function () {
       );
       return;
     }
-
     getBusinesses(locationName, gameName);
   }
 
@@ -143,7 +145,9 @@ $(document).ready(function () {
    */
   function displayCards(businesses) {
     resultsContainer.empty();
+
     let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
     businesses.forEach((business) => {
       // GENERATE DISPLAY CARD ELEMENTS
 
@@ -466,4 +470,110 @@ $(document).ready(function () {
     selectedCategories.genres = [];
     selectedCategories.themes = [];
   }
+
+  $("#afk").click(function () {
+    location.reload();
+  });
+
+  // ================== Search History ================== //
+
+  // Retain data from local storage
+
+  function readSearchesFromStorage() {
+    return JSON.parse(localStorage.getItem("AFK Game Searches")) || [];
+  }
+
+  // Display data from local storage
+
+  function printSearchHistory() {
+    //clear current list of searches on page
+    recentSearchesEl.empty(); //
+
+    // attaches the array made from readSearchesFromStorage and applies it to searches
+    let searches = readSearchesFromStorage();
+
+    // loop through each project and create a new li and add it to the list
+
+    searches.forEach((searchedItem) => {
+      let listEl = $("<p>");
+
+      listEl.addClass("saved-search");
+
+      listEl.text(searchedItem.game + " in " + searchedItem.location);
+      listEl.attr("style", "list-style-type: none");
+      listEl.addClass(
+        "pb-2 cursor-pointer text-white/50 hover:text-white/75 transition"
+      );
+
+      listEl.on("click", function () {
+        getBusinesses(searchedItem.location, searchedItem.game);
+      });
+
+      recentSearchesEl.append(listEl);
+    });
+  }
+
+  // add searched item to local storage
+  function saveSearches(searchLocation, searchGameName) {
+    // Get the old searches from local storage
+    let searchHistory = readSearchesFromStorage();
+
+    // Find the index of the new search item
+    let index = searchHistory.indexOf(
+      (search) =>
+        search.game === searchGameName && search.location === searchLocation
+    );
+
+    // If it's already the most recent search no change is necessary
+    if (index !== 0) {
+      // Remove new search item if it already existed
+      if (index !== -1) {
+        searchHistory.splice(index, 1);
+      }
+
+      // Add new search item to the beginning
+      searchHistory.unshift({
+        game: searchGameName,
+        location: searchLocation,
+      });
+
+      // Remove excess search items
+      if (searchHistory.length > 3) {
+        searchHistory.pop();
+      }
+
+      // Add the search history back into local storage
+      localStorage.setItem("AFK Game Searches", JSON.stringify(searchHistory));
+
+      printSearchHistory();
+    }
+  }
+
+  // ===== Recent Searches ===== //
+
+  let open = "";
+
+  revealRecentSearch.on("click", () => {
+    let arrow = $("#toggle-arrow");
+    if (!open) {
+      arrow.text("arrow_drop_up");
+      recentSearchesEl.slideDown("slow");
+      setTimeout(function () {
+        revealRecentSearch.removeClass("rounded-b-lg");
+      }, 50);
+      open = true;
+      console.log("if" + open);
+    } else {
+      arrow.text("arrow_drop_down");
+      recentSearchesEl.slideUp("slow");
+      setTimeout(function () {
+        revealRecentSearch.addClass("rounded-b-lg");
+      }, 575);
+
+      open = false;
+      console.log("else" + open);
+    }
+  });
+
+  printSearchHistory();
 });
