@@ -293,3 +293,88 @@ $(document).ready(function () {
 
   favoritesBtn.on("click", displayFavorites);
 });
+
+
+var generesBtn = document.getElementById('toggle')
+var gameLabelEl = document.getElementById('game-label')
+
+
+
+
+// Display these
+// let gameCategories = APIManager.getGameCategories();
+// {
+//   genres: [],
+//   themes: [],
+// }
+
+// // Pass in an  object with arrays or ids
+// Manager.getBusinessesFromGameCategories({
+//   genres: [1, 2, 3, 4],
+//   themes: [2, 3]
+// })
+
+
+$(generesBtn).on('click', function(){
+displayGameCategories();
+
+})
+
+let gameCategories = APIManager.getGameCategories();
+let selectedGenre = {
+  genres: [],
+  themes: [],
+}
+
+
+function displayGameCategories() {
+    gameCategories.genres.forEach((category) => {
+      createGenreCheckbox(category, "genres");
+    });
+  
+    gameCategories.themes.forEach((category) => {
+      createGenreCheckbox(category, "themes");
+    });
+  }
+
+function createGenreCheckbox(catagory, type){
+var gridDiv = document.createElement ('div')
+var genereDiv = document.createElement('div')
+var inputdiv = document.createElement('input')
+var labelDiv = document.createElement('label')
+
+gridDiv.id = "grid-id"
+gridDiv.setAttribute("class", " grid grid cols-3 gap-2")
+genereDiv.setAttribute("class","flex items-center")
+inputdiv.dataset.key = catagory.id
+inputdiv.dataset.type = type;
+labelDiv.setAttribute("class","ml-2 text-white")
+
+labelDiv.innerText = catagory.title;
+var gameSearchEl = document.getElementById("game-search").setAttribute("class", "invisible")
+
+genereDiv.appendChild(inputdiv)
+genereDiv.appendChild(labelDiv)
+gridDiv.appendChild(genereDiv)
+gameLabelEl.appendChild(gridDiv)
+
+
+inputdiv.addEventListener("change", function(){
+  if(inputdiv.checked(":checked")){
+    selectedGenre[type].push(catagory.id)
+  } else{
+    selectedGenre[type] = selectedGenre[type].filter(
+      (a)=> a !== category.id
+        );
+      }
+    });
+}
+
+//  <div class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900">
+//       <label class="mb-1 mt-5 text-blue-300 font-bold">Select Genre</label>
+//       <div class="grid grid-cols-3 gap-4">
+//         <!-- Genre options -->
+//         <div class="flex items-center">
+//           <input type="checkbox" id="action-genre" name="genre" value="action">
+//           <label for="action-genre" class="ml-2 text-white">Action</label>
+//         </div>
