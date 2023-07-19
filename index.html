@@ -44,6 +44,70 @@
       #afk {
         font-family: "Moirai One", cursive;
       }
+
+      /* w-96 absolute left-3/5 top-2/5 transform rotate-6
+      hover:scale-105 duration-700 ease-in-out hover:-rotate-12 */
+
+      #controller-box {
+      }
+
+      #l-body {
+        transition: 0.4s ease-in-out;
+      }
+
+      #r-body {
+        transition: 0.4s ease-in-out;
+      }
+
+      #l-wires {
+        transition: 0.4s ease-in-out;
+      }
+
+      #r-wires {
+        transition: 0.4s ease-in-out;
+      }
+
+      #firework-1 {
+        transition: 0.4s ease-in-out;
+      }
+
+      #firework-2 {
+        transition: 0.4s ease-in-out;
+      }
+
+      #controller-box:hover #l-body {
+        translate: -50px -20px;
+        transform: rotate(20deg);
+        scale: 1.3;
+      }
+
+      #controller-box:hover #r-body {
+        translate: 50px -5px;
+        transform: rotate(-10deg);
+        scale: 1.1;
+      }
+
+      #controller-box:hover #l-wires {
+        translate: -50px -20px;
+        transform: rotate(20deg);
+      }
+
+      #controller-box:hover #r-wires {
+        translate: 50px -5px;
+        transform: rotate(-10deg);
+      }
+
+      #controller-box:hover #firework-1 {
+        translate: -50px -20px;
+        transform: rotate(20deg);
+        scale: 5;
+      }
+
+      #controller-box:hover #firework-2 {
+        translate: 50px -5px;
+        transform: rotate(-10deg);
+        scale: 5;
+      }
     </style>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -213,18 +277,17 @@
         <span id="sub-tag-line" class="px-5 text-xl"
           >Welcome, Gamers&trade;</span
         >
-        <div id='toggle' class="flex justify-center">
+        <div id="toggle" class="flex justify-center">
           <button
-            
-            class="w-16  text-white my-5 text-center font-bold rounded justify-self-end focus:ring  transform transition hover:scale-105 duration-300 ease-in-out"
-            >By Genre</button>
+            class="w-16 text-white my-5 text-center font-bold rounded justify-self-end focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
+          >
+            By Genre
+          </button>
         </div>
         <!-- FORM -->
         <form
-          class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900 flex flex-col "
+          class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900 flex flex-col"
         >
-        
-       
           <label id="game-label" class="mb-1 mt-5 text-blue-300 font-bold"
             >Enter Your Favorite Game</label
           >
@@ -252,16 +315,52 @@
           </div>
         </form>
       </div>
-     
+
       <div
         id="results-container"
         class="w-full lg:w-3/5 2xl:w-1/2 flex justify-center items-center"
       >
-        <!-- IMAGE -->
-        <img
+        <div
+          id="controller-box"
+          class="w-full h-full relative flex justify-center items-center"
+        >
+          <!-- IMAGE -->
+          <img
+            src="./assets/images/fireworks-01-Bright.png"
+            id="firework-1"
+            class="w-36 absolute left-3/5 top-2/4 lg:top-2/5 transform rotate-12"
+          />
+          <img
+            src="./assets/images/fireworks-02-Bright.png"
+            id="firework-2"
+            class="w-36 absolute left-3/5 top-2/4 lg:top-2/5 transform rotate-12"
+          />
+          <img
+            id="r-wires"
+            src="./assets/images/controller-R-Wires-dull.png"
+            class="w-96 absolute left-3/5 top-2/4 lg:top-2/5 transform rotate-12"
+          />
+          <img
+            id="l-wires"
+            src="./assets/images/controller-L-Wires-dull.png"
+            class="w-96 absolute left-3/5 top-2/4 lg:top-2/5 transform rotate-12"
+          />
+          <img
+            id="r-body"
+            src="./assets/images/controller-R-Body-dull.png"
+            class="w-96 absolute left-3/5 top-2/4 lg:top-2/5 transform rotate-12"
+          />
+          <img
+            src="./assets/images/controller-L-Body-dull.png"
+            id="l-body"
+            class="w-96 absolute left-3/5 top-2/4 lg:top-2/5 transform rotate-12"
+          />
+        </div>
+
+        <!-- <img
           src="./assets/images/control_ps4.jpg"
           class="md:w-96 transform -rotate-6 transition hover:scale-105 duration-700 ease-in-out hover:rotate-6"
-        />
+        /> -->
       </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>

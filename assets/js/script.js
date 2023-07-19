@@ -9,6 +9,8 @@ $(document).ready(function () {
   let searchType = "game";
   let isDisplayingFavorites = false;
 
+  let homeButton = $("#afk");
+
   /**
    * Checks if inputs are valid and gets the calls getBusinesses
    * @returns {null} Return if conditons for search are not met
@@ -379,5 +381,13 @@ $(document).ready(function () {
       }
     });
   }
+
+  homeButton.click(function() {
+    location.reload();
+  });
+
+
+
+
 });
 
