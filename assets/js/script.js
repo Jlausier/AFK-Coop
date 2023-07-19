@@ -1,19 +1,9 @@
 $(document).ready(function () {
   let Manager = new APIManager();
-  var tagLine = $("tag-line");
-  var subTagLine = $("sub-tag-line");
-
-  var contactModal = $("#contact-modal");
-  var contactBtn = $("#contactBtn");
-  var contactCloseBtn = $("#contactCloseBtn");
-
-  let favoritesBtn = $("#favorites-button");
-
   var searchContainer = $("#search-container");
   var gameSearchEl = $("#game-search");
   var locationSearchEl = $("#location-search");
   var searchBtnEl = $("#search-btn");
-
   var resultsContainer = $("#results-container");
 
   let searchType = "game";
@@ -25,7 +15,9 @@ $(document).ready(function () {
    * Checks if inputs are valid and gets the calls getBusinesses
    * @returns {null} Return if conditons for search are not met
    */
-  function getBusinessesFromForm() {
+  function getBusinessesFromForm(e) {
+    e.stopPropagation();
+
     isDisplayingFavorites = false;
 
     let locationName = locationSearchEl.val().trim();
@@ -143,7 +135,7 @@ $(document).ready(function () {
         " mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap"
       );
       dispCardImg.addClass(
-        "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover"
+        "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover rounded"
       );
 
       dispCardDetailContainer.addClass(
@@ -260,50 +252,47 @@ $(document).ready(function () {
       "w-full lg:w-3/5 lg:ml-10 2xl:w-1/2 lg:h-[40rem] xl:h-[50rem] overflow-y-scroll flex flex-col justify-start items-start"
     );
 
-    tagLine.hide();
-    subTagLine.hide();
+    $("tag-line").hide();
+    $("sub-tag-line").hide();
+  }
+
+  searchBtnEl.on("click", getBusinessesFromForm);
+
+  /* ===== MODALS ======================================================= */
+
+  function showModal() {
+    $("#modal-overlay").show().addClass("modal-open");
+    $("body").on("click.modal", function (event) {
+      if (event.target.id === "modal-overlay") hideModal();
+    });
+  }
+
+  function hideModal() {
+    $("body").off("click.modal");
+    let modal = $("#modal-overlay");
+    modal.removeClass("modal-open");
+    setTimeout(function () {
+      modal.hide();
+      $(".modal-content").hide();
+    }, 200);
   }
 
   function showErrorModal(title, message) {
     $("#error-modal-title").text(title);
     $("#error-modal-message").text(message);
-    $("#error-modal-overlay").show().addClass("error-modal-open");
+    $("#error-modal").show();
+    showModal();
   }
 
-  $("#error-modal-close").on("click", function () {
-    var modal = $("#error-modal-overlay");
-    modal.removeClass("error-modal-open");
-    setTimeout(function () {
-      modal.hide();
-    }, 200);
-  });
+  $("#error-modal-close").on("click", hideModal);
 
-  searchBtnEl.on("click", getBusinessesFromForm);
-
-  /**
-   * Hides the contact modal and disables the body event listener
-   */
-  function hideContactModal() {
-    contactModal.hide();
-    $("body").off("click.contact-modal");
-  }
-
-  // When the user clicks the button, open the modal
-  contactBtn.on("click", function (e) {
+  $("#contact-btn").on("click", function (e) {
     e.stopPropagation();
-    contactModal.show();
-    // When the user clicks anywhere outside of the modal, close it
-    $("body").on("click.contact-modal", function (event) {
-      if (event.target !== contactModal) {
-        hideContactModal();
-      }
-    });
+    $("#contact-modal").show();
+    showModal();
   });
 
-  // When the user clicks on <span> (x), close the modal
-  contactCloseBtn.on("click", function () {
-    hideContactModal();
-  });
+  /* ===== FAVORITES ======================================================= */
 
   /**
    * Saves or removes a favorite business into local storage
@@ -329,12 +318,13 @@ $(document).ready(function () {
     } else if (!isDisplayingFavorites && favorites.length === 0) {
       showErrorModal(
         "No Favorites",
-        "You have no favorited businesses yet, click the heart icon to save a business as a favorite."
+        "You haven't favorited any businesses yet, click the heart icon to save a business to your favorites."
       );
     }
   }
+  
   // Displays favorites when button in header is clicked
-  favoritesBtn.on("click", displayFavorites);
+  $("#favorites-btn").on("click", displayFavorites);
 
   var generesBtn = document.getElementById("toggle");
   generesBtn.addEventListener("click", function () {
@@ -401,24 +391,3 @@ $(document).ready(function () {
 
 });
 
-// Display these
-// let gameCategories = APIManager.getGameCategories();
-// {
-//   genres: [],
-//   themes: [],
-// }
-
-// // Pass in an  object with arrays or ids
-// Manager.getBusinessesFromGameCategories({
-//   genres: [1, 2, 3, 4],
-//   themes: [2, 3]
-// })
-
-//  <div class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900">
-//       <label class="mb-1 mt-5 text-blue-300 font-bold">Select Genre</label>
-//       <div class="grid grid-cols-3 gap-4">
-//         <!-- Genre options -->
-//         <div class="flex items-center">
-//           <input type="checkbox" id="action-genre" name="genre" value="action">
-//           <label for="action-genre" class="ml-2 text-white">Action</label>
-//         </div>

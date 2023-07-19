@@ -117,128 +117,144 @@
     style="background-image: url('./assets/images/header.png')"
   >
     <!-- MODAL -->
-    <div id="error-modal-overlay" style="display: none">
+    <div id="modal-overlay" style="display: none">
       <div
-        id="error-modal"
-        class="rounded-2xl max-w-2xl relative transform overflow-hidden rounded-lg text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+        id="modal"
+        class="bg-gray-900 overflow-hidden rounded-lg shadow-lg max-w-2xl sm:my-8 sm:w-full sm:max-w-lg"
       >
-        <div class="my-4 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-          <div class="sm:flex sm:items-start">
-            <div
-              class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
-            >
-              <svg
-                class="h-6 w-6 text-red-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                aria-hidden="true"
+        <!-- ERROR MODAL -->
+        <div id="error-modal" style="display: none" class="modal-content">
+          <div class="my-4 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div
+                class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-                />
-              </svg>
-            </div>
-            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-              <h3
-                class="text-base font-semibold leading-6 text-gray-900"
-                id="error-modal-title"
-              ></h3>
-              <div class="mt-2">
-                <p id="error-modal-message" class="text-sm text-white"></p>
+                <svg
+                  class="h-6 w-6 text-red-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                  />
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                <h3
+                  class="text-base font-semibold leading-6 text-white"
+                  id="error-modal-title"
+                ></h3>
+                <div class="mt-2">
+                  <p id="error-modal-message" class="text-sm text-white"></p>
+                </div>
               </div>
             </div>
           </div>
+          <div class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+            <button
+              id="error-modal-close"
+              type="button"
+              class="w-full p-2 text-white my-5 text-center focus:ring bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 transform transition hover:scale-105 duration-300 ease-in-out rounded"
+            >
+              Close
+            </button>
+          </div>
         </div>
-        <div class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-          <button
-            id="error-modal-close"
-            type="button"
-            class="w-full p-2 text-white my-5 text-center focus:ring bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 transform transition hover:scale-105 duration-300 ease-in-out rounded"
+        <!-- CONTACT MODAL -->
+        <div
+          id="contact-modal"
+          class="modal-content p-6 flex flex-col justify-center items-center"
+          style="display: none"
+        >
+          <h3
+            id="contact"
+            class="mt-2 mb-6 text-2xl font-semibold tracking-widest"
           >
-            Close
-          </button>
+            CONTACT US
+          </h3>
+          <div
+            class="w-full md:w-4/5 p-3 flex flex-wrap flex-col justify-around gap-y-4"
+          >
+            <!-- JACOB -->
+            <a
+              href="https://github.com/Jlausier"
+              target="_blank"
+              class="p-2 rounded-full shadow-lg relative opacity-60 bg-gray-800 flex items-center transition hover:opacity-100 hover:-translate-y-1"
+            >
+              <img
+                src="./assets/images/jake.jpg"
+                class="h-12 w-12 object-cover rounded-full"
+              />
+              <p
+                class="text-xl absolute m-auto left-0 right-0 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 text-center bg-clip-text font-bold"
+              >
+                Jacob Lausier
+              </p>
+            </a>
+            <!-- BRIAN -->
+            <a
+              href="https://github.com/GormanBrian"
+              target="_blank"
+              class="p-2 rounded-full shadow-lg relative opacity-60 bg-gray-800 flex items-center transition hover:opacity-100 hover:-translate-y-1"
+            >
+              <img
+                src="./assets/images/brian.jpg"
+                class="h-12 w-12 rounded-full"
+              />
+              <p
+                class="text-xl absolute m-auto left-0 right-0 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 text-center bg-clip-text font-bold"
+              >
+                Brian Gorman
+              </p>
+            </a>
+            <!-- MATTHEW -->
+            <a
+              href="https://github.com/alfaro-matttthew"
+              target="_blank"
+              class="p-2 mb-2 rounded-full shadow-lg relative opacity-60 bg-gray-800 flex items-center transition hover:opacity-100 hover:-translate-y-1"
+            >
+              <img
+                src="./assets/images/matthew.png"
+                class="h-12 w-12 rounded-full"
+              />
+              <p
+                class="text-xl absolute m-auto left-0 right-0 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 text-center bg-clip-text font-bold"
+              >
+                Alfaro Matthew
+              </p>
+            </a>
+          </div>
         </div>
+        <!-- END MODALS -->
       </div>
     </div>
     <header class="flex justify-between">
       <div>
         <!-- SITE TITLE -->
-        <h1
+        <a
+          href="#"
           id="afk"
-          class="p-3 text-4xl md:text-5xl leading-5 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 text-center bg-clip-text"
+          class="p-3 text-4xl font-bold md:text-5xl leading-5 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 text-center bg-clip-text"
         >
           AFK
-        </h1>
+        </a>
       </div>
       <!-- NAV BAR -->
       <div class="flex mt-4 space-x-4 items-center">
         <button
-          id="contactBtn"
-          class="text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 font-bold text-center bg-clip-text hover:bg-blue-700 font-bold py-2 px-4 rounded"
+          id="contact-btn"
+          class="text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 font-bold text-center bg-clip-text transform transition hover:scale-105 duration-300 ease-in-out rounded py-2 px-4"
         >
           Contact Us
         </button>
 
-        <div id="contact-modal" class="modal w-80 md:w-1/4">
-          <div class="modal-content">
-            <span id="contactCloseBtn" class="close">&times;</span>
-            <div
-              id="hub-display"
-              class="mt-3 flex flex-col justify-center items-center"
-            >
-              <h4 id="contact" class="m-3 text-sm tracking-widest">
-                CONTACT US
-              </h4>
-              <div
-                class="w-full md:w-4/5 p-3 flex flex-wrap justify-around flex-col"
-              >
-                <!-- JACOB -->
-                <a
-                  href="https://github.com/Jlausier"
-                  target="_blank"
-                  class="p-2 rounded-full shadow-lg opacity-60 bg-gray-900 flex items-center transition hover:opacity-90 hover:-translate-y-1"
-                >
-                  <img
-                    src="./assets/images/jake.jpg"
-                    class="h-12 w-12 object-cover rounded-full"
-                  />
-                  <p class="p-2">Jacob Lausier</p>
-                </a>
-                <!-- BRIAN -->
-                <a
-                  href="https://github.com/GormanBrian"
-                  target="_blank"
-                  class="p-2 rounded-full shadow-lg opacity-60 bg-gray-900 flex items-center transition hover:opacity-90 hover:-translate-y-1"
-                >
-                  <img
-                    src="./assets/images/brian.jpg"
-                    class="h-12 w-12 rounded-full"
-                  />
-                  <p class="p-2">Brian Gorman</p>
-                </a>
-                <!-- MATTHEW -->
-                <a
-                  href="https://github.com/alfaro-matttthew"
-                  target="_blank"
-                  class="p-2 rounded-full shadow-lg opacity-60 bg-gray-900 flex items-center transition hover:opacity-90 hover:-translate-y-1"
-                >
-                  <img
-                    src="./assets/images/matthew.png"
-                    class="h-12 w-12 rounded-full"
-                  />
-                  <p class="p-2">Alfaro Matthew</p>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <button
-          id="favorites-button"
+          id="favorites-btn"
           class="py-2 px-5 text-sm font-bold text-white my-5 text-center tracking-wider rounded justify-self-end focus:ring bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 transform transition hover:scale-105 duration-300 ease-in-out rounded"
         >
           Favorites
@@ -258,7 +274,9 @@
         >
           Enjoy Our Convenient Searching App
         </h2>
-        <span id="sub-tag-line" class="px-5 text-xl">Welcome Gamers</span>
+        <span id="sub-tag-line" class="px-5 text-xl"
+          >Welcome, Gamers&trade;</span
+        >
         <div id="toggle" class="flex justify-center">
           <button
             class="w-16 text-white my-5 text-center font-bold rounded justify-self-end focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
@@ -277,7 +295,7 @@
             type="text"
             id="game-search"
             class="p-2 my-2 focus:ring hover:scale-105 duration-300 ease-in-out"
-            placeholder="MineCraft"
+            placeholder="Minecraft"
           />
           <label class="mb-1 mt-5 text-blue-300 font-bold"
             >Enter Your Desired City</label
@@ -291,7 +309,7 @@
           <div class="flex justify-center">
             <a
               id="search-btn"
-              class="w-56 p-2 text-white my-5 text-center font-bold rounded justify-self-end focus:ring bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 transform transition hover:scale-105 duration-300 ease-in-out"
+              class="w-56 p-2 text-white my-5 cursor-pointer select-none text-center font-bold rounded justify-self-end focus:ring bg-gradient-to-r from-purple-800 to-green-500 hover:from-pink-500 hover:to-green-500 transform transition hover:scale-105 duration-300 ease-in-out"
               >Find Your Next Adventure</a
             >
           </div>
