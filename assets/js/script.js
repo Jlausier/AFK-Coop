@@ -320,16 +320,19 @@ $(document).ready(function () {
       );
     }
   }
-  
+
   // Displays favorites when button in header is clicked
   $("#favorites-btn").on("click", displayFavorites);
 
-  var generesBtn = document.getElementById("toggle");
-  generesBtn.addEventListener("click", function () {
+  // ================================================================================
+
+  var genresBtn = $("#toggle");
+  genresBtn.on("click", function () {
     displayGameCategories();
   });
 
-  var gameLabelEl = document.getElementById("game-label");
+  let genreGrid = $("#genre-grid");
+  var gameLabelEl = $("#game-label");
 
   let gameCategories = APIManager.getGameCategories();
   let selectedCategories = {
@@ -337,10 +340,39 @@ $(document).ready(function () {
     themes: [],
   };
 
-
-
   function displayGameCategories() {
+    if (searchType === "genres") return;
+
     searchType = "genres";
+
+    function createGenreCheckbox(category, type) {
+      var genreDiv = $("<div>");
+      var inputDiv = $("<input>");
+      var labelDiv = $("<label>");
+
+      genreDiv.addClass("flex items-center");
+      inputDiv.attr("type", "checkbox");
+
+      labelDiv.addClass("ml-2 text-white");
+
+      labelDiv.text(category.title);
+      gameSearchEl.hide();
+
+      genreDiv.append(inputDiv);
+      genreDiv.append(labelDiv);
+      genreGrid.append(genreDiv);
+
+      inputDiv.on("change", function (_) {
+        if (inputDiv.is(":checked")) {
+          selectedCategories[type].push(category.id);
+        } else {
+          selectedCategories[type] = selectedCategories[type].filter(
+            (a) => a !== category.id
+          );
+        }
+      });
+    }
+
     gameCategories.genres.forEach((category) => {
       createGenreCheckbox(category, "genres");
     });
@@ -348,84 +380,36 @@ $(document).ready(function () {
     gameCategories.themes.forEach((category) => {
       createGenreCheckbox(category, "themes");
     });
-   
+
+    gameLabelEl.text("Select Your Favorite Genres");
+    genreGrid.show();
+    resetForm();
   }
 
-  function createGenreCheckbox(category, type) {
-    var gridDiv = document.createElement("div");
-    var genereDiv = document.createElement("div");
-    var inputdiv = document.createElement("input");
-    var labelDiv = document.createElement("label");
+  var gameToggle = $("#toggle-back");
 
-    gridDiv.id = "grid-id";
-    gridDiv.setAttribute("class", " grid grid cols-3 gap-2");
-    genereDiv.setAttribute("class", "flex items-center");
-    inputdiv.type = "checkbox";
+  $(gameToggle).on("click", toggleGame);
 
-    labelDiv.setAttribute("class", "ml-2 text-white");
+  function toggleGame() {
+    if (searchType === "game") return;
 
-    labelDiv.innerText = category.title;
-    document.getElementById("game-search").setAttribute("class", "invisible");
+    genreGrid.empty();
 
-    genereDiv.appendChild(inputdiv);
-    genereDiv.appendChild(labelDiv);
-    gridDiv.appendChild(genereDiv);
-   
-
-    inputdiv.addEventListener("change", function (event) {
-      if (event.target.checked) {
-        selectedCategories[type].push(category.id);
-      } else {
-        selectedCategories[type] = selectedCategories[type].filter(
-          (a) => a !== category.id
-        );
-      }
-    });
+    searchType = "game";
+    gameLabelEl.text("Enter Your Favorite Game");
+    genreGrid.hide();
+    gameSearchEl.show();
+    resetForm();
   }
 
-  
-  gameLabelEl.appendChild(gridDiv);
- 
- 
- 
-  var gameToggle = document.getElementById('toggle-back')
+  function resetForm() {
+    // Clear the input field
 
-$(gameToggle).on('click', toggleGame)
+    gameSearchEl.val("");
+    // Clear the selected categories
+    selectedCategories.genres = [];
+    selectedCategories.themes = [];
 
-function toggleGame(){
-
-
-  var gameInput = document.createElement("input")
-  var gameLabel = document.createElement("label")
-
-  gameLabel.setAttribute("class", "mb-1 mt-5 text-blue-300 font-bold")
-  gameInput.setAttribute("class", "p-2 my-2 focus:ring hover:scale-105 duration-300 ease-in-out")
-gameInput.id = "game-search"
-gameInput.type = "text"
-
-
-gameLabel.appendChild(gameInput)
-gameLabelEl.appendChild(gameLabel)
-
-
-resetForm()
-}
-
-function resetForm() {
-  // Clear the input field
-  var gameInput = document.getElementById("game-search");
-  if (gameInput) {
-    gameInput.value = "";
+    // Clear any existing categories displayed on the form
   }
-
-  // Clear the selected categories
-  selectedCategories.genres = [];
-  selectedCategories.themes = [];
-
-  // Clear any existing categories displayed on the form
-  var gridDiv = document.getElementById("grid-id");
-  
-    gridDiv.remove();
-}
 });
-
