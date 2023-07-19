@@ -46,6 +46,8 @@ and end. */
   color: #ec4899;
 }
 
+/* ===== SCROLLBAR SELECTORS ========================================================= */
+
 ::-webkit-scrollbar {
   width: 10px;
 }
