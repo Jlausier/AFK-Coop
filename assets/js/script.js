@@ -337,6 +337,8 @@ $(document).ready(function () {
     themes: [],
   };
 
+
+
   function displayGameCategories() {
     searchType = "genres";
     gameCategories.genres.forEach((category) => {
@@ -346,6 +348,7 @@ $(document).ready(function () {
     gameCategories.themes.forEach((category) => {
       createGenreCheckbox(category, "themes");
     });
+   
   }
 
   function createGenreCheckbox(category, type) {
@@ -367,7 +370,7 @@ $(document).ready(function () {
     genereDiv.appendChild(inputdiv);
     genereDiv.appendChild(labelDiv);
     gridDiv.appendChild(genereDiv);
-    gameLabelEl.appendChild(gridDiv);
+   
 
     inputdiv.addEventListener("change", function (event) {
       if (event.target.checked) {
@@ -379,5 +382,50 @@ $(document).ready(function () {
       }
     });
   }
+
+  
+  gameLabelEl.appendChild(gridDiv);
+ 
+ 
+ 
+  var gameToggle = document.getElementById('toggle-back')
+
+$(gameToggle).on('click', toggleGame)
+
+function toggleGame(){
+
+
+  var gameInput = document.createElement("input")
+  var gameLabel = document.createElement("label")
+
+  gameLabel.setAttribute("class", "mb-1 mt-5 text-blue-300 font-bold")
+  gameInput.setAttribute("class", "p-2 my-2 focus:ring hover:scale-105 duration-300 ease-in-out")
+gameInput.id = "game-search"
+gameInput.type = "text"
+
+
+gameLabel.appendChild(gameInput)
+gameLabelEl.appendChild(gameLabel)
+
+
+resetForm()
+}
+
+function resetForm() {
+  // Clear the input field
+  var gameInput = document.getElementById("game-search");
+  if (gameInput) {
+    gameInput.value = "";
+  }
+
+  // Clear the selected categories
+  selectedCategories.genres = [];
+  selectedCategories.themes = [];
+
+  // Clear any existing categories displayed on the form
+  var gridDiv = document.getElementById("grid-id");
+  
+    gridDiv.remove();
+}
 });
 
