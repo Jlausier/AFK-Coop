@@ -44,6 +44,44 @@
       #afk {
         font-family: "Moirai One", cursive;
       }
+
+      /* w-96 absolute left-3/5 top-2/5 transform rotate-6
+      hover:scale-105 duration-700 ease-in-out hover:-rotate-12 */
+
+      #results-container {
+      }
+
+      #l-body {
+        transition: 0.7s ease-in-out;
+      }
+
+      #r-body {
+        transition: 0.7s ease-in-out;
+      }
+
+      #l-wires {
+        transition: 0.7s ease-in-out;
+      }
+
+      #r-wires {
+        transition: 0.7s ease-in-out;
+      }
+
+      #results-container:hover #l-body {
+        transform: rotate(-20deg);
+      }
+
+      #results-container:hover #r-body {
+        transform: rotate(20deg);
+      }
+
+      #results-container:hover #l-wires {
+        transform: rotate(-20deg);
+      }
+
+      #results-container:hover #r-wires {
+        transform: rotate(20deg);
+      }
     </style>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -84,12 +122,12 @@
                 id="error-modal-title"
               ></h3>
               <div class="mt-2">
-                <p id="error-modal-message" class="text-sm text-white "></p>
+                <p id="error-modal-message" class="text-sm text-white"></p>
               </div>
             </div>
           </div>
         </div>
-        <div class=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+        <div class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
           <button
             id="error-modal-close"
             type="button"
@@ -111,7 +149,7 @@
         </h1>
       </div>
       <!-- NAV BAR -->
-      <div class="flex mt-4 space-x-4 items-center" >
+      <div class="flex mt-4 space-x-4 items-center">
         <button
           id="contactBtn"
           class="text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 font-bold text-center bg-clip-text hover:bg-blue-700 font-bold py-2 px-4 rounded"
@@ -119,7 +157,7 @@
           Contact Us
         </button>
 
-        <div id="contact-modal" class="modal w-80 md:w-1/4" >
+        <div id="contact-modal" class="modal w-80 md:w-1/4">
           <div class="modal-content">
             <span id="contactCloseBtn" class="close">&times;</span>
             <div
@@ -195,18 +233,17 @@
           Enjoy Our Convenient Searching App
         </h2>
         <span id="sub-tag-line" class="px-5 text-xl">Welcome Gamers</span>
-        <div id='toggle' class="flex justify-center">
+        <div id="toggle" class="flex justify-center">
           <button
-            
-            class="w-16  text-white my-5 text-center font-bold rounded justify-self-end focus:ring  transform transition hover:scale-105 duration-300 ease-in-out"
-            >By Genre</button>
+            class="w-16 text-white my-5 text-center font-bold rounded justify-self-end focus:ring transform transition hover:scale-105 duration-300 ease-in-out"
+          >
+            By Genre
+          </button>
         </div>
         <!-- FORM -->
         <form
-          class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900 flex flex-col "
+          class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900 flex flex-col"
         >
-        
-       
           <label id="game-label" class="mb-1 mt-5 text-blue-300 font-bold"
             >Enter Your Favorite Game</label
           >
@@ -234,16 +271,37 @@
           </div>
         </form>
       </div>
-     
+
       <div
         id="results-container"
-        class="w-full lg:w-3/5 2xl:w-1/2 flex justify-center items-center"
+        class="border w-full lg:w-3/5 2xl:w-1/2 flex justify-center items-center"
       >
         <!-- IMAGE -->
         <img
+          id="r-wires"
+          src="./assets/images/controller-R-Wires.png"
+          class="w-96 absolute left-3/5 top-2/5 transform rotate-6"
+        />
+        <img
+          id="l-wires"
+          src="./assets/images/controller-L-Wires.png"
+          class="w-96 absolute left-3/5 top-2/5 transform rotate-6"
+        />
+        <img
+          id="r-body"
+          src="./assets/images/controller-R-Body.png"
+          class="w-96 absolute left-3/5 top-2/5 transform rotate-6"
+        />
+        <img
+          src="./assets/images/controller-L-Body.png"
+          id="l-body"
+          class="w-96 absolute left-3/5 top-2/5 transform rotate-6"
+        />
+
+        <!-- <img
           src="./assets/images/control_ps4.jpg"
           class="md:w-96 transform -rotate-6 transition hover:scale-105 duration-700 ease-in-out hover:rotate-6"
-        />
+        /> -->
       </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
@@ -254,3 +312,6 @@
     <script src="./assets/js/script.js"></script>
   </body>
 </html>
+
+w-96 absolute left-3/5 top-2/5 transform rotate-6 hover:scale-105 duration-700
+ease-in-out hover:-rotate-12

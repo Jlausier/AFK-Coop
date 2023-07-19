@@ -389,6 +389,20 @@ $(document).ready(function () {
       }
     });
   }
+
+  function controllerAnimation() {
+
+    var leftBody = $('#l-body');
+    var rightBody = $('#r-body');
+    var leftWires = $('#l-wires');
+    var rightWires = $('#r-wires');
+
+    resultsContainer.on('mouseenter' () => {
+      
+    })
+  }
+
+
 });
 
 // Display these
