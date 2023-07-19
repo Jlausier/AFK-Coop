@@ -6,6 +6,8 @@ $(document).ready(function () {
   var searchBtnEl = $("#search-btn");
 
   var resultsContainer = $("#results-container");
+  var revealRecentSearch = $("#reveal-recent-btn");
+  var recentSearchesEl = $("#recently-searched");
 
   let searchType = "game";
   let isDisplayingFavorites = false;
@@ -55,9 +57,6 @@ $(document).ready(function () {
     getBusinesses(locationName, gameName);
   }
 
-
-    
-
   function validateBusinessesByGenre(locationName) {
     let categoriesEmpty =
       selectedCategories.genres.length === 0 &&
@@ -97,7 +96,6 @@ $(document).ready(function () {
   function getBusinesses(locationName, gameName) {
     Manager.getBusinessesFromGames(locationName, [gameName])
       .then(({ businesses, categories }) => {
-
         displayCards(businesses);
       })
       .catch(({ title, message }) => {
@@ -141,9 +139,7 @@ $(document).ready(function () {
         " mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap"
       );
       dispCardImg.addClass(
-
         "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover rounded"
-
       );
 
       dispCardDetailContainer.addClass(
@@ -300,9 +296,7 @@ $(document).ready(function () {
     showModal();
   });
 
-
   /* ===== FAVORITES ======================================================= */
-
 
   /**
    * Saves or removes a favorite business into local storage
@@ -332,7 +326,7 @@ $(document).ready(function () {
       );
     }
   }
-  
+
   // Displays favorites when button in header is clicked
   $("#favorites-btn").on("click", displayFavorites);
 
@@ -392,10 +386,9 @@ $(document).ready(function () {
     });
   }
 
-  homeButton.click(function() {
+  homeButton.click(function () {
     location.reload();
   });
-
 
   // ================== Search History ================== //
 
@@ -423,15 +416,15 @@ $(document).ready(function () {
 
       listEl.text(searchedItem.game + " in " + searchedItem.location);
       listEl.attr("style", "list-style-type: none");
-      listEl.addClass('pb-2 cursor-pointer text-white/50 hover:text-white/75 transition');
+      listEl.addClass(
+        "pb-2 cursor-pointer text-white/50 hover:text-white/75 transition"
+      );
 
       listEl.on("click", function () {
         getBusinesses(searchedItem.location, searchedItem.game);
       });
 
       recentSearchesEl.append(listEl);
-
-      // recentSearchesEl.slowDown('slow');
     });
   }
 
@@ -481,7 +474,7 @@ $(document).ready(function () {
       arrow.text("arrow_drop_up");
       recentSearchesEl.slideDown("slow");
       setTimeout(function () {
-        revealRecentSearch.removeClass('rounded-b-lg');
+        revealRecentSearch.removeClass("rounded-b-lg");
       }, 50);
       open = true;
       console.log("if" + open);
@@ -489,16 +482,13 @@ $(document).ready(function () {
       arrow.text("arrow_drop_down");
       recentSearchesEl.slideUp("slow");
       setTimeout(function () {
-        revealRecentSearch.addClass('rounded-b-lg');
+        revealRecentSearch.addClass("rounded-b-lg");
       }, 575);
-  
+
       open = false;
       console.log("else" + open);
     }
   });
 
   printSearchHistory();
-
-
 });
-
