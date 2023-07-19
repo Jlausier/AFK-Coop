@@ -1,27 +1,38 @@
 $(document).ready(function () {
   let Manager = new APIManager();
-  var tagLine = $("tag-line");
-  var subTagLine = $("sub-tag-line");
-
-  var contactModal = $("#contact-modal");
-  var contactBtn = $("#contactBtn");
-  var contactCloseBtn = $("#contactCloseBtn");
-
   var searchContainer = $("#search-container");
   var gameSearchEl = $("#game-search");
   var locationSearchEl = $("#location-search");
   var searchBtnEl = $("#search-btn");
 
-  var recentSearchesEl = $("#recently-searched");
-  var revealRecentSearch = $("#reveal-recent-btn");
-
   var resultsContainer = $("#results-container");
 
-  function getBusinessesFromForm(event) {
-    let gameName = gameSearchEl.val().trim();
+  let searchType = "game";
+  let isDisplayingFavorites = false;
+
+  let homeButton = $("#afk");
+
+  /**
+   * Checks if inputs are valid and gets the calls getBusinesses
+   * @returns {null} Return if conditons for search are not met
+   */
+  function getBusinessesFromForm(e) {
+    e.stopPropagation();
+
+    isDisplayingFavorites = false;
+
     let locationName = locationSearchEl.val().trim();
 
-    // If input is invalid show a modal and return
+    if (searchType === "game") {
+      validateBusinessesByGame(locationName);
+    } else if (searchType === "genres") {
+      validateBusinessesByGenre(locationName);
+    }
+  }
+
+  function validateBusinessesByGame(locationName) {
+    let gameName = gameSearchEl.val().trim();
+
     if (gameName === "" && locationName === "") {
       showErrorModal(
         "Enter a Game and Location",
@@ -44,10 +55,49 @@ $(document).ready(function () {
     getBusinesses(locationName, gameName);
   }
 
+
+    
+
+  function validateBusinessesByGenre(locationName) {
+    let categoriesEmpty =
+      selectedCategories.genres.length === 0 &&
+      selectedCategories.themes.length === 0;
+    if (categoriesEmpty && locationName === "") {
+      showErrorModal(
+        "Select a Category and Enter a Location",
+        "Please select one of the categories above and enter a location to proceed."
+      );
+      return;
+    } else if (categoriesEmpty) {
+      showErrorModal(
+        "Select a Category",
+        "Please select one of the categories above to proceed."
+      );
+      return;
+    } else if (locationName === "") {
+      showErrorModal(
+        "Enter a Location",
+        "Please enter the location to proceed."
+      );
+      return;
+    }
+
+    getBusinessesByCategory(locationName);
+  }
+
+  function getBusinessesByCategory() {
+    // TODO: MERGE BRANCH TO ACCESS NEWEST APIMANAGER FUNCTIONS
+  }
+
+  /**
+   * Gets businesses from the API Manager, displays results or an error modal
+   * @param {string} locationName Geographic area to search for businesses
+   * @param {string} gameName Name of the game to get the genres and themes from
+   */
   function getBusinesses(locationName, gameName) {
     Manager.getBusinessesFromGames(locationName, [gameName])
       .then(({ businesses, categories }) => {
-        saveSearches(locationName, gameName);
+
         displayCards(businesses);
       })
       .catch(({ title, message }) => {
@@ -57,6 +107,8 @@ $(document).ready(function () {
 
   function displayCards(businesses) {
     resultsContainer.empty();
+
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
 
     businesses.forEach((business) => {
       // GENERATE DISPLAY CARD ELEMENTS
@@ -89,7 +141,9 @@ $(document).ready(function () {
         " mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap"
       );
       dispCardImg.addClass(
-        "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover"
+
+        "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover rounded"
+
       );
 
       dispCardDetailContainer.addClass(
@@ -126,7 +180,7 @@ $(document).ready(function () {
 
       // CONNECT DISPLAY CARD WITH API DATA
 
-      dispCardImg.attr("src", business["image_url"]);
+      dispCardImg.attr("src", business.image_url);
       dispCardName.text(business.name);
 
       ratingNumb.text(business.rating);
@@ -155,8 +209,23 @@ $(document).ready(function () {
       dispCardUrlBtn.attr("href", business.url);
       dispCardUrlBtn.attr("target", "_blank");
 
+      // Create favorites button
       dispCardFavBtn.text("favorite");
-      dispCardFavBtn.attr(".fav-btn");
+      dispCardFavBtn.addClass("fav-btn");
+      // Set the current favorite state
+      dispCardFavBtn.attr(
+        "data-state",
+        favorites.some((fav) => fav.id === business.id) ? "active" : ""
+      );
+      dispCardFavBtn.on("click", () => {
+        // Toggle the favorites state
+        dispCardFavBtn.attr(
+          "data-state",
+          dispCardFavBtn.attr("data-state") == "active" ? "" : "active"
+        );
+        // Add or remove from localStorage
+        saveFavorite(business);
+      });
 
       // INSERT DISPLAY CARD INTO CONTAINER
 
@@ -191,50 +260,142 @@ $(document).ready(function () {
       "w-full lg:w-3/5 lg:ml-10 2xl:w-1/2 lg:h-[40rem] xl:h-[50rem] overflow-y-scroll flex flex-col justify-start items-start"
     );
 
-    tagLine.hide();
-    subTagLine.hide();
+    $("tag-line").hide();
+    $("sub-tag-line").hide();
+  }
+
+  searchBtnEl.on("click", getBusinessesFromForm);
+
+  /* ===== MODALS ======================================================= */
+
+  function showModal() {
+    $("#modal-overlay").show().addClass("modal-open");
+    $("body").on("click.modal", function (event) {
+      if (event.target.id === "modal-overlay") hideModal();
+    });
+  }
+
+  function hideModal() {
+    $("body").off("click.modal");
+    let modal = $("#modal-overlay");
+    modal.removeClass("modal-open");
+    setTimeout(function () {
+      modal.hide();
+      $(".modal-content").hide();
+    }, 200);
   }
 
   function showErrorModal(title, message) {
     $("#error-modal-title").text(title);
     $("#error-modal-message").text(message);
-    $("#error-modal-overlay").show().addClass("error-modal-open");
+    $("#error-modal").show();
+    showModal();
   }
 
-  $("#error-modal-close").on("click", function () {
-    var modal = $("#error-modal-overlay");
-    modal.removeClass("error-modal-open");
-    setTimeout(function () {
-      modal.hide();
-    }, 200);
+  $("#error-modal-close").on("click", hideModal);
+
+  $("#contact-btn").on("click", function (e) {
+    e.stopPropagation();
+    $("#contact-modal").show();
+    showModal();
   });
 
-  searchBtnEl.on("click", getBusinessesFromForm);
+
+  /* ===== FAVORITES ======================================================= */
+
 
   /**
-   * Hides the contact modal and disables the body event listener
+   * Saves or removes a favorite business into local storage
+   * @param {Object} business Full business object to save
    */
-  function hideContactModal() {
-    contactModal.hide();
-    $("body").off("click.contact-modal");
+  function saveFavorite(business) {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    let index = favorites.findIndex((fav) => fav.id === business.id);
+    if (index === -1) favorites.unshift(business);
+    else favorites.splice(index, 1);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    if (isDisplayingFavorites && index !== -1) displayFavorites();
   }
 
-  // When the user clicks the button, open the modal
-  contactBtn.on("click", function (e) {
-    e.stopPropagation();
-    contactModal.show();
-    // When the user clicks anywhere outside of the modal, close it
-    $("body").on("click.contact-modal", function (event) {
-      if (event.target !== contactModal) {
-        hideContactModal();
-      }
-    });
+  /**
+   * Displays favorites cards in results container
+   */
+  function displayFavorites() {
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    if (isDisplayingFavorites || favorites.length !== 0) {
+      isDisplayingFavorites = true;
+      displayCards(favorites);
+    } else if (!isDisplayingFavorites && favorites.length === 0) {
+      showErrorModal(
+        "No Favorites",
+        "You haven't favorited any businesses yet, click the heart icon to save a business to your favorites."
+      );
+    }
+  }
+  
+  // Displays favorites when button in header is clicked
+  $("#favorites-btn").on("click", displayFavorites);
+
+  var generesBtn = document.getElementById("toggle");
+  generesBtn.addEventListener("click", function () {
+    displayGameCategories();
   });
 
-  // When the user clicks on <span> (x), close the modal
-  contactCloseBtn.on("click", function () {
-    hideContactModal();
+  var gameLabelEl = document.getElementById("game-label");
+
+  let gameCategories = APIManager.getGameCategories();
+  let selectedCategories = {
+    genres: [],
+    themes: [],
+  };
+
+  function displayGameCategories() {
+    searchType = "genres";
+    gameCategories.genres.forEach((category) => {
+      createGenreCheckbox(category, "genres");
+    });
+
+    gameCategories.themes.forEach((category) => {
+      createGenreCheckbox(category, "themes");
+    });
+  }
+
+  function createGenreCheckbox(category, type) {
+    var gridDiv = document.createElement("div");
+    var genereDiv = document.createElement("div");
+    var inputdiv = document.createElement("input");
+    var labelDiv = document.createElement("label");
+
+    gridDiv.id = "grid-id";
+    gridDiv.setAttribute("class", " grid grid cols-3 gap-2");
+    genereDiv.setAttribute("class", "flex items-center");
+    inputdiv.type = "checkbox";
+
+    labelDiv.setAttribute("class", "ml-2 text-white");
+
+    labelDiv.innerText = category.title;
+    document.getElementById("game-search").setAttribute("class", "invisible");
+
+    genereDiv.appendChild(inputdiv);
+    genereDiv.appendChild(labelDiv);
+    gridDiv.appendChild(genereDiv);
+    gameLabelEl.appendChild(gridDiv);
+
+    inputdiv.addEventListener("change", function (event) {
+      if (event.target.checked) {
+        selectedCategories[type].push(category.id);
+      } else {
+        selectedCategories[type] = selectedCategories[type].filter(
+          (a) => a !== category.id
+        );
+      }
+    });
+  }
+
+  homeButton.click(function() {
+    location.reload();
   });
+
 
   // ================== Search History ================== //
 
@@ -338,17 +499,6 @@ $(document).ready(function () {
 
   printSearchHistory();
 
-  // $(".saved-search").on("click", function() {
-  //   console.log('click');
-  //   let searches = readSearchesFromStorage();
-  //   let savedSearch = searches.find((saved) => {
-  //     console.log('good')
-  //     return saved.game + saved.location == $(this).attr("data-game");
 
-  //   });
-  // console.log(typeof savedSearch);
-  //   if (typeof savedSearch !== "undefined") {
-  //     getBusinesses(savedSearch.location, savedSearch.game);
-  //   }
-  // });
 });
+
