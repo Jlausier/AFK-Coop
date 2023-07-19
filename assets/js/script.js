@@ -303,7 +303,7 @@ $(document).ready(function () {
       }
 
       // Add the search history back into local storage
-      localStorage.setItem("AFK Game Searches", JSON.stringify(searchItems));
+      localStorage.setItem("AFK Game Searches", JSON.stringify(searchHistory));
 
       printSearchHistory();
     }
