@@ -16,6 +16,7 @@ $(document).ready(function () {
 
   var resultsContainer = $("#results-container");
 
+  let searchType = "game";
   let isDisplayingFavorites = false;
 
   /**
@@ -24,10 +25,19 @@ $(document).ready(function () {
    */
   function getBusinessesFromForm() {
     isDisplayingFavorites = false;
-    let gameName = gameSearchEl.val().trim();
+
     let locationName = locationSearchEl.val().trim();
 
-    // If input is invalid show a modal and return
+    if (searchType === "game") {
+      validateBusinessesByGame(locationName);
+    } else if (searchType === "genres") {
+      validateBusinessesByGenre(locationName);
+    }
+  }
+
+  function validateBusinessesByGame(locationName) {
+    let gameName = gameSearchEl.val().trim();
+
     if (gameName === "" && locationName === "") {
       showErrorModal(
         "Enter a Game and Location",
@@ -47,7 +57,39 @@ $(document).ready(function () {
       );
       return;
     }
+
     getBusinesses(locationName, gameName);
+  }
+
+  function validateBusinessesByGenre(locationName) {
+    let categoriesEmpty =
+      selectedCategories.genres.length === 0 &&
+      selectedCategories.themes.length === 0;
+    if (categoriesEmpty && locationName === "") {
+      showErrorModal(
+        "Select a Category and Enter a Location",
+        "Please select one of the categories above and enter a location to proceed."
+      );
+      return;
+    } else if (categoriesEmpty) {
+      showErrorModal(
+        "Select a Category",
+        "Please select one of the categories above to proceed."
+      );
+      return;
+    } else if (locationName === "") {
+      showErrorModal(
+        "Enter a Location",
+        "Please enter the location to proceed."
+      );
+      return;
+    }
+
+    getBusinessesByCategory(locationName);
+  }
+
+  function getBusinessesByCategory() {
+    // TODO: MERGE BRANCH TO ACCESS NEWEST APIMANAGER FUNCTIONS
   }
 
   /**
@@ -58,7 +100,6 @@ $(document).ready(function () {
   function getBusinesses(locationName, gameName) {
     Manager.getBusinessesFromGames(locationName, [gameName])
       .then(({ businesses, categories }) => {
-        console.log(businesses);
         displayCards(businesses);
       })
       .catch(({ title, message }) => {
@@ -291,78 +332,64 @@ $(document).ready(function () {
     }
   }
 
-let searchtype = "game"
-
-
   favoritesBtn.on("click", displayFavorites);
-  $(generesBtn).on('click', function(){
+
+  var generesBtn = document.getElementById("toggle");
+  generesBtn.addEventListener("click", function () {
     displayGameCategories();
-    
-    })
-    var generesBtn = document.getElementById('toggle')
-    var gameLabelEl = document.getElementById('game-label')
+  });
 
-    let gameCategories = APIManager.getGameCategories();
-    let selectedGenre = {
-      genres: [],
-      themes: [],
-    }
-    
-    
-    function displayGameCategories() {
-        gameCategories.genres.forEach((category) => {
-          createGenreCheckbox(category, "genres");
-        });
-      
-        gameCategories.themes.forEach((category) => {
-          createGenreCheckbox(category, "themes");
-        });
+  var gameLabelEl = document.getElementById("game-label");
+
+  let gameCategories = APIManager.getGameCategories();
+  let selectedCategories = {
+    genres: [],
+    themes: [],
+  };
+
+  function displayGameCategories() {
+    searchType = "genres";
+    gameCategories.genres.forEach((category) => {
+      createGenreCheckbox(category, "genres");
+    });
+
+    gameCategories.themes.forEach((category) => {
+      createGenreCheckbox(category, "themes");
+    });
+  }
+
+  function createGenreCheckbox(category, type) {
+    var gridDiv = document.createElement("div");
+    var genereDiv = document.createElement("div");
+    var inputdiv = document.createElement("input");
+    var labelDiv = document.createElement("label");
+
+    gridDiv.id = "grid-id";
+    gridDiv.setAttribute("class", " grid grid cols-3 gap-2");
+    genereDiv.setAttribute("class", "flex items-center");
+    inputdiv.type = "checkbox";
+
+    labelDiv.setAttribute("class", "ml-2 text-white");
+
+    labelDiv.innerText = category.title;
+    document.getElementById("game-search").setAttribute("class", "invisible");
+
+    genereDiv.appendChild(inputdiv);
+    genereDiv.appendChild(labelDiv);
+    gridDiv.appendChild(genereDiv);
+    gameLabelEl.appendChild(gridDiv);
+
+    inputdiv.addEventListener("change", function (event) {
+      if (event.target.checked) {
+        selectedCategories[type].push(category.id);
+      } else {
+        selectedCategories[type] = selectedCategories[type].filter(
+          (a) => a !== category.id
+        );
       }
-    
-    function createGenreCheckbox(catagory, type){
-     searchtype = "genres"
-
-    var gridDiv = document.createElement ('div')
-    var genereDiv = document.createElement('div')
-    var inputdiv = document.createElement('input')
-    var labelDiv = document.createElement('label')
-    
-    gridDiv.id = "grid-id"
-    gridDiv.setAttribute("class", " grid grid cols-3 gap-2")
-    genereDiv.setAttribute("class","flex items-center")
-    inputdiv.dataset.key = catagory.id
-    inputdiv.dataset.type = type;
-    inputdiv.type="checkbox"
-    
-    labelDiv.setAttribute("class","ml-2 text-white")
-    
-    labelDiv.innerText = catagory.title;
-    var gameSearchEl = document.getElementById("game-search").setAttribute("class", "invisible")
-    
-    genereDiv.appendChild(inputdiv)
-    genereDiv.appendChild(labelDiv)
-    gridDiv.appendChild(genereDiv)
-    gameLabelEl.appendChild(gridDiv)
-    
-    
-    inputdiv.addEventListener("change", function(){
-      if(inputdiv.checked(":checked")){
-        selectedGenre[type].push(catagory.id)
-      } else{
-        selectedGenre[type] = selectedGenre[type].filter(
-          (a)=> a !== category.id
-            );
-          }
-        });
-    }
+    });
+  }
 });
-
-
-var generesBtn = document.getElementById('toggle')
-var gameLabelEl = document.getElementById('game-label')
-
-
-
 
 // Display these
 // let gameCategories = APIManager.getGameCategories();
@@ -376,9 +403,6 @@ var gameLabelEl = document.getElementById('game-label')
 //   genres: [1, 2, 3, 4],
 //   themes: [2, 3]
 // })
-
-
-
 
 //  <div class="my-5 p-5 opacity-75 rounded-lg shadow-lg bg-gray-900">
 //       <label class="mb-1 mt-5 text-blue-300 font-bold">Select Genre</label>
