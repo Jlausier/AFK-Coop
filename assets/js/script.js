@@ -1,18 +1,9 @@
 $(document).ready(function () {
   let Manager = new APIManager();
-  var tagLine = $("tag-line");
-  var subTagLine = $("sub-tag-line");
-
-  var contactBtn = $("#contactBtn");
-  var contactCloseBtn = $("#contactCloseBtn");
-
-  let favoritesBtn = $("#favorites-button");
-
   var searchContainer = $("#search-container");
   var gameSearchEl = $("#game-search");
   var locationSearchEl = $("#location-search");
   var searchBtnEl = $("#search-btn");
-
   var resultsContainer = $("#results-container");
 
   let isDisplayingFavorites = false;
@@ -103,7 +94,7 @@ $(document).ready(function () {
         " mb-28 md:mb-14 lg:mb-10 xl:justify-start flex justify-center items-center flex-wrap md:items-start md:flex-nowrap"
       );
       dispCardImg.addClass(
-        "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover"
+        "w-64 md:w-48 2xl:max-w-1/3 aspect-square object-cover rounded"
       );
 
       dispCardDetailContainer.addClass(
@@ -220,8 +211,8 @@ $(document).ready(function () {
       "w-full lg:w-3/5 lg:ml-10 2xl:w-1/2 lg:h-[40rem] xl:h-[50rem] overflow-y-scroll flex flex-col justify-start items-start"
     );
 
-    tagLine.hide();
-    subTagLine.hide();
+    $("tag-line").hide();
+    $("sub-tag-line").hide();
   }
 
   searchBtnEl.on("click", getBusinessesFromForm);
@@ -231,9 +222,7 @@ $(document).ready(function () {
   function showModal() {
     $("#modal-overlay").show().addClass("modal-open");
     $("body").on("click.modal", function (event) {
-      if (event.target.id !== "modal") {
-        hideModal();
-      }
+      if (event.target.id === "modal-overlay") hideModal();
     });
   }
 
@@ -241,7 +230,6 @@ $(document).ready(function () {
     $("body").off("click.modal");
     let modal = $("#modal-overlay");
     modal.removeClass("modal-open");
-
     setTimeout(function () {
       modal.hide();
       $(".modal-content").hide();
@@ -251,31 +239,17 @@ $(document).ready(function () {
   function showErrorModal(title, message) {
     $("#error-modal-title").text(title);
     $("#error-modal-message").text(message);
-
     $("#error-modal").show();
     showModal();
   }
 
   $("#error-modal-close").on("click", hideModal);
 
-  contactBtn.on("click", function (e) {
+  $("#contact-btn").on("click", function (e) {
     e.stopPropagation();
     $("#contact-modal").show();
     showModal();
   });
-
-  /* ===== CONTACT MODAL ===================================================== */
-
-  /**
-   * Hides the contact modal and disables the body event listener
-   */
-
-  // When the user clicks the button, open the modal
-
-  // // When the user clicks on <span> (x), close the modal
-  // contactCloseBtn.on("click", function () {
-  //   hideContactModal();
-  // });
 
   /* ===== FAVORITES ======================================================= */
 
@@ -303,10 +277,10 @@ $(document).ready(function () {
     } else if (!isDisplayingFavorites && favorites.length === 0) {
       showErrorModal(
         "No Favorites",
-        "You have no favorited businesses yet, click the heart icon to save a business as a favorite."
+        "You haven't favorited any businesses yet, click the heart icon to save a business to your favorites."
       );
     }
   }
 
-  favoritesBtn.on("click", displayFavorites);
+  $("#favorites-btn").on("click", displayFavorites);
 });
