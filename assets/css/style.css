@@ -1,11 +1,3 @@
-/* These selectors have been created to organize html content and the dashed border
-has been applied to them to provide a visual queue to see where elements begin 
-and end. */
-
-/* !! All dashed borders can be commented out/deleted once no longer needed. */
-
-/* !! Any selectors that are not used by the end of the project may be deleted !! */
-
 /* ===== ERROR MODAL SELECTORS ======================================================= */
 
 #modal-overlay {

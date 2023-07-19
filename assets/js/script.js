@@ -547,7 +547,6 @@ $(document).ready(function () {
         revealRecentSearch.removeClass("rounded-b-lg");
       }, 50);
       open = true;
-      console.log("if" + open);
     } else {
       arrow.text("arrow_drop_down");
       recentSearchesEl.slideUp("slow");
@@ -556,7 +555,6 @@ $(document).ready(function () {
       }, 575);
 
       open = false;
-      console.log("else" + open);
     }
   });
 
