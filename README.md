@@ -39,6 +39,6 @@ We used [excalidraw](https://excalidraw.com/#room=38a29e77ac5b3026aa0f,qWynBzUBf
 
 ## Screenshots
 
-![Screenshot of the home page](./assets/images/screenshots/home_page.png)
+![Screenshot of the home page](./screenshots/home_page.png)
 
-![Screenshot of the home page with the controller exploding](./assets/images/screenshots/home_page_controller.png)
+![Screenshot of the home page with the controller exploding](./screenshots/home_page_controller.png)
