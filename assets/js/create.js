@@ -1,4 +1,7 @@
-const genreGridItems = [
+/**
+ * Genre Checkboxes
+ */
+const genreLinks = [
   {
     id: "5",
     image: "./assets/images/icons/rifle-100.png",
@@ -55,13 +58,48 @@ const genreGridItems = [
   },
 ].map(({ id, image, title, type }) =>
   $(
-    `<a id="${id}" data-state="" data-type="${type}" class="genre-btn p-2 m-1 select-none cursor-pointer rounded drop-shadow-sm flex flex-col justify-center items-center bg-gradient-to-b from-indigo-400 to-indigo-500 hover:bg-gradient-to-b hover:from-pink-500 hover:to-green-500 transition">
+    `<div id="${id}" data-state="" data-type="${type}" class="genre-btn p-2 m-1 select-none cursor-pointer rounded drop-shadow-sm flex flex-col justify-center items-center bg-gradient-to-b from-indigo-400 to-indigo-500 hover:bg-gradient-to-b hover:from-pink-500 hover:to-green-500 transition">
       <img src="${image}" class="w-12 m-2">
       <div class="pt-1 font-medium text-black text-sm">${title}</div>
-     </a>`
+     </div>`
+  )
+);
+
+/**
+ * Contact Links
+ */
+const contactLinks = [
+  {
+    github: "https://github.com/Jlausier",
+    image: "./assets/images/contact/jake.jpg",
+    name: "Jacob Lausier",
+  },
+  {
+    github: "https://github.com/GormanBrian",
+    image: "./assets/images/contact/brian.jpg",
+    name: "Brian Gorman",
+  },
+  {
+    github: "https://github.com/alfaro-matttthew",
+    image: "./assets/images/contact/matthew.png",
+    name: "Alfaro Matthew",
+  },
+].map(({ github, image, name }, index) =>
+  $(
+    `<a href="${github}" target="_blank" 
+        class="p-2 ${
+          index === 2 ? "mb-2" : ""
+        } rounded-full shadow-lg relative opacity-60 bg-gray-800 flex items-center transition hover:opacity-100 hover:-translate-y-1"
+     >
+      <img src="${image}" class="h-12 w-12 object-cover rounded-full" />
+      <p class="text-xl absolute m-auto left-0 right-0 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 text-center bg-clip-text font-bold">
+        ${name}
+      </p>
+    </a>`
   )
 );
 
 $(() => {
-  $("#genre-grid").append(...genreGridItems);
+  $("#genre-grid").append(...genreLinks);
+  $("#contact-list").append(...contactLinks);
 });

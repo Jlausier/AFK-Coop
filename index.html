@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Meta Information -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <!-- FAVICONS -->
+    <meta name="keywords" content="AFK, Gaming, Adventure" />
+    <meta name="description" content="Away from keyboard, still in game!" />
+    <title>AFK</title>
+
+    <!-- Favicons -->
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -23,22 +28,16 @@
       href="./assets/images/favicon/favicon-16x16.png"
     />
 
+    <!-- Web Manifest -->
     <link
       rel="manifest"
       href="./site.webmanifest"
       crossorigin="use-credentials"
     />
 
-    <title>AFK</title>
-    <meta
-      name="description"
-      content="Step away from your keyboard, but still be in game!"
-    />
-    <meta name="keywords" content="AFK, Gaming, Adventure" />
-
+    <!-- Preload -->
+    <link rel="preload" as="style" href="./assets/css/style.css" />
     <link rel="preload" as="image" href="./assets/images/header.png" />
-
-    <!-- Preload Controller Images -->
     <link
       rel="preload"
       as="image"
@@ -70,6 +69,13 @@
       href="./assets/images/controller/controller-L-Body-dull.png"
     />
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Bruno+Ace+SC&family=Dela+Gothic+One&family=Gugi&family=Libre+Barcode+39+Extended+Text&family=Moirai+One&family=Monoton&family=Righteous&display=swap"
+      rel="stylesheet"
+    />
     <!-- Favorite -->
     <link
       rel="stylesheet"
@@ -84,13 +90,6 @@
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-    />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Bruno+Ace+SC&family=Dela+Gothic+One&family=Gugi&family=Libre+Barcode+39+Extended+Text&family=Moirai+One&family=Monoton&family=Righteous&display=swap"
-      rel="stylesheet"
     />
 
     <link rel="stylesheet" href="./assets/css/style.css" />
@@ -162,57 +161,9 @@
             CONTACT US
           </h3>
           <div
+            id="contact-list"
             class="w-full md:w-4/5 p-3 flex flex-wrap flex-col justify-around gap-y-4"
-          >
-            <!-- JACOB -->
-            <a
-              href="https://github.com/Jlausier"
-              target="_blank"
-              class="p-2 rounded-full shadow-lg relative opacity-60 bg-gray-800 flex items-center transition hover:opacity-100 hover:-translate-y-1"
-            >
-              <img
-                src="./assets/images/contact/jake.jpg"
-                class="h-12 w-12 object-cover rounded-full"
-              />
-              <p
-                class="text-xl absolute m-auto left-0 right-0 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 text-center bg-clip-text font-bold"
-              >
-                Jacob Lausier
-              </p>
-            </a>
-            <!-- BRIAN -->
-            <a
-              href="https://github.com/GormanBrian"
-              target="_blank"
-              class="p-2 rounded-full shadow-lg relative opacity-60 bg-gray-800 flex items-center transition hover:opacity-100 hover:-translate-y-1"
-            >
-              <img
-                src="./assets/images/contact/brian.jpg"
-                class="h-12 w-12 rounded-full"
-              />
-              <p
-                class="text-xl absolute m-auto left-0 right-0 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 text-center bg-clip-text font-bold"
-              >
-                Brian Gorman
-              </p>
-            </a>
-            <!-- MATTHEW -->
-            <a
-              href="https://github.com/alfaro-matttthew"
-              target="_blank"
-              class="p-2 mb-2 rounded-full shadow-lg relative opacity-60 bg-gray-800 flex items-center transition hover:opacity-100 hover:-translate-y-1"
-            >
-              <img
-                src="./assets/images/contact/matthew.png"
-                class="h-12 w-12 rounded-full"
-              />
-              <p
-                class="text-xl absolute m-auto left-0 right-0 text-transparent bg-gradient-to-r from-green-400 via-pink-500 to-purple-500 text-center bg-clip-text font-bold"
-              >
-                Alfaro Matthew
-              </p>
-            </a>
-          </div>
+          ></div>
         </div>
         <!-- END MODALS -->
       </div>
