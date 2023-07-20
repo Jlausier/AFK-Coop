@@ -62,6 +62,6 @@ const genreGridItems = [
   )
 );
 
-$(document).ready(function () {
+$(() => {
   $("#genre-grid").append(...genreGridItems);
 });

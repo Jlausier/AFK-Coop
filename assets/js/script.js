@@ -1,6 +1,30 @@
-$(document).ready(function () {
-  let Manager = new APIManager();
+const inputErrors = {
+  gameAndLocation: {
+    title: "Enter a Game and Location",
+    message: "Please enter the name of a game and a location to proceed.",
+  },
+  game: {
+    title: "Enter a Game",
+    message: "Please enter the name of a game to proceed.",
+  },
+  categoryAndLocation: {
+    title: "Select a Category and Enter a Location",
+    message:
+      "Please select one of the categories above and enter a location to proceed.",
+  },
+  category: {
+    title: "Select a Category",
+    message: "Please select one of the categories above to proceed.",
+  },
+  location: {
+    title: "Enter a Location",
+    message: "Please enter a location to proceed.",
+  },
+};
 
+let Manager = new APIManager();
+
+$(() => {
   let searchContainer = $("#search-container");
 
   let gameLabelEl = $("#game-label");
@@ -32,111 +56,72 @@ $(document).ready(function () {
     let locationName = $("#location-search").val().trim();
 
     if (searchType === "game") {
-      validateBusinessesByGame(locationName);
+      getBusinessesByGame(locationName);
     } else if (searchType === "genres") {
-      validateBusinessesByGenre(locationName);
+      getBusinessesByGenre(locationName);
     }
   }
 
   /**
-   * Validates location and game name inputs
+   * Validates location and game name inputs, fetches businesses data
    * @param {string} locationName Geographic area to search for businesses
    * @returns {null} Exits function if input is invalid
    */
-  function validateBusinessesByGame(locationName) {
+  function getBusinessesByGame(locationName) {
     let gameName = gameSearchEl.val().trim();
 
-    if (gameName === "" && locationName === "") {
-      showErrorModal(
-        "Enter a Game and Location",
-        "Please enter the name of a game and a location to proceed."
-      );
-      return;
-    } else if (gameName === "") {
-      showErrorModal(
-        "Enter a Game",
-        "Please enter the name of a game to proceed."
-      );
-      return;
-    } else if (locationName === "") {
-      showErrorModal(
-        "Enter a Location",
-        "Please enter the location to proceed."
-      );
-      return;
-    }
-    getBusinesses(locationName, gameName);
+    if (gameName === "" && locationName === "")
+      return showErrorModal(inputErrors.gameAndLocation);
+    else if (gameName === "") return showErrorModal(inputErrors.game);
+    else if (locationName === "") return showErrorModal(inputErrors.location);
+
+    handleResponse(
+      Manager.getBusinessesFromGames(locationName, [gameName]),
+      saveSearches,
+      [locationName, gameName]
+    );
   }
 
   /**
-   * Validates location and selected categories inputs
+   * Validates location and selected categories inputs, fetches businesses data
    * @param {string} locationName Geographic area to search for businesses
    * @returns {null} Exits function if input is invalid
    */
-  function validateBusinessesByGenre(locationName) {
+  function getBusinessesByGenre(locationName) {
     let categoriesEmpty =
       selectedCategories.genres.length === 0 &&
       selectedCategories.themes.length === 0;
-    if (categoriesEmpty && locationName === "") {
-      showErrorModal(
-        "Select a Category and Enter a Location",
-        "Please select one of the categories above and enter a location to proceed."
-      );
-      return;
-    } else if (categoriesEmpty) {
-      showErrorModal(
-        "Select a Category",
-        "Please select one of the categories above to proceed."
-      );
-      return;
-    } else if (locationName === "") {
-      showErrorModal(
-        "Enter a Location",
-        "Please enter the location to proceed."
-      );
-      return;
-    }
 
-    getBusinessesByGenre(locationName);
+    if (categoriesEmpty && locationName === "")
+      return showErrorModal(inputErrors.categoryAndLocation);
+    else if (categoriesEmpty) return showErrorModal(inputErrors.category);
+    else if (locationName === "") return showErrorModal(inputErrors.location);
+
+    handleResponse(
+      Manager.getBusinessesFromGameCategories(locationName, selectedCategories)
+    );
   }
 
   /**
    * Displays result cards or shows an error modal
    * @param {Promise<Object>} promise API call
+   * @param {function} saveFunction Saves search
+   * @param {Array<any>} saveFunctionArgs Arguments for saveFunction
    */
-  function handleResponse(promise) {
-    promise;
-  }
-
-  /**
-   * Gets businesses by game genres, displays results or an error modal
-   * @param {string} locationName Geographic area to search for businesses
-   */
-  function getBusinessesByGenre(locationName) {
-    Manager.getBusinessesFromGameCategories(locationName, selectedCategories)
+  const handleResponse = (
+    promise,
+    saveFunction = () => {},
+    saveFunctionArgs = []
+  ) => {
+    promise
       .then(({ businesses, _ }) => {
+        saveFunction(...saveFunctionArgs);
         displayCards(businesses);
       })
       .catch(({ title, message }) => {
         showErrorModal(title, message);
       });
-  }
-
-  /**
-   * Gets businesses by game name, displays results or an error modal
-   * @param {string} locationName Geographic area to search for businesses
-   * @param {string} gameName Name of the game to get the genres and themes from
-   */
-  function getBusinesses(locationName, gameName) {
-    Manager.getBusinessesFromGames(locationName, [gameName])
-      .then(({ businesses, _ }) => {
-        saveSearches(locationName, gameName);
-        displayCards(businesses);
-      })
-      .catch(({ title, message }) => {
-        showErrorModal(title, message);
-      });
-  }
+  };
 
   /**
    * Displays list of business cards in results list
