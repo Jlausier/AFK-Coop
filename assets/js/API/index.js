@@ -1,5 +1,5 @@
 class API {
-  #proxy = "https://floating-headland-95050.herokuapp.com/";
+  static proxy = "https://floating-headland-95050.herokuapp.com/";
   client;
   apiKey;
 
@@ -71,7 +71,7 @@ class API {
       return new Promise((resolve, _) => resolve());
     } else {
       // Asks client authorization server for a new bearer token
-      return fetch(this.#proxy + this.client.url(), {
+      return fetch(API.proxy + this.client.url(), {
         method: this.client.method,
       })
         .then(this.handleResponse)
@@ -106,7 +106,7 @@ class API {
    */
   constructUrl(resource, params) {
     // Prepends URL with proxy if required
-    let url = this.useProxy ? this.#proxy : "";
+    let url = this.useProxy ? API.proxy : "";
     // Adds base URL and resource location
     url += this.baseUrl + resource;
 
