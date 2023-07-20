@@ -1,20 +1,20 @@
 class API {
-  #proxy = "https://floating-headland-95050.herokuapp.com/";
+  static proxy = "https://floating-headland-95050.herokuapp.com/";
   client;
   apiKey;
 
-  static noResourceError(apiName, details = "") {
+  noResourceError(details = "") {
     return {
       title: "Information not Available",
-      message: `The requested information is not available from the ${apiName} API, please try again.`,
+      message: `The requested information is not available from the ${this.name} API, please try again.`,
       details,
     };
   }
 
-  static authenticationError(apiName, details = "") {
+  authenticationError(details = "") {
     return {
       title: "Authentication Issue",
-      message: `Could not authenticate with the ${apiName} API, please try again.`,
+      message: `Could not authenticate with the ${this.name} API, please try again.`,
       details,
     };
   }
@@ -71,7 +71,7 @@ class API {
       return new Promise((resolve, _) => resolve());
     } else {
       // Asks client authorization server for a new bearer token
-      return fetch(this.#proxy + this.client.url(), {
+      return fetch(API.proxy + this.client.url(), {
         method: this.client.method,
       })
         .then(this.handleResponse)
@@ -88,8 +88,7 @@ class API {
           );
         })
         .catch((_) => {
-          throw API.authenticationError(
-            this.name,
+          throw this.authenticationError(
             `There was an error while attempting to refresh the client authorization token for the ${this.name} API.`
           );
         });
@@ -106,7 +105,7 @@ class API {
    */
   constructUrl(resource, params) {
     // Prepends URL with proxy if required
-    let url = this.useProxy ? this.#proxy : "";
+    let url = this.useProxy ? API.proxy : "";
     // Adds base URL and resource location
     url += this.baseUrl + resource;
 
@@ -160,8 +159,7 @@ class API {
   validateCall(resource, subResource, params = [], subResourceParameters = []) {
     // Validates base resource
     if (!(resource in this.resources && "location" in this.resources[resource]))
-      throw API.noResourceError(
-        this.name,
+      throw this.noResourceError(
         `The ${resource} resource was not found in the list of available resources for the ${this.name} API.`
       );
 
@@ -181,8 +179,7 @@ class API {
           subResource in validResource.subResources
         )
       )
-        throw API.noResourceError(
-          this.name,
+        throw this.noResourceError(
           `The ${subResource} subresource was not found in the list of available subresources for the ${this.name} API.`
         );
 
@@ -448,7 +445,7 @@ class GamesAPI extends API {
         [],
         [],
         {},
-        `fields genres, themes; where name = (${joinedNames});`
+        `fields genres, themes, slug, keywords; where name = (${joinedNames});`
       )
       .then(super.handleResponse)
       .catch((error) => {

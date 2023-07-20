@@ -1,30 +1,64 @@
-$(document).ready(function () {
-  let Manager = new APIManager();
+/**
+ * Static client validation errors
+ */
+const clientErrors = {
+  gameAndLocation: {
+    title: "Enter a Game and Location",
+    message: "Please enter the name of a game and a location to proceed.",
+  },
+  game: {
+    title: "Enter a Game",
+    message: "Please enter the name of a game to proceed.",
+  },
+  categoryAndLocation: {
+    title: "Select a Category and Enter a Location",
+    message:
+      "Please select one of the categories above and enter a location to proceed.",
+  },
+  category: {
+    title: "Select a Category",
+    message: "Please select one of the categories above to proceed.",
+  },
+  location: {
+    title: "Enter a Location",
+    message: "Please enter a location to proceed.",
+  },
+  noFavorites: {
+    title: "No Favorites",
+    message:
+      "You haven't favorited any businesses yet, click the heart icon to save a business to your favorites.",
+  },
+};
 
-  let searchContainer = $("#search-container");
-  let genresBtn = $("#toggle");
-  let gameToggle = $("#toggle-back");
+// Global API Manager
+let Manager = new APIManager();
+
+$(() => {
+  /* ===== SELECTORS ============================================================== */
 
   let gameLabelEl = $("#game-label");
   let gameSearchEl = $("#game-search");
   let genreGrid = $("#genre-grid");
 
-  let locationSearchEl = $("#location-search");
-  let searchBtnEl = $("#search-btn");
-
   let resultsContainer = $("#results-container");
 
-  let gameCategories = APIManager.getGameCategories();
+  let recentSearchButton = $("#reveal-recent-btn");
+  let recentSearchesEl = $("#recently-searched");
+
+  $("#afk").on("click", () => location.reload());
+
+  /* ===== GLOBAL STATE =========================================================== */
+
+  let open = false;
+  let searchType = "game";
+  let isDisplayingFavorites = false;
+
   let selectedCategories = {
     genres: [],
     themes: [],
   };
 
-  let revealRecentSearch = $("#reveal-recent-btn");
-  let recentSearchesEl = $("#recently-searched");
-
-  let searchType = "game";
-  let isDisplayingFavorites = false;
+  /* ===== API CALLS ============================================================== */
 
   /**
    * Checks if inputs are valid and gets the calls getBusinesses
@@ -32,117 +66,97 @@ $(document).ready(function () {
    */
   function getBusinessesFromForm(e) {
     e.stopPropagation();
-
-    isDisplayingFavorites = false;
-
-    let locationName = locationSearchEl.val().trim();
-
+    let locationName = $("#location-search").val().trim();
     if (searchType === "game") {
       validateBusinessesByGame(locationName);
     } else if (searchType === "genres") {
-      validateBusinessesByGenre(locationName);
+      validateBusinessesByGameCategories(locationName);
     }
-  }
-
-  /**
-   * Validates location and game name inputs
-   * @param {string} locationName Geographic area to search for businesses
-   * @returns {null} Exits function if input is invalid
-   */
-  function validateBusinessesByGame(locationName) {
-    let gameName = gameSearchEl.val().trim();
-
-    if (gameName === "" && locationName === "") {
-      showErrorModal(
-        "Enter a Game and Location",
-        "Please enter the name of a game and a location to proceed."
-      );
-      return;
-    } else if (gameName === "") {
-      showErrorModal(
-        "Enter a Game",
-        "Please enter the name of a game to proceed."
-      );
-      return;
-    } else if (locationName === "") {
-      showErrorModal(
-        "Enter a Location",
-        "Please enter the location to proceed."
-      );
-      return;
-    }
-    getBusinesses(locationName, gameName);
-  }
-
-  /**
-   * Validates location and selected categories inputs
-   * @param {string} locationName Geographic area to search for businesses
-   * @returns {null} Exits function if input is invalid
-   */
-  function validateBusinessesByGenre(locationName) {
-    let categoriesEmpty =
-      selectedCategories.genres.length === 0 &&
-      selectedCategories.themes.length === 0;
-    if (categoriesEmpty && locationName === "") {
-      showErrorModal(
-        "Select a Category and Enter a Location",
-        "Please select one of the categories above and enter a location to proceed."
-      );
-      return;
-    } else if (categoriesEmpty) {
-      showErrorModal(
-        "Select a Category",
-        "Please select one of the categories above to proceed."
-      );
-      return;
-    } else if (locationName === "") {
-      showErrorModal(
-        "Enter a Location",
-        "Please enter the location to proceed."
-      );
-      return;
-    }
-
-    getBusinessesByGenre(locationName);
   }
 
   /**
    * Displays result cards or shows an error modal
    * @param {Promise<Object>} promise API call
+   * @param {function} saveFunction Saves search
+   * @param {Array<any>} saveFunctionArgs Arguments for saveFunction
    */
-  function handleResponse(promise) {
-    promise;
+  const handleResponse = (
+    promise,
+    saveFunction = () => {},
+    saveFunctionArgs = []
+  ) => {
+    promise
+      .then((businesses) => {
+        isDisplayingFavorites = false;
+        saveFunction(...saveFunctionArgs);
+        displayCards(businesses);
+      })
+      .catch((error) => {
+        showErrorModal(error);
+      });
+  };
+
+  /**
+   * Validates location and game name inputs
+   * @param {string} locationName
+   * @returns {null} Exits function if inputs are invalid
+   */
+  function validateBusinessesByGame(locationName) {
+    // Get game name input
+    let gameName = gameSearchEl.val().trim();
+    // Check input validity
+    if (gameName === "" && locationName === "")
+      return showErrorModal(clientErrors.gameAndLocation);
+    else if (gameName === "") return showErrorModal(clientErrors.game);
+    else if (locationName === "") return showErrorModal(clientErrors.location);
+    // Fetch businesses
+    getBusinessesByGame(locationName, gameName);
   }
 
   /**
-   * Gets businesses by game genres, displays results or an error modal
+   * Fetches businesses data based on a game's categories
    * @param {string} locationName Geographic area to search for businesses
+   * @param {string} gameName Name of the game to search with
    */
-  function getBusinessesByGenre(locationName) {
-    Manager.getBusinessesFromGameCategories(locationName, selectedCategories)
-      .then(({ businesses, _ }) => {
-        displayCards(businesses);
-      })
-      .catch(({ title, message }) => {
-        showErrorModal(title, message);
-      });
+  function getBusinessesByGame(locationName, gameName) {
+    handleResponse(
+      Manager.getBusinessesFromGames(locationName, [gameName]),
+      saveSearches,
+      [locationName, gameName]
+    );
   }
 
   /**
-   * Gets businesses by game name, displays results or an error modal
-   * @param {string} locationName Geographic area to search for businesses
-   * @param {string} gameName Name of the game to get the genres and themes from
+   * Validates location and game category inputs
+   * @param {string} locationName
+   * @returns {null} Exits function if inputs are invalid
    */
-  function getBusinesses(locationName, gameName) {
-    Manager.getBusinessesFromGames(locationName, [gameName])
-      .then(({ businesses, _ }) => {
-        saveSearches(locationName, gameName);
-        displayCards(businesses);
-      })
-      .catch(({ title, message }) => {
-        showErrorModal(title, message);
-      });
+  function validateBusinessesByGameCategories(locationName) {
+    // Compute categories' validity
+    let categoriesEmpty =
+      selectedCategories.genres.length === 0 &&
+      selectedCategories.themes.length === 0;
+    // Check input validity
+    if (categoriesEmpty && locationName === "")
+      return showErrorModal(clientErrors.categoryAndLocation);
+    else if (categoriesEmpty) return showErrorModal(clientErrors.category);
+    else if (locationName === "") return showErrorModal(clientErrors.location);
+    // Fetch businesses
+    getBusinessesByGameCategories(locationName);
   }
+
+  /**
+   * Validates location and selected categories inputs, fetches businesses data
+   * @param {string} locationName Geographic area to search for businesses
+
+   */
+  function getBusinessesByGameCategories(locationName) {
+    handleResponse(
+      Manager.getBusinessesFromGameCategories(locationName, selectedCategories)
+    );
+  }
+
+  /* ===== DISPLAY RESULTS ======================================================== */
 
   /**
    * Displays list of business cards in results list
@@ -296,6 +310,8 @@ $(document).ready(function () {
    * Reformats containers after search
    */
   function reformat() {
+    let searchContainer = $("#search-container");
+
     searchContainer.removeClass("w-full lg:w-2/5 flex flex-col justify-center");
     resultsContainer.removeClass("w-3/5 flex justify-center items-center");
 
@@ -308,19 +324,9 @@ $(document).ready(function () {
     $("sub-tag-line").hide();
   }
 
-  searchBtnEl.on("click", getBusinessesFromForm);
+  $("#search-btn").on("click", getBusinessesFromForm);
 
-  /* ===== MODALS ======================================================= */
-
-  /**
-   * Show a generic modal
-   */
-  function showModal() {
-    $("#modal-overlay").show().addClass("modal-open");
-    $("body").on("click.modal", function (event) {
-      if (event.target.id === "modal-overlay") hideModal();
-    });
-  }
+  /* ===== MODALS ================================================================= */
 
   /**
    * Hide a generic modal
@@ -335,29 +341,41 @@ $(document).ready(function () {
     }, 200);
   }
 
+  // Close error modal
+  $("#error-modal-close").on("click", hideModal);
+
+  /**
+   * Show a generic modal
+   */
+  function showModal() {
+    $("#modal-overlay").show().addClass("modal-open");
+    $("body").on("click.modal", function (event) {
+      if (event.target.id === "modal-overlay") hideModal();
+    });
+  }
+
   /**
    * Show an error modal
    * @param {string} title Title of the error
    * @param {string} message Longer error message
    */
-  function showErrorModal(title, message) {
+  function showErrorModal({ title, message }) {
     $("#error-modal-title").text(title);
     $("#error-modal-message").text(message);
     $("#error-modal").show();
     showModal();
   }
 
-  // Close error modal
-  $("#error-modal-close").on("click", hideModal);
-
-  // Show the contact modal
-  $("#contact-btn").on("click", function (e) {
+  /**
+   * Show the contact modal
+   */
+  $("#contact-btn").on("click", (e) => {
     e.stopPropagation();
     $("#contact-modal").show();
     showModal();
   });
 
-  /* ===== FAVORITES ======================================================= */
+  /* ===== FAVORITES ================================================================= */
 
   /**
    * Saves or removes a favorite business into local storage
@@ -381,32 +399,47 @@ $(document).ready(function () {
       isDisplayingFavorites = true;
       displayCards(favorites);
     } else if (!isDisplayingFavorites && favorites.length === 0) {
-      showErrorModal(
-        "No Favorites",
-        "You haven't favorited any businesses yet, click the heart icon to save a business to your favorites."
-      );
+      showErrorModal(clientErrors.noFavorites);
     }
   }
 
   // Displays favorites when button in header is clicked
   $("#favorites-btn").on("click", displayFavorites);
 
-  // ================================================================================
+  /* ===== TOGGLE INPUT TYPE =========================================================== */
 
   /**
-   * Hides game input and shows genres
-   * @returns {null} Exit if already showing genres
+   * Hides other inputs and shows the new input
+   * @returns {null} Exit if already showing selected input
    */
-  function toggleGenres() {
-    if (searchType === "genres") return;
+  function switchInputType(type) {
+    if (searchType === type) return;
+    searchType = type;
 
-    searchType = "genres";
+    if (type === "game") {
+      gameLabelEl.text("Enter Your Favorite Game");
+      genreGrid.hide();
+      gameSearchEl.show();
+    } else if (type === "genres") {
+      gameLabelEl.text("Select Your Favorite Genres");
+      gameSearchEl.hide();
+      genreGrid.show();
+    }
 
-    gameLabelEl.text("Select Your Favorite Genres");
-    gameSearchEl.hide();
-    genreGrid.show();
     resetForm();
   }
+
+  // Toggle genres on click
+  $("#toggle").on("click", () => {
+    switchInputType("genres");
+  });
+
+  // Toggle game input on click
+  $("#toggle-back").on("click", () => {
+    switchInputType("game");
+  });
+
+  //
 
   $(".genre-btn").on("click", function () {
     let state = $(this).attr("data-state");
@@ -426,85 +459,52 @@ $(document).ready(function () {
     $(this).attr("data-state", state == "active" ? "" : "active");
   });
 
-  // Toggle genres on click
-  genresBtn.on("click", toggleGenres);
-
-  /**
-   * Hides genres and shows game input
-   * @returns {null} Exit if already showing genres
-   */
-  function toggleGame() {
-    if (searchType === "game") return;
-
-    searchType = "game";
-    gameLabelEl.text("Enter Your Favorite Game");
-    genreGrid.hide();
-    gameSearchEl.show();
-    resetForm();
-  }
-  // Toggle game input on click
-  $(gameToggle).on("click", toggleGame);
-
   /**
    * Clears inputs on toggle
    */
   function resetForm() {
-    // Clear the input field
     gameSearchEl.val("");
-    // Clear the selected categories
-    selectedCategories.genres = [];
-    selectedCategories.themes = [];
+    selectedCategories = { genres: [], themes: [] };
   }
 
-  $("#afk").click(function () {
-    location.reload();
-  });
-
-  // ================== Search History ================== //
+  /* ===== SEARCH HISTORY =========================================================== */
 
   // Retain data from local storage
-
-  function readSearchesFromStorage() {
-    return JSON.parse(localStorage.getItem("AFK Game Searches")) || [];
-  }
+  const readSearchesFromStorage = () =>
+    JSON.parse(localStorage.getItem("search-history")) || [];
 
   // Display data from local storage
 
   function printSearchHistory() {
-    //clear current list of searches on page
+    // Clear current list of searches on page
     recentSearchesEl.empty(); //
-
-    // attaches the array made from readSearchesFromStorage and applies it to searches
     let searches = readSearchesFromStorage();
 
-    // loop through each project and create a new li and add it to the list
-
+    // Add each recent search to a list
     searches.forEach((searchedItem) => {
-      let listEl = $("<p>");
-
-      listEl.addClass("saved-search");
-
-      listEl.text(searchedItem.game + " in " + searchedItem.location);
-      listEl.attr("style", "list-style-type: none");
-      listEl.addClass(
-        "pb-2 cursor-pointer text-white/50 hover:text-white/75 transition"
+      recentSearchesEl.append(
+        $(
+          `<p class="saved-search pb-2 cursor-pointer text-white/50 hover:text-white/75 transition" style="list-style-type: none;">${
+            searchedItem.game + " in " + searchedItem.location
+          }</p>`
+        ).on("click", function () {
+          getBusinessesByGame(searchedItem.location, searchedItem.game);
+        })
       );
-
-      listEl.on("click", function () {
-        getBusinesses(searchedItem.location, searchedItem.game);
-      });
-
-      recentSearchesEl.append(listEl);
     });
   }
 
-  // add searched item to local storage
+  /**
+   *
+   * @param {string} searchLocation Name of the search location
+   * @param {string} searchGameName Name of the game
+   */
   function saveSearches(searchLocation, searchGameName) {
     // Get the old searches from local storage
     let searchHistory = readSearchesFromStorage();
 
     // Find the index of the new search item
-    let index = searchHistory.indexOf(
+    let index = searchHistory.findIndex(
       (search) =>
         search.game === searchGameName && search.location === searchLocation
     );
@@ -512,51 +512,44 @@ $(document).ready(function () {
     // If it's already the most recent search no change is necessary
     if (index !== 0) {
       // Remove new search item if it already existed
-      if (index !== -1) {
-        searchHistory.splice(index, 1);
-      }
-
+      if (index !== -1) searchHistory.splice(index, 1);
       // Add new search item to the beginning
       searchHistory.unshift({
         game: searchGameName,
         location: searchLocation,
       });
-
       // Remove excess search items
-      if (searchHistory.length > 3) {
-        searchHistory.pop();
-      }
-
+      if (searchHistory.length > 3) searchHistory.pop();
       // Add the search history back into local storage
-      localStorage.setItem("AFK Game Searches", JSON.stringify(searchHistory));
-
+      localStorage.setItem("search-history", JSON.stringify(searchHistory));
       printSearchHistory();
     }
   }
 
-  // ===== Recent Searches ===== //
-
-  let open = "";
-
-  revealRecentSearch.on("click", () => {
+  /**
+   * Toggles recent searches box
+   */
+  function toggleRecentSearch() {
     let arrow = $("#toggle-arrow");
     if (!open) {
       arrow.text("arrow_drop_up");
       recentSearchesEl.slideDown("slow");
       setTimeout(function () {
-        revealRecentSearch.removeClass("rounded-b-lg");
+        recentSearchButton.removeClass("rounded-b-lg");
       }, 50);
       open = true;
     } else {
       arrow.text("arrow_drop_down");
       recentSearchesEl.slideUp("slow");
       setTimeout(function () {
-        revealRecentSearch.addClass("rounded-b-lg");
+        recentSearchButton.addClass("rounded-b-lg");
       }, 575);
-
       open = false;
     }
-  });
+  }
+  // Toggles recent searches on click
+  recentSearchButton.on("click", toggleRecentSearch);
 
+  // Preload search history from local storage
   printSearchHistory();
 });

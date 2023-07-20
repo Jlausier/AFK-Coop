@@ -8,6 +8,7 @@ class APIManager {
   constructor() {
     this.Yelp = new YelpAPI();
     this.Games = new GamesAPI();
+    this.Games.refreshToken();
   }
 
   /**
@@ -39,7 +40,9 @@ class APIManager {
         };
       // Reduces game data into the genres and themes
       let processedData = { genres: [], themes: [] };
-      data.forEach((game) => {
+
+      let truncatedData = names.length === 1 ? data.slice(0, 1) : data;
+      truncatedData.forEach((game) => {
         processedData.genres = processedData.genres.concat(game.genres);
         processedData.themes = processedData.themes.concat(game.themes);
       });
@@ -72,21 +75,17 @@ class APIManager {
       };
 
     // Fetches businesses by the categories and returns both
-    return await this.Yelp.fetchBusinessesByCategories(location, categories)
-      .then((businesses) => {
-        return {
-          businesses,
-          categories,
-        };
-      })
-      .catch((error) => {
-        throw {
-          title: "Unable to Search for Businesses",
-          message:
-            "An error occurred while searching for businesses, please try again.",
-          details: error,
-        };
-      });
+    return await this.Yelp.fetchBusinessesByCategories(
+      location,
+      categories
+    ).catch((error) => {
+      throw {
+        title: "Unable to Search for Businesses",
+        message:
+          "An error occurred while searching for businesses, please try again.",
+        details: error,
+      };
+    });
   };
 
   /**
@@ -101,29 +100,19 @@ class APIManager {
   mapGenresAndThemesToCategories = (data) => {
     let mappedData = {};
 
-    // Extracts related Yelp categories from each genre
-    data.genres.forEach((genre) => {
-      if (!(genre in APIManager.GameCategories.Genres)) return;
-      // Weights each category by frequency
-      APIManager.GameCategories.Genres[genre].yelpCategories.forEach(
-        (category) => {
-          if (category in mappedData) mappedData[category] += 1;
-          else mappedData[category] = 1;
-        }
-      );
-    });
+    const weightCategories = (array, typeArray) => {
+      array.forEach((obj) => {
+        if (!(obj in typeArray)) return;
+        typeArray[obj].yelpCategories.forEach(
+          (category) =>
+            (mappedData[category] =
+              category in mappedData ? mappedData[category] + 1 : 1)
+        );
+      });
+    };
 
-    // Extracts related Yelp categories from each theme
-    data.themes.forEach((theme) => {
-      if (!(theme in APIManager.GameCategories.Themes)) return;
-      // Weights each category by frequency
-      APIManager.GameCategories.Themes[theme].yelpCategories.forEach(
-        (category) => {
-          if (category in mappedData) mappedData[category] += 1;
-          else mappedData[category] = 1;
-        }
-      );
-    });
+    weightCategories(data.genres, APIManager.GameCategories.Genres);
+    weightCategories(data.themes, APIManager.GameCategories.Themes);
 
     // Sorts categories by frequency
     let sortable = [];
@@ -132,8 +121,8 @@ class APIManager {
 
     // Removes less frequent categories
     let index = 0;
-    if (sortable.length > 10) {
-      // Gets the total number of categories multiplied by their frequency
+    if (sortable.length > 50) {
+      // Gets the total weight of all categories
       let total = sortable.reduce((acc, curr) => acc + parseInt(curr[1]), 0);
       // Gets the index at which categories become less frequent
       let counter = 0;
@@ -144,10 +133,9 @@ class APIManager {
     } else index = sortable.length;
 
     // Returns array of Yelp category IDs
-    return sortable.slice(0, index).map((id) => {
-      if (id[0] in APIManager.YelpCategories)
-        return APIManager.YelpCategories[id[0]].alias;
-    });
+    return sortable
+      .slice(0, index)
+      .map((id) => APIManager.YelpCategories[id[0]].alias);
   };
 
   /**

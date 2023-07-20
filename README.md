@@ -1,40 +1,44 @@
 # AFK
 
-Step away from your keyboard but still be in game!
+Step away from your keyboard, but still be in game!
 
 ## Usage
-On our app simply input one of your favorite game, or try these suggestions
 
-MineCraft
-Call of duty
-Forza horizon 5
-Madden NFL 
-Elder Scrolls V
-Doki Doki Literature Club
-Phasmophobia
+1. Input one of your favorite games, or choose any of the following genres:
 
-Then Enter in the desired city where you would like to look. 
-Ex: Orlando
+- Shooter
+- Platform
+- Racing
+- RPG
+- Sports
+- Adventure
+- Arcade
+- Horror
 
-Then use our links to get directions, the yelp page to your new found adventure. Even save your favoirites to our site with the heart icon. 
+2. Enter the location where you would like to search. (ex. Orlando, NYC)
+3. Click the search button to get dozens of personalized places for your next adventure.
 
+See information about the business, get directions, visit the Yelp page, even save it to your favorites.
 
-https://jlausier.github.io/AFK-Coop/
+Visit the live site [here](https://jlausier.github.io/AFK-Coop/)
 
 ## Technologies
-We used Tailwind css framework, Jquery for Javascript, Google fonts,  as well as the IGDB api and Yelp Api to gather our data.
 
-We used excalidraw to do our Mock up and wireframing 
+We used [excalidraw](https://excalidraw.com/#room=38a29e77ac5b3026aa0f,qWynBzUBf2m8wvpcgPZITA) to do our mock-up and wireframing
 
-https://excalidraw.com/#room=38a29e77ac5b3026aa0f,qWynBzUBf2m8wvpcgPZITA
+### Front End
 
+- Tailwind CSS
+- jQuery
+- Google Fonts
 
+### APIs
 
-## ScreenShot
+- IGDB API
+- Yelp Fusion API
 
-![SCreenshot](./assets/images/127.0.0.1_5500_index.html%20(2).png)
+## Screenshots
 
-![SCreenshot](./assets/images/127.0.0.1_5500_index.html%20(3).png)
+![Screenshot of the home page](./assets/images/screenshots/home_page.png)
 
-
-
+![Screenshot of the home page with the controller exploding](./assets/images/screenshots/home_page_controller.png)
