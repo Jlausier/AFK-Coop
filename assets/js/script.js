@@ -2,29 +2,23 @@ $(document).ready(function () {
   let Manager = new APIManager();
 
   let searchContainer = $("#search-container");
-  let genresBtn = $("#toggle");
-  let gameToggle = $("#toggle-back");
 
   let gameLabelEl = $("#game-label");
   let gameSearchEl = $("#game-search");
   let genreGrid = $("#genre-grid");
 
-  let locationSearchEl = $("#location-search");
-  let searchBtnEl = $("#search-btn");
-
   let resultsContainer = $("#results-container");
-
-  let gameCategories = APIManager.getGameCategories();
-  let selectedCategories = {
-    genres: [],
-    themes: [],
-  };
 
   let revealRecentSearch = $("#reveal-recent-btn");
   let recentSearchesEl = $("#recently-searched");
 
   let searchType = "game";
   let isDisplayingFavorites = false;
+
+  let selectedCategories = {
+    genres: [],
+    themes: [],
+  };
 
   /**
    * Checks if inputs are valid and gets the calls getBusinesses
@@ -35,7 +29,7 @@ $(document).ready(function () {
 
     isDisplayingFavorites = false;
 
-    let locationName = locationSearchEl.val().trim();
+    let locationName = $("#location-search").val().trim();
 
     if (searchType === "game") {
       validateBusinessesByGame(locationName);
@@ -308,7 +302,7 @@ $(document).ready(function () {
     $("sub-tag-line").hide();
   }
 
-  searchBtnEl.on("click", getBusinessesFromForm);
+  $("#search-btn").on("click", getBusinessesFromForm);
 
   /* ===== MODALS ======================================================= */
 
@@ -399,10 +393,10 @@ $(document).ready(function () {
    */
   function toggleGenres() {
     if (searchType === "genres") return;
-
     searchType = "genres";
 
     gameLabelEl.text("Select Your Favorite Genres");
+
     gameSearchEl.hide();
     genreGrid.show();
     resetForm();
@@ -427,7 +421,7 @@ $(document).ready(function () {
   });
 
   // Toggle genres on click
-  genresBtn.on("click", toggleGenres);
+  $("#toggle").on("click", toggleGenres);
 
   /**
    * Hides genres and shows game input
@@ -435,15 +429,16 @@ $(document).ready(function () {
    */
   function toggleGame() {
     if (searchType === "game") return;
-
     searchType = "game";
+
     gameLabelEl.text("Enter Your Favorite Game");
+
     genreGrid.hide();
     gameSearchEl.show();
     resetForm();
   }
   // Toggle game input on click
-  $(gameToggle).on("click", toggleGame);
+  $("#toggle-back").on("click", toggleGame);
 
   /**
    * Clears inputs on toggle
