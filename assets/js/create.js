@@ -55,9 +55,9 @@ const genreGridItems = [
   },
 ].map(({ id, image, title, type }) =>
   $(
-    `<a id="${id}" data-state="" data-type="${type}" class="genre-btn p-2 m-1 bg-gradient-to-b from-indigo-400 to-indigo-500 rounded drop-shadow-sm flex flex-col justify-center items-center hover:bg-gradient-to-b hover:from-pink-500 hover:to-green-500 transition">
+    `<a id="${id}" data-state="" data-type="${type}" class="genre-btn p-2 m-1 select-none cursor-pointer rounded drop-shadow-sm flex flex-col justify-center items-center bg-gradient-to-b from-indigo-400 to-indigo-500 hover:bg-gradient-to-b hover:from-pink-500 hover:to-green-500 transition">
       <img src="${image}" class="w-12 m-2">
-      <div class="pt-1 text-black text-xs">${title}</div>
+      <div class="pt-1 font-medium text-black text-sm">${title}</div>
      </a>`
   )
 );
