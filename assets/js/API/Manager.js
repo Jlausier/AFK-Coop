@@ -72,21 +72,17 @@ class APIManager {
       };
 
     // Fetches businesses by the categories and returns both
-    return await this.Yelp.fetchBusinessesByCategories(location, categories)
-      .then((businesses) => {
-        return {
-          businesses,
-          categories,
-        };
-      })
-      .catch((error) => {
-        throw {
-          title: "Unable to Search for Businesses",
-          message:
-            "An error occurred while searching for businesses, please try again.",
-          details: error,
-        };
-      });
+    return await this.Yelp.fetchBusinessesByCategories(
+      location,
+      categories
+    ).catch((error) => {
+      throw {
+        title: "Unable to Search for Businesses",
+        message:
+          "An error occurred while searching for businesses, please try again.",
+        details: error,
+      };
+    });
   };
 
   /**
