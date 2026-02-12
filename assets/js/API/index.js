@@ -1,9 +1,8 @@
 import 'dotenv/config';
 
 class API {
-  static proxy = "https://floating-headland-95050.herokuapp.com/";
+  static proxy = "https://cors-anywhere.herokuapp.com/";
   client;
-  apiKey;
 
   noResourceError(details = "") {
     return {
