@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 class API {
   static proxy = "https://floating-headland-95050.herokuapp.com/";
   client;
@@ -331,7 +333,7 @@ class YelpAPI extends API {
       },
       {
         Authorization:
-          "Bearer NdsssKx2ir8nv7oCjugA6W3xuCcDKf8mWFYBsvGebSjzP2kEvWl08ihRgpQae9YjKprA-rKIG-ndVQorYhOFU2ByUfK_HiliUEIl_Fs1RsWxL4YbAwSfxodkBpKwZHYx",
+          "Bearer ${process.env.YELP_API_KEY}",
       }
     );
   }
@@ -423,9 +425,9 @@ class GamesAPI extends API {
     this.setClient({
       method: "POST",
       url: () =>
-        `https://id.twitch.tv/oauth2/token?client_id=${this.client.id}&client_secret=${this.client.secret}&grant_type=client_credentials`,
-      id: "lawi0eumazvfp1qjuk5r4tgt2nx1w2",
-      secret: "5wb2rf226eq4m5j6pnds140uzrsnta",
+        `https://id.twitch.tv/oauth2/token?client_id=${process.env.IGDB_CLIENT_ID}&client_secret=${process.env.IGDB_CLIENT_SECRET}&grant_type=client_credentials`,
+      id: process.env.IGDB_CLIENT_ID,
+      secret: process.env.IGDB_CLIENT_SECRET,
     });
   }
 
