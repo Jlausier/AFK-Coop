@@ -31,6 +31,7 @@ const clientErrors = {
 };
 
 // Global API Manager
+import { APIManager } from "./API/Manager.js";
 let Manager = new APIManager();
 
 $(() => {
