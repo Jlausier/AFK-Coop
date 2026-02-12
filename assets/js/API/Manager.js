@@ -153,3 +153,4 @@ class APIManager {
     return baseUrl;
   };
 }
+export class APIManager{}
