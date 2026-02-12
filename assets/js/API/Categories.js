@@ -3,6 +3,7 @@
  *  - title: User friendly name
  *  - yelpCategories: Yelp categories that the genre or theme maps onto
  */
+import { APIManager } from "./Manager.js";
 APIManager.GameCategories = {
   Genres: {
     5: { title: "Shooter", yelpCategories: [1, 21, 30, 40, 48, 77] },
