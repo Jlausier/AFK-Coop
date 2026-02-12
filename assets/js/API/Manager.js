@@ -1,7 +1,7 @@
 /**
  * Bridges data between the IGDB API and Yelp Fusion API
  */
-class APIManager {
+export class APIManager {
   /**
    * Instantiates a new APIManager and instantiates relevant APIs
    */
@@ -153,4 +153,3 @@ class APIManager {
     return baseUrl;
   };
 }
-export class APIManager{}
