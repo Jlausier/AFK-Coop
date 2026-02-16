@@ -1,4 +1,3 @@
-import 'dotenv/config';
 
 class API {
   static proxy = "https://cors-anywhere.herokuapp.com/";
