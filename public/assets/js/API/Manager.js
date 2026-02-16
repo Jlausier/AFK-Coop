@@ -1,6 +1,8 @@
 /**
  * Bridges data between the IGDB API and Yelp Fusion API
  */
+import { YelpAPI } from "./index.js";
+import { GamesAPI } from "./index.js";
 export class APIManager {
   /**
    * Instantiates a new APIManager and instantiates relevant APIs
@@ -8,7 +10,9 @@ export class APIManager {
   constructor() {
     this.Yelp = new YelpAPI();
     this.Games = new GamesAPI();
+   if (typeof window !== "undefined") {
     this.Games.refreshToken();
+  }
   }
 
   /**
