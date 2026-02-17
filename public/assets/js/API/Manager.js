@@ -1,6 +1,8 @@
 /**
  * Bridges data between the IGDB API and Yelp Fusion API
  */
+import { YelpAPI } from "./index.js";
+import { GamesAPI } from "./index.js";
 export class APIManager {
   /**
    * Instantiates a new APIManager and instantiates relevant APIs
@@ -8,7 +10,9 @@ export class APIManager {
   constructor() {
     this.Yelp = new YelpAPI();
     this.Games = new GamesAPI();
+   if (typeof window !== "undefined") {
     this.Games.refreshToken();
+  }
   }
 
   /**
@@ -98,10 +102,27 @@ export class APIManager {
    * @returns {Array<>}
    */
   mapGenresAndThemesToCategories = (data) => {
+    return APIManager.mapGenreAndThemeIdsToYelpAliases(
+      data.genres || [],
+      data.themes || []
+    );
+  };
+
+  /**
+   * Static: maps genre and theme IDs (from UI/IGDB) to Yelp category aliases.
+   * Use when you have selected genre/theme IDs and need Yelp aliases for the API.
+   * Requires APIManager.GameCategories and APIManager.YelpCategories (load Categories.js).
+   *
+   * @param {Array<string|number>} genreIds
+   * @param {Array<string|number>} themeIds
+   * @returns {Array<string>} Yelp category aliases
+   */
+  static mapGenreAndThemeIdsToYelpAliases(genreIds, themeIds) {
+    if (!APIManager.GameCategories || !APIManager.YelpCategories) return [];
     let mappedData = {};
 
     const weightCategories = (array, typeArray) => {
-      array.forEach((obj) => {
+      (array || []).forEach((obj) => {
         if (!(obj in typeArray)) return;
         typeArray[obj].yelpCategories.forEach(
           (category) =>
@@ -111,20 +132,16 @@ export class APIManager {
       });
     };
 
-    weightCategories(data.genres, APIManager.GameCategories.Genres);
-    weightCategories(data.themes, APIManager.GameCategories.Themes);
+    weightCategories(genreIds, APIManager.GameCategories.Genres);
+    weightCategories(themeIds, APIManager.GameCategories.Themes);
 
-    // Sorts categories by frequency
     let sortable = [];
     for (let id in mappedData) sortable.push([id, mappedData[id]]);
     sortable.sort((a, b) => b[1] - a[1]);
 
-    // Removes less frequent categories
     let index = 0;
     if (sortable.length > 50) {
-      // Gets the total weight of all categories
-      let total = sortable.reduce((acc, curr) => acc + parseInt(curr[1]), 0);
-      // Gets the index at which categories become less frequent
+      let total = sortable.reduce((acc, curr) => acc + parseInt(curr[1], 10), 0);
       let counter = 0;
       while (counter <= total * (2 / 3)) {
         counter += sortable[index][1];
@@ -132,11 +149,10 @@ export class APIManager {
       }
     } else index = sortable.length;
 
-    // Returns array of Yelp category IDs
     return sortable
       .slice(0, index)
-      .map((id) => APIManager.YelpCategories[id[0]].alias);
-  };
+      .map((pair) => APIManager.YelpCategories[pair[0]].alias);
+  }
 
   /**
    * Creates a Google Maps link from an address

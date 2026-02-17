@@ -29,10 +29,11 @@ const clientErrors = {
       "You haven't favorited any businesses yet, click the heart icon to save a business to your favorites.",
   },
 };
-
-// Global API Manager
-import { APIManager } from "./API/Manager.js";
-let Manager = new APIManager();
+function createGoogleMapsLink(addressArray) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    addressArray.join(", ")
+  )}`;
+}
 
 $(() => {
   /* ===== SELECTORS ============================================================== */
@@ -119,13 +120,15 @@ $(() => {
    * @param {string} locationName Geographic area to search for businesses
    * @param {string} gameName Name of the game to search with
    */
-  function getBusinessesByGame(locationName, gameName) {
-    handleResponse(
-      Manager.getBusinessesFromGames(locationName, [gameName]),
-      saveSearches,
-      [locationName, gameName]
-    );
-  }
+function getBusinessesByGame(locationName, gameName) {
+  fetch(`http://localhost:3010/api/businesses?location=${encodeURIComponent(locationName)}&game=${encodeURIComponent(gameName)}`)
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to fetch businesses");
+      return res.json();
+    })
+    .then(businesses => displayCards(businesses))
+    .catch(error => showErrorModal({ title: "Error", message: error.message }));
+}
 
   /**
    * Validates location and game category inputs
@@ -152,11 +155,19 @@ $(() => {
 
    */
   function getBusinessesByGameCategories(locationName) {
-    handleResponse(
-      Manager.getBusinessesFromGameCategories(locationName, selectedCategories)
-    );
+    const params = new URLSearchParams({
+      location: locationName,
+      game: "categorySearch",
+    });
+    if (selectedCategories.genres.length)
+      params.set("genres", selectedCategories.genres.join(","));
+    if (selectedCategories.themes.length)
+      params.set("themes", selectedCategories.themes.join(","));
+    fetch(`/api/businesses?${params.toString()}`)
+      .then(res => res.json())
+      .then(businesses => displayCards(businesses))
+      .catch(error => showErrorModal(error));
   }
-
   /* ===== DISPLAY RESULTS ======================================================== */
 
   /**
@@ -255,10 +266,10 @@ $(() => {
       phone.text(business.display_phone);
 
       dispCardMapBtn.text("Directions");
-      dispCardMapBtn.attr(
-        "href",
-        Manager.createGoogleMapsLink(business.location.display_address)
-      );
+     dispCardMapBtn.attr(
+  "href",
+  createGoogleMapsLink(business.location.display_address)
+);
       dispCardMapBtn.attr("target", "_blank");
 
       dispCardUrlBtn.text("Yelp Page");
