@@ -121,7 +121,7 @@ $(() => {
    * @param {string} gameName Name of the game to search with
    */
 function getBusinessesByGame(locationName, gameName) {
-  fetch(`http://localhost:3010/api/businesses?location=${encodeURIComponent(locationName)}&game=${encodeURIComponent(gameName)}`)
+  fetch(`/api/businesses?location=${encodeURIComponent(locationName)}&game=${encodeURIComponent(gameName)}`)
     .then(res => {
       if (!res.ok) throw new Error("Failed to fetch businesses");
       return res.json();
