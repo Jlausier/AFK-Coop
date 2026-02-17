@@ -40,4 +40,5 @@ app.get("/api/businesses", async (req, res) => {
 // Serve frontend (optional, if you serve index.html from Node)
 app.use(express.static("public"));
 
-app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
