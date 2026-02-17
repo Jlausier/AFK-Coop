@@ -121,7 +121,7 @@ $(() => {
    * @param {string} gameName Name of the game to search with
    */
 function getBusinessesByGame(locationName, gameName) {
-  fetch(`http://localhost:3000/api/businesses?location=${encodeURIComponent(locationName)}&game=${encodeURIComponent(gameName)}`)
+  fetch(`http://localhost:3010/api/businesses?location=${encodeURIComponent(locationName)}&game=${encodeURIComponent(gameName)}`)
     .then(res => {
       if (!res.ok) throw new Error("Failed to fetch businesses");
       return res.json();
@@ -155,13 +155,19 @@ function getBusinessesByGame(locationName, gameName) {
 
    */
   function getBusinessesByGameCategories(locationName) {
-  fetch(
-    `/api/businesses?location=${encodeURIComponent(locationName)}&game=categorySearch`
-  )
-    .then(res => res.json())
-    .then(businesses => displayCards(businesses))
-    .catch(error => showErrorModal(error));
-}
+    const params = new URLSearchParams({
+      location: locationName,
+      game: "categorySearch",
+    });
+    if (selectedCategories.genres.length)
+      params.set("genres", selectedCategories.genres.join(","));
+    if (selectedCategories.themes.length)
+      params.set("themes", selectedCategories.themes.join(","));
+    fetch(`/api/businesses?${params.toString()}`)
+      .then(res => res.json())
+      .then(businesses => displayCards(businesses))
+      .catch(error => showErrorModal(error));
+  }
   /* ===== DISPLAY RESULTS ======================================================== */
 
   /**

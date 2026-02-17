@@ -2,6 +2,30 @@
 
 Step away from your keyboard, but still be in game!
 
+## Setup & running
+
+**From the project root** (`AFK-Coop`):
+
+1. **Install dependencies:**  
+   `npm install`
+
+2. **Optional – enable search:**  
+   Copy `.env.example` to `.env` and add your API keys. Without keys, the app and server run normally; search will return a friendly message asking you to configure keys.
+
+3. **Start the server:**  
+   `npm start`  
+   Then open **http://localhost:3010** in your browser.
+
+**API keys (for `.env`):**
+
+| Variable | Where to get it |
+|----------|------------------|
+| `IGDB_CLIENT_ID` | [Twitch Developer Console](https://dev.twitch.tv/console) – create an app, use Client ID |
+| `IGDB_CLIENT_SECRET` | Same app → Manage → New Secret |
+| `YELP_API_KEY` | [Yelp Manage App](https://www.yelp.com/developers/v3/manage_app) – API Key |
+
+The server reads these from `.env` (via `dotenv`). Keep `.env` out of version control.
+
 ## Usage
 
 1. Input one of your favorite games, or choose any of the following genres:
