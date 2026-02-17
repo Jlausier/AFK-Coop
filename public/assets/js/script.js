@@ -155,13 +155,19 @@ function getBusinessesByGame(locationName, gameName) {
 
    */
   function getBusinessesByGameCategories(locationName) {
-  fetch(
-    `/api/businesses?location=${encodeURIComponent(locationName)}&game=categorySearch`
-  )
-    .then(res => res.json())
-    .then(businesses => displayCards(businesses))
-    .catch(error => showErrorModal(error));
-}
+    const params = new URLSearchParams({
+      location: locationName,
+      game: "categorySearch",
+    });
+    if (selectedCategories.genres.length)
+      params.set("genres", selectedCategories.genres.join(","));
+    if (selectedCategories.themes.length)
+      params.set("themes", selectedCategories.themes.join(","));
+    fetch(`/api/businesses?${params.toString()}`)
+      .then(res => res.json())
+      .then(businesses => displayCards(businesses))
+      .catch(error => showErrorModal(error));
+  }
   /* ===== DISPLAY RESULTS ======================================================== */
 
   /**

@@ -1,4 +1,6 @@
 // API/index.js
+import fetch from "node-fetch";
+
 /**
  * Base class for APIs
  */
@@ -41,7 +43,8 @@ class API {
   async getData(resource, subResource = "", subResourceParams = [], params = [], headerOptions = {}, body = null) {
     const url = this.constructUrl(resource, params);
     const headers = { ...this.headers, ...headerOptions };
-    const options = { method: "GET", headers };
+    const method = body ? "POST" : "GET";
+    const options = { method, headers };
     if (body) options.body = body;
 
     const response = await fetch(url, options);
@@ -89,11 +92,11 @@ export class YelpAPI extends API {
       { name: "sort_by", val: "best_match" },
       { name: "limit", val: "20" },
     ];
-    return this.getData("businesses", "searchByCategory", [], params);
+    return this.getData("businesses/search", "", [], params);
   }
 
   async fetchBusinessById(id) {
-    return this.getData("businesses", "searchById", [id]);
+    return this.getData(`businesses/${encodeURIComponent(id)}`, "", [], []);
   }
 }
 
