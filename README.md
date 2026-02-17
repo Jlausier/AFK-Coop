@@ -44,7 +44,7 @@ The server reads these from `.env` (via `dotenv`). Keep `.env` out of version co
 
 See information about the business, get directions, visit the Yelp page, even save it to your favorites.
 
-Visit the live site [here](https://jlausier.github.io/AFK-Coop/)
+Visit the live site [here](https://afk-coop.fly.dev)
 
 ## Technologies
 
